@@ -1,0 +1,4 @@
+[build-system]
+packages = ["hoi4"]
+py-modules = ["__init__"]
+requires = ["setuptools @ git+https://github.com/pypa/setuptools.git@main"]

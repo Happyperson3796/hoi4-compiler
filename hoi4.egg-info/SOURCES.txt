@@ -1,0 +1,13 @@
+pyproject.toml
+hoi4/__init__.py
+hoi4/achievements.py
+hoi4/compiler.py
+hoi4/filetype.py
+hoi4/filetypes.py
+hoi4/focus.py
+hoi4/nation.py
+hoi4/pdxscript.py
+hoi4.egg-info/PKG-INFO
+hoi4.egg-info/SOURCES.txt
+hoi4.egg-info/dependency_links.txt
+hoi4.egg-info/top_level.txt
