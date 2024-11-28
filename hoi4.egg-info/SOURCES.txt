@@ -1,3 +1,4 @@
+LICENSE
 pyproject.toml
 hoi4/__init__.py
 hoi4/achievements.py
