@@ -1,0 +1,12 @@
+import os
+
+namespace = input("Namespace: ").replace(" ", "_")
+
+for path in os.scandir():
+    if path.path.endswith(".nation"):
+        with open(path.path, "r") as file:
+            text = file.readlines()
+
+        with open(path.path, "w") as file:
+            file.write("namespace = "+namespace)
+            file.writelines(text)

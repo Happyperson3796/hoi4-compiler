@@ -1,0 +1,189 @@
+import os
+import shutil
+from hoi4.pdxscript import get, format, Pair, Collection
+
+tag = input("Tag: ").upper().strip()
+mode = 3 #0: Raw, #1 Strip leaders, #2 Strip max, add blanks, #3: remove all nonideology loc
+
+root = os.getcwd().replace("\\","/") + "/"
+vanilla = "C:/Program Files (x86)/Steam/steamapps/common/Hearts of Iron IV/"
+
+history = ""
+for path in os.scandir(root+"history/countries/"):
+    if path.name.startswith(tag):
+        history = open(path.path, "r", encoding="utf-8-sig").read()
+        break
+
+if mode >= 1:
+    history_data = get(history)
+    new_history = Collection()
+
+    for x in range(len(history_data)):
+        if "portrait_path" not in str(history_data[x]) and "picture" not in str(history_data[x]):
+            new_history.append(history_data[x])
+
+    history = format(new_history)
+
+
+if mode >= 2:
+    history_data = get(history)
+    new_history = Collection()
+
+    for x in range(len(history_data)):
+        if "add_ideas" not in str(history_data[x]) and "set_popularities" not in str(history_data[x]) and "set_politics" not in str(history_data[x]) and "country_event" not in str(history_data[x]) and "oob" not in str(history_data[x]) and "OOB" not in str(history_data[x]) and "set_variable" not in str(history_data[x]) and "set_country_flag" not in str(history_data[x]):
+            new_history.append(history_data[x])
+
+    history = format(new_history)
+
+    history += """
+set_politics = {
+    ruling_party = democratic/communism/fascism/neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+
+set_popularities = {
+    democratic = 25
+    neutrality = 25
+    fascism = 25
+    communism = 25
+}
+"""
+
+
+history = history.replace("\n","\n    ")
+
+localisation = []
+
+ideologies = {
+
+    "$_neutrality_party": "$_neutrality_party",
+    "$_neutrality": "$",
+
+    "$_democratic": "$_democratic",
+    "$_communism": "$_communism",
+    "$_fascism": "$_fascism",
+
+
+
+    "$_social_conservative_party": "$_neutrality_party",
+    "$_social_conservative": "$",
+
+    "$_social_liberal": "$_democratic",
+    "$_totalist": "$_communism",
+    "$_national_populist": "$_fascism",
+
+    
+
+    "$_paternalism_party": "$_neutrality_party",
+    "$_paternalism_1": "$",
+    "$_paternalism": "$",
+
+    "$_conservatism_1": "$_democratic",
+    "$_conservatism": "$_democratic",
+    "$_communist": "$_communism",
+    "$_national_socialism": "$_fascism"
+}
+
+name = tag
+
+def scan_loc(path):
+    global name
+
+    file = open(path, "r", encoding="utf-8-sig")
+    for line in file.readlines():
+        line = line.replace("\n","").replace(":0", " =", 1).replace(":", " =", 1)
+
+        line = line.split("\"")
+        line[0] = line[0]+"\""
+        line[-1] = line[-1]+"\""
+        line = "'".join(line).replace("\"'", "\"").replace("'\"", "\"")
+
+        if line.strip().startswith(tag):
+            line = line.replace(tag, "$", 1)
+
+            cont = mode < 3
+            for i, new in ideologies.items():
+                if i in line in line or "$ =" in line or "$_DEF =" in line or "$_ADJ =" in line:
+                    cont = True
+                    line = line.replace(i, new, 1)
+
+                    if (new == "$" and line.split("=")[0].strip() == "$") or "$ =" in line:
+                        name = line.split("=")[-1].replace("\"","").strip()
+                        
+                    break
+
+            if cont: localisation.append(line)
+
+for path in os.scandir(root+"localisation"):
+    if path.is_file():
+        scan_loc(path.path)
+for path in os.scandir(root+"localisation/english"):
+    if path.is_file():
+        scan_loc(path.path)
+
+loc = ""
+for line in localisation:
+    loc += "\n  "+line.strip()
+
+color = ""
+with open(root+"common/countries/colors.txt") as file:
+    try:
+        data = get(file.read())
+
+        color_data = str(data.get(tag, False, True).val()).split("color_ui")[0].split("\n")
+
+        for x in color_data:
+            if str(x).strip().isnumeric():
+                if color != "": color += " "
+                color += x
+    except:
+        color = "Not found"
+
+vanilla_states = [int(x.name.split("-")[0].strip()) for x in os.scandir(vanilla+"/history/states/")]
+
+cores = []
+for path in os.scandir(root+"history/states"):
+    with open(path.path, "r") as file:
+        try:
+            data = get(file.read())
+
+            state_history = data.get("state").val().get("history").val()
+
+            for x in state_history:
+                if tag in str(x) and "core" in str(x):
+                    id = str(data.get("state").val().get("id")).strip()
+                    if int(id) in vanilla_states or mode < 1:
+                        cores.append(id)
+
+        except: pass
+cores = " ".join(cores)
+
+template = f"""
+tag = {tag}
+
+loc = {{{loc}
+}}
+
+color = {{ {color} }}
+
+cores = {{
+    {cores}
+}}
+
+history = {{
+    {history}
+
+    setup_starting_tech = yes
+}}
+"""
+
+with open(name+".nation", "w", encoding="utf-8") as file:
+    file.write(template)
+
+#shutil.copyfile(root+"gfx/flags/"+tag+".tga", root+tag+".tga")
+
+for path in os.scandir(root+"gfx/flags/"):
+    if path.name.startswith(tag) and path.name.endswith(".tga") and path.is_file():
+        shutil.copyfile(path.path, root+path.name)
