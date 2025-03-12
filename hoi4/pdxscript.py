@@ -171,6 +171,39 @@ def get(text): #All combined
     return merge_pairs(collect(parse(text)))
 
 
+def format_compress(text): #Break down odd brackets
+    r = ""
+
+    no_newlines = False
+
+    buffer = ""
+    for x in text:
+        if x != " " and x != "\n":
+            buffer += x.strip()
+
+        if buffer.endswith("}"):
+            no_newlines = False
+        
+        elif buffer.endswith("={"):
+            buffer = ""
+
+        elif buffer.endswith("{"):
+            no_newlines = True
+
+            while r.endswith(" ") or r.endswith("\n"):
+                r = r.removesuffix(" ").removesuffix("\n")
+            r += " "
+
+        if not no_newlines or x != "\n":
+            r += x
+
+            if no_newlines:
+                if r.endswith("  "):
+                    r = r.removesuffix("  ")
+                    r += " "
+
+    return r
+
 def format(merged): #And back to text
     text = ""
     for x in merged:
@@ -180,14 +213,14 @@ def format(merged): #And back to text
 
     indent = 0
     for line in range(len(text)):
-        if "}" in text[line]:
+        if "}" in text[line] and "{" not in text[line]:
             indent -= 1
 
         text[line] = indent*"    " + text[line]
 
-        if "{" in text[line]:
+        if "{" in text[line] and "}" not in text[line]:
             indent += 1
 
     text = "\n".join(text)
 
-    return text
+    return format_compress(text)

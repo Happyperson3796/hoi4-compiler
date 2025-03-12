@@ -2,18 +2,27 @@ from .filetype import fileType
 from .pdxscript import get, format, Pair, Collection
 import shutil
 import os
+from . import globals
+
+def strip(text):
+    texts = text.replace(".focus", ".txt").split(".")
+    if texts[-1] == "txt":
+        if "/" not in texts[-2] and "\\" not in texts[-2]:
+            texts.pop(-2)
+    return ".".join(texts)
 
 class Focus(fileType):
+
     def run(self):
         head, tail = os.path.split(self.path)
 
-        vanilla_path = "C:/Program Files (x86)/Steam/steamapps/common/Hearts of Iron IV/common/national_focus/"
+        vanilla_path = globals.vanilla_path+"/common/national_focus/"
 
-        if not os.path.exists(self.path.replace(".focus",".txt")):
-            shutil.copyfile(vanilla_path+tail.replace(".focus",".txt"), self.path.replace(".focus",".txt"))
+        if not os.path.exists(strip(self.path)):
+            shutil.copyfile(vanilla_path+strip(tail), strip(self.path))
 
         file_from = self.path
-        file_to = self.path.replace(".focus",".txt")
+        file_to = strip(self.path)
 
         focus = open(file_to, "r", encoding="utf-8-sig")
         focus_data = get(focus.read()).get().val()
@@ -73,7 +82,7 @@ class Focus(fileType):
             collected = Collection()
             collected.append(Pair("focus_tree", "=", focus_data))
             
-            with open(file_from.replace(".focus", ".txt"), "w") as file:
+            with open(strip(file_from), "w") as file:
                 file.write(format(collected))
 
         focus.close()
@@ -82,5 +91,5 @@ class Focus(fileType):
 
     def clean(self):
         try:
-            os.remove(self.path.replace(".focus",".txt"))
+            os.remove(strip(self.path))
         except: pass
