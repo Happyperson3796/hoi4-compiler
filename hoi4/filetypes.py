@@ -1,5 +1,5 @@
 from .filetype import fileType
-from . import focus, achievements, nation, merge_file, flag, pull_file, state
+from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file
 import os
 
 def clean_suffix(path):
@@ -18,6 +18,8 @@ def get(path: str):
         return state.State(path)
     elif path.endswith(".merge"):
         return merge_file.Merged(path)
+    elif path.endswith(".append"):
+        return append_file.Appended(path)
     elif path.endswith(".flag.tga"):
         return flag.Flag(path)
     else:
