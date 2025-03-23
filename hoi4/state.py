@@ -9,13 +9,13 @@ def get_top_state_id(parent_dir):
     top_num = 0
     for path in os.scandir(vanilla_path+"/history/states/"):
         try:
-            num = int(path.name.split("-")[0])
+            num = int(path.name.split("-")[0].strip())
             if num > top_num: top_num = num
         except: pass
 
     for path in os.scandir(parent_dir+"/history/states/"):
         try:
-            num = int(path.name.split("-")[0])
+            num = int(path.name.split("-")[0].strip())
             if num > top_num: top_num = num
         except: pass
 
@@ -35,16 +35,17 @@ class State(fileType):
         parent = data.retrieve("parent").val()[0].val()
         provinces = data.retrieve("provinces").val()
 
+        print(self.path)
 
         vanilla_file = ""
 
         for path in os.scandir(parent_dir+"/history/states/"): #Get file that's already in the mod if possible
-            if path.name.split("-",1)[0] == parent:
+            if path.name.split("-",1)[0].strip() == parent:
                 vanilla_file = path.path
         
         if vanilla_file == "":
             for path in os.scandir(vanilla_path+"/history/states/"): #Else get from vanilla files
-                if path.name.split("-",1)[0] == parent:
+                if path.name.split("-",1)[0].strip() == parent:
                     with open(path.path, "r") as file:
                         tdata = get(file.read())
 
@@ -52,6 +53,10 @@ class State(fileType):
                     write = open(vanilla_file, "w")
                     write.write(format(tdata))
                     write.close()
+
+        if vanilla_file == "":
+            print("Error! Parent state ["+parent+"] not found for "+name)
+            exit
 
         with open(vanilla_file, "r", encoding="utf-8") as file:
             vanilla_data = get(file.read()).get("state").val()
@@ -98,65 +103,74 @@ class State(fileType):
                 
                 
         try: #Set buildings & infrastructure... this is useless, cut out and replace with text parsing later
-            new_data.retrieve("history").val().retrieve("buildings").val().retrieve("infrastructure").set(infrastructure)
+            new_data.retrieve("history").val().retrieve("buildings").val().retrieve("infrastructure").set(str(infrastructure))
         except:
             try:
-                new_data.retrieve("history").val().retrieve("buildings").val().append(get("infrastructure="+infrastructure)[0])
+                new_data.retrieve("history").val().retrieve("buildings").val().append(get("infrastructure="+str(infrastructure))[0])
             except:
-                new_data.retrieve("history").val().append(get("buildings={infrastructure="+infrastructure+"}")[0])
+                new_data.retrieve("history").val().append(get("buildings={infrastructure="+str(infrastructure)+"}")[0])
 
 
         old_province_total = len(vanilla_data.retrieve("provinces").val())
         shared_provinces = []
 
-        for baseprov in vanilla_data.retrieve("provinces").val(): #Check for provinces shared by old and new states
-            for prov in provinces:
-                if str(prov) == str(baseprov):
-                    shared_provinces.append(str(prov))
+        for prov in [c for c in provinces]: #Check for provinces shared by old and new states
+            for baseprov in vanilla_data.retrieve("provinces").val():
+                if str(prov).strip() == str(baseprov).strip():
+                    shared_provinces.append(int(str(prov).strip()))
                     new_data.retrieve("provinces").val().append(baseprov)
                     vanilla_data.retrieve("provinces").val().remove(baseprov)
 
         old_vps = 0
         new_vps = 0
 
-        for pair in vanilla_data.retrieve("history").val(): #Move VP mappings over
-            if str(pair[0]) == "victory_points":
+        for pair in [c for c in vanilla_data.retrieve("history").val()]: #Move VP mappings over
+            if str(pair[0]).strip() == "victory_points":
                 vp, pts = pair[-1].val()
-                if str(vp) in shared_provinces:
+                if int(str(vp).strip()) in shared_provinces:
                     new_data.retrieve("history").val().append(pair)
                     vanilla_data.retrieve("history").val().remove(pair)
-                    new_vps += int(str(pts))
+                    new_vps += int(str(pts).removesuffix(".0"))
                 else:
-                    old_vps += int(str(pts))
+                    old_vps += int(str(pts).removesuffix(".0"))
 
-        for pair in vanilla_data.retrieve("history").val().retrieve("buildings").val(): #Move Province Buildings Over
-            if str(pair[0]) in shared_provinces:
-                new_data.retrieve("history").val().retrieve("buildings").val().append(pair)
-                vanilla_data.retrieve("history").val().retrieve("buildings").val().remove(pair)
+        try:
+            for pair in [c for c in vanilla_data.retrieve("history").val().retrieve("buildings").val()]: #Move Province Buildings Over
+                if int(str(pair[0]).strip()) in shared_provinces:
+                    new_data.retrieve("history").val().retrieve("buildings").val().append(pair)
+                    vanilla_data.retrieve("history").val().retrieve("buildings").val().remove(pair)
+        except: pass
                 
 
-        state_size_ratio = (len(shared_provinces)+(new_vps*1.5))/(old_province_total+(old_vps*1.5)) #Calc amt of stuff (resources) a province should keep
-        state_pop_ratio = (len(shared_provinces)+(new_vps*5))/(old_province_total+(old_vps*5)) #Calc amt of stuff (manpower) a province should keep
-        #print(str(round(state_size_ratio*100,2))+"%")
+        state_size_ratio = len(shared_provinces)/old_province_total #Land Percentages
+        state_pop_ratio = (new_vps-old_vps)/100 #Ratio of new to old VPs
 
+        state_resource_ratio = state_size_ratio #Calc amt of stuff (resources) a province should keep
+        state_manpower_ratio = min(max(state_size_ratio+(state_pop_ratio*1.25), 0.025), 0.975) #Calc amt of stuff (manpower) a province should keep
 
-        for r in vanilla_data.retrieve("resources").val(): #Merge up the resources
-            res, s, amt = r
+        #if "Ohio" in name:
+        #    print(str(round(state_resource_ratio*100,2))+"%")
+        #    print(str(round(state_manpower_ratio*100,2))+"%")
 
-            new_amt = str(math.ceil(int(amt.val())*state_size_ratio))
+        try:
+            for r in vanilla_data.retrieve("resources").val(): #Merge up the resources
+                res, s, amt = r
 
-            try:
-                val = new_data.retrieve("resources").val().retrieve(res)
-                val.set(int(val.val())+int(new_amt))
-            except:
-                new_data.retrieve("resources").val().append(get(res+s+new_amt)[0])
+                new_amt = str(math.ceil(int(amt.val())*state_resource_ratio))
 
-            amt.set(math.ceil(int(amt.val())*(1-state_size_ratio)))
+                try:
+                    val = new_data.retrieve("resources").val().retrieve(res)
+                    val.set(int(val.val())+int(new_amt))
+                except:
+                    new_data.retrieve("resources").val().append(get(res+s+new_amt)[0])
+
+                amt.set(max(math.ceil(int(amt.val())*(1-state_resource_ratio)),0))
+        except: pass
 
 
         for pair in vanilla_data.retrieve("history").val(): #Copy over extra history={} content like cores, demilitarized zones
             if pair[0] != "victory_points" and pair[0] != "owner" and pair[0] != "buildings":
-                new_data.retrieve("history").val().append(pair)
+                new_data.retrieve("history").val().append(get(format(pair))[0])
 
         manpower_ratio_muliplier = 1
         try:
@@ -164,12 +178,13 @@ class State(fileType):
         except: pass
 
         manpower = vanilla_data.retrieve("manpower") #Distribute manpower
-        new_data.retrieve("manpower").set(max(math.ceil(int(manpower.val())*(state_pop_ratio*manpower_ratio_muliplier)),0))
-        manpower.set(max(math.ceil(int(manpower.val())*(1-(state_pop_ratio*manpower_ratio_muliplier))),0))
+        new_data.retrieve("manpower").set(max(math.ceil(int(manpower.val())*(state_manpower_ratio*manpower_ratio_muliplier)),0))
+        manpower.set(max(math.ceil(int(manpower.val())*(1-(state_manpower_ratio*manpower_ratio_muliplier))),0))
 
         for pair in data.retrieve("history").val(): #Append custom history={} block contents
             if pair[0] != "owner":
                 try:
+                    if pair[0] == "add_core_of": raise
                     new_data.retrieve("history").val().retrieve(pair[0]).set(pair[-1].val())
                 except: 
                     new_data.retrieve("history").val().append(pair)
@@ -184,11 +199,10 @@ class State(fileType):
 
 
 
-    def prebuild(self): #Replace all $ID with state ids
+    def postbuild(self): #Replace all $ID with state ids
         head, tail = os.path.split(self.path)
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
-
-        num_id = get_top_state_id(parent_dir) + 1
+        parent_dir = os.path.abspath(os.path.join(parent_dir, os.pardir))
 
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
@@ -197,6 +211,12 @@ class State(fileType):
         full_id = data.retrieve("id").val()
         name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
         parent = data.retrieve("parent").val()[0].val()
+
+        for path in os.scandir(parent_dir+"/history/states/"):
+            try:
+                if path.name.split("-")[1].strip().removesuffix(".txt") == name:
+                    num_id = path.name.split("-")[0].strip()
+            except: pass
 
         def scan_subdirs(dir):
             for filepath in os.scandir(dir):
@@ -234,13 +254,13 @@ class State(fileType):
 
         try:
             for path in os.scandir(parent_dir+"/history/states/"):
-                if path.name.split("-",1)[0] == parent:
+                if path.name.split("-",1)[0].strip() == parent:
                     os.remove(path.path)
         except: pass
 
         try:
             for path in os.scandir(parent_dir+"/history/states/"):
-                if path.name.split("-",1)[1] == name+".txt":
+                if path.name.split("-",1)[1].strip() == name+".txt":
                     os.remove(path.path)
         except: pass
 

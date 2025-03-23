@@ -4,6 +4,13 @@ import shutil
 import distutils.dir_util
 import json
 import hashlib
+import re
+
+
+def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
+    entries = list(os.scandir(dir))
+    entries.sort(key=lambda x: (int(re.match(r'\d+', x.name).group()) if re.match(r'\d+', x.name) else float('inf'), x.name))
+    return entries
 
 
 def compute_file_hash(file_path, algorithm='sha256'):
@@ -21,7 +28,7 @@ def compute_file_hash(file_path, algorithm='sha256'):
 def sub_scan(dir, parsed_files = []): #Scan all subdirs and files
     running_files = 0
 
-    for path in os.scandir(dir):
+    for path in scandir(dir):
         if path.is_dir() and path.name != "build" and path.name != "Hoi4 modding tools":
             running_files += sub_scan(path.path)
         elif filetypes.should_run(path.path):
@@ -73,7 +80,7 @@ class Build():
 
     def collect_compiler_files(self, dir=""): #Collect to /build/
         if dir == "": dir = self.mod
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir() and path.name != "build":
                 self.collect_compiler_files(path.path)
             else:
@@ -90,7 +97,7 @@ class Build():
     def deposit_compiler_files(self, dir=""): #Deposit from /build/
         if dir == "": dir = self.mod
 
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir():
                 self.deposit_compiler_files(path.path)
             else:
@@ -101,7 +108,7 @@ class Build():
 
     def clean_empty_dirs(self, dir=""):
         if dir == "": dir = self.mod
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir():
                 self.clean_empty_dirs(path.path)
 
@@ -110,7 +117,7 @@ class Build():
 
     def clean(self, dir=""):
         if dir == "": dir = self.mod
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir() and path.name != "build":
                 self.clean(path.path)
             else:
@@ -136,7 +143,7 @@ class Build():
         head, tail = os.path.split(self.mod)
 
         overrides = []
-        for file in os.scandir(self.data["overrides"].replace("$USER", os.path.expanduser("~"))):
+        for file in scandir(self.data["overrides"].replace("$USER", os.path.expanduser("~"))):
             if file.is_dir():
                 if file.name.startswith(tail+"_overrides"):
                     overrides.append(file.path)
@@ -146,7 +153,7 @@ class Build():
 
         for override in overrides:
             print("Applying "+override+"...")
-            for file in os.scandir(override):
+            for file in scandir(override):
                 if not self.exclude(file.name):
                     if file.is_file():
                         shutil.copyfile(file.path, self.mod+"/"+file.name)
@@ -157,7 +164,7 @@ class Build():
 
     def fire_build_scripts(self, dir="", mode=0):
         if dir == "": dir = self.mod
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir():
                 self.fire_build_scripts(path.path, mode=mode)
             elif filetypes.should_run(path.path):
