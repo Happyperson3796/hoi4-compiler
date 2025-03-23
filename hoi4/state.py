@@ -136,9 +136,11 @@ class State(fileType):
 
         try:
             for pair in [c for c in vanilla_data.retrieve("history").val().retrieve("buildings").val()]: #Move Province Buildings Over
-                if int(str(pair[0]).strip()) in shared_provinces:
-                    new_data.retrieve("history").val().retrieve("buildings").val().append(pair)
-                    vanilla_data.retrieve("history").val().retrieve("buildings").val().remove(pair)
+                try:
+                    if int(str(pair[0]).strip()) in shared_provinces:
+                        new_data.retrieve("history").val().retrieve("buildings").val().append(pair)
+                        vanilla_data.retrieve("history").val().retrieve("buildings").val().remove(pair)
+                except: pass
         except: pass
                 
 
