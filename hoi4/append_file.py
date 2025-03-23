@@ -33,9 +33,5 @@ class Appended(fileType):
             base_file = file.readlines()[0].replace("#","").strip()
 
         try:
-            os.remove(head+"/"+base_file)
-        except: pass
-
-        try:
             os.remove(self.path)
         except: pass
