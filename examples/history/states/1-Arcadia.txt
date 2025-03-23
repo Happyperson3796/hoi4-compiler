@@ -1,0 +1,32 @@
+state = {
+    id = 1
+    name = "Arcadia"
+    manpower = 257368
+    state_category = rural
+    resources = {
+        steel = 5
+        chromium = 4
+    }
+    history = {
+        owner = FIN
+        buildings = {
+            infrastructure = 1
+            3134 = {
+                naval_base = 4
+                coastal_bunker = 1
+            }
+        }
+        victory_points = {
+            3134
+            5
+        }
+        add_core_of = SOV
+        add_core_of = SMI
+    }
+    provinces = {
+        116
+        3134
+        11117
+    }
+    local_supplies = 3.0
+}

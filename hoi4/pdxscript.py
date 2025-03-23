@@ -95,6 +95,9 @@ class Collection(list):
     def search(self, search, debug=False):
         return self.get(search, debug, False)
     
+    def retrieve(self, retrieve, debug=False):
+        return self.get(retrieve, debug, True)
+    
     def merge(self, collection):
         for override in collection:
             append = True

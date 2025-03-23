@@ -15,8 +15,8 @@ class Nation(fileType):
 
             tag = data.get("tag").val()
             name = data.get("loc").val().get("$", False, True).val().replace("\"","")
-            name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
-            name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
+            #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
+            #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
             color = data.get("color").val()
             history = data.get("history").val()
             cores = data.get("cores").val()
@@ -124,8 +124,8 @@ class Nation(fileType):
 
             tag = data.get("tag").val()
             name = data.get("loc").val().get("$", False, True).val().replace("\"","")
-            name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
-            name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
+            #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
+            #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
             color = data.get("color").val()
             history = data.get("history").val()
             cores = data.get("cores").val()
@@ -168,3 +168,9 @@ class Nation(fileType):
         try:
             os.remove(head+"/small/"+tail)
         except: pass
+
+
+    def required_dir(self):
+        return ["countries"]
+    def blocked_dir(self):
+        return ["history/countries"]

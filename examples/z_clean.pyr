@@ -1,0 +1,11 @@
+from hoi4 import filetypes
+import os
+print("This will recursivly scan your directory and all subfolders for any special filetypes and attempt a rough clean. Use Build instead for 90% of use cases.\n")
+def clean(dir):
+    for path in os.scandir(dir):
+        if path.is_dir() and path.name != "build":
+            clean(path.path)
+        else:
+            if filetypes.should_run(path.path):
+                filetypes.get(path.path).clean()
+clean(os.getcwd())

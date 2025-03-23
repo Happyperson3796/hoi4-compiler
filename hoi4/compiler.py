@@ -71,7 +71,7 @@ class Build():
 
         self.parsed_files = []
 
-    def collect_compiler_files(self, dir=""):
+    def collect_compiler_files(self, dir=""): #Collect to /build/
         if dir == "": dir = self.mod
         for path in os.scandir(dir):
             if path.is_dir() and path.name != "build":
@@ -87,7 +87,7 @@ class Build():
                     
                     os.remove(path.path)
 
-    def deposit_compiler_files(self, dir=""):
+    def deposit_compiler_files(self, dir=""): #Deposit from /build/
         if dir == "": dir = self.mod
 
         for path in os.scandir(dir):
@@ -155,12 +155,33 @@ class Build():
                     
             #scan(self.mod, self.parsed_files)
 
+    def fire_build_scripts(self, dir="", mode=0):
+        if dir == "": dir = self.mod
+        for path in os.scandir(dir):
+            if path.is_dir():
+                self.fire_build_scripts(path.path, mode=mode)
+            elif filetypes.should_run(path.path):
+                file = filetypes.get(path.path)
+                if mode == -1:
+                    file.prebuild()
+                elif mode == 0:
+                    file.build()
+                elif mode == 1:
+                    file.postbuild()
+
     def build(self):
         self.apply_overrides()
+
+        self.fire_build_scripts("", -1)
+
         scan(self.mod, self.parsed_files)
+
+        self.fire_build_scripts("", 0)
 
         print("Cleaning build files...")
         self.collect_compiler_files()
+
+        self.fire_build_scripts("", 1)
 
         print("Cleaning empty dirs...")
         self.clean_empty_dirs()
