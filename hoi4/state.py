@@ -35,7 +35,7 @@ class State(fileType):
         parent = data.retrieve("parent").val()[0].val()
         provinces = data.retrieve("provinces").val()
 
-        print(self.path)
+        #print(self.path)
 
         vanilla_file = ""
 
