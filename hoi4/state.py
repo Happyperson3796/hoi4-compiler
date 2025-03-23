@@ -191,6 +191,8 @@ class State(fileType):
                 except: 
                     new_data.retrieve("history").val().append(pair)
 
+        new_data.retrieve("history").val().append("set_variable = { var = state_event_parent value = "+str(parent)+" }")
+
         #Write to file
         with open(parent_dir+"/history/states/"+str(num_id)+"-"+name+".txt", "w") as file:
             file.write(format(new_data_collection))
