@@ -7,6 +7,7 @@ from PIL import Image
 class Nation(fileType):
     def run(self):
         head, tail = os.path.split(self.path)
+        parent_dir = os.path.abspath(os.path.join(head, os.pardir))
         
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
@@ -18,8 +19,25 @@ class Nation(fileType):
             #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
             #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
             color = data.get("color").val()
-            history = data.get("history").val()
+            history_data = data.get("history").val()
             cores = data.get("cores").val()
+
+        for s in cores: #Integration for .state files, add cores
+            for path in os.scandir(parent_dir+"/states/"):
+                if path.name.endswith(".state"):
+                    with open(path.path, "r") as file:
+                        tdata = get(file.read())
+                        parent = tdata.retrieve("parent").val()[0]
+                        if str(parent) == str(s):
+                            tcore = "$"+str(tdata.retrieve("id").val())
+                            if tcore not in cores:
+                                cores.append(tcore)
+
+        history = Collection()
+        for s in cores:
+            history.append(get("add_state_core="+str(s))[0])
+        for x in history_data:
+            history.append(x)
         
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
@@ -31,7 +49,7 @@ class Nation(fileType):
         file_colors = base+"/common/countries/"+name+"_color.merge"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
         file_flag = base+"/gfx/flags/"+tag+".tga"
-        file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
+        #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
 
         try:
             with open(file_loc, "r+", encoding="utf-8-sig") as file:
@@ -75,19 +93,19 @@ class Nation(fileType):
             file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
             file.writelines(lines)
 
-        try:
-            with open(file_cores, "r") as file:
-                lines = file.readlines()[3:-3]
-        except:
-            lines = []
-            
-        with open(file_cores, "w") as file:
-            file.write("on_actions = {\n    on_startup = {\n        effect = {\n")
-            #file.write("            every_state = {\n                limit = { is_core_of = "+tag+" }\n                remove_core_of = "+tag+"\n            }\n")
-            for s in cores:
-                file.write("            "+s.val()+" = { add_core_of = "+tag+" }\n")
-            if len(lines) > 0: file.writelines(lines)
-            file.write("        }\n    }\n}")
+        #try:
+        #    with open(file_cores, "r") as file:
+        #        lines = file.readlines()[3:-3]
+        #except:
+        #    lines = []
+        #    
+        #with open(file_cores, "w") as file:
+        #    file.write("on_actions = {\n    on_startup = {\n        effect = {\n")
+        #    #file.write("            every_state = {\n                limit = { is_core_of = "+tag+" }\n                remove_core_of = "+tag+"\n            }\n")
+        #    for s in cores:
+        #        file.write("            "+s.val()+" = { add_core_of = "+tag+" }\n")
+        #    if len(lines) > 0: file.writelines(lines)
+        #    file.write("        }\n    }\n}")
 
 
         head, tail = os.path.split(file_flag)
@@ -126,9 +144,6 @@ class Nation(fileType):
             name = data.get("loc").val().get("$", False, True).val().replace("\"","")
             #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
             #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
-            color = data.get("color").val()
-            history = data.get("history").val()
-            cores = data.get("cores").val()
         
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
@@ -140,7 +155,7 @@ class Nation(fileType):
         file_colors = base+"/common/countries/"+name+"_color.merge"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
         file_flag = base+"/gfx/flags/"+tag+".tga"
-        file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
+        #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
 
         try:
             os.remove(file_history)
@@ -157,9 +172,9 @@ class Nation(fileType):
         try:
             os.remove(file_loc)
         except: pass
-        try:
-            os.remove(file_cores)
-        except: pass
+        #try:
+        #    os.remove(file_cores)
+        #except: pass
 
         head, tail = os.path.split(file_flag)
         try:
