@@ -29,7 +29,7 @@ class State(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = data.retrieve("namespace").val()
+        namespace = str(data.retrieve("namespace").val())
         full_id = data.retrieve("id").val()
         name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
         parent = data.retrieve("parent").val()[0].val()
@@ -200,6 +200,129 @@ class State(fileType):
         with open(vanilla_file, "w") as file:
             file.write(format(get("state="+str(vanilla_data))))
 
+        try:
+            with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt", "r") as file:
+                template = file.read()
+                if template == "":
+                    raise Exception
+        except:
+            template = """
+#Want to block dynamic transfer? Set the "bdt" flag for either state.
+
+on_actions = {
+
+    on_startup = {
+        effect = {
+            every_state = {
+                set_variable = { prev_owner = OWNER }
+            }
+        }
+    }
+
+    on_state_control_changed = {
+        effect = {
+            FROM.FROM = {
+                if = {
+                    limit = {
+                        NOT = { has_state_flag = bdt }
+                        NOT = {
+                            check_variable = { prev_owner = OWNER } 
+                        }
+                    }
+                    # Event for state ownership change
+                    #<states>
+                    
+                    #</states>
+                    # Update the stored owner
+                    set_variable = { prev_owner = OWNER }
+                }
+            }
+        }
+    }
+
+    on_monthly = {
+        effect = {
+            #<every>
+
+            #/every>
+        }
+    }
+
+    on_monthly = {
+        effect = {
+            if = {
+                limit = {
+                    NOT = {
+                        has_global_flag = compiler_per_states_fired_monthly_tick
+                    }
+                }
+                set_global_flag = {
+                    flag = compiler_per_states_fired_monthly_tick
+                    days = 1
+                    value = 1
+                }
+                #<monthly>
+
+                #/monthly>
+            }
+        }
+    }
+
+}
+"""
+
+        with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt", "w") as file:
+            state_template = f"""<states>
+
+                    if = {{
+                        limit = {{
+                            state = {parent}
+                            {num_id} = {{
+                                NOT = {{ has_state_flag = bdt }}
+                                OWNER = {{
+                                    check_variable = {{ PREV.PREV.prev_owner = THIS }}
+                                }}
+                            }}
+                        }}
+                        {num_id} = {{ transfer_state_to = {parent}.OWNER }}
+                    }}"""
+            
+            monthly_state_template = f"""<monthly>
+
+                {parent} = {{
+                    if = {{
+                        limit = {{ is_demilitarized_zone = yes }}
+                        {num_id} = {{ set_demilitarized_zone = yes }}
+                    }}
+                    else_if = {{
+                        limit = {{ is_demilitarized_zone = no }}
+                        {num_id} = {{ set_demilitarized_zone = no }}
+                    }}
+                }}"""
+            
+            every_country_template = f"""<every>
+            if = {{
+                limit = {{
+                    {parent} = {{ is_core_of = PREV }}
+                    {num_id} = {{ NOT = {{ is_core_of = PREV }} }}
+                }}
+                {num_id} = {{ add_core_of = PREV }}
+            }}
+            if = {{
+                limit = {{
+                    {parent} = {{ is_claimed_by = PREV }}
+                    {num_id} = {{ NOT = {{ is_claimed_by = PREV }} }}
+                }}
+                {num_id} = {{ add_claim_by = PREV }}
+            }}"""
+
+            template = template.replace("<states>", state_template, 1)
+            template = template.replace("<monthly>", monthly_state_template, 1)
+            template = template.replace("<every>", every_country_template, 1)
+
+            file.write(template)
+
+
 
 
 
@@ -211,7 +334,7 @@ class State(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = data.retrieve("namespace").val()
+        namespace = str(data.retrieve("namespace").val())
         full_id = data.retrieve("id").val()
         name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
         parent = data.retrieve("parent").val()[0].val()
@@ -251,7 +374,7 @@ class State(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = data.retrieve("namespace").val()
+        namespace = str(data.retrieve("namespace").val())
         full_id = data.retrieve("id").val()
         name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
         parent = data.retrieve("parent").val()[0].val()
@@ -266,6 +389,10 @@ class State(fileType):
             for path in os.scandir(parent_dir+"/history/states/"):
                 if path.name.split("-",1)[1].strip() == name+".txt":
                     os.remove(path.path)
+        except: pass
+
+        try:
+            os.remove(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt")
         except: pass
 
 
