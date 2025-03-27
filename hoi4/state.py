@@ -121,6 +121,10 @@ class State(fileType):
                     new_data.retrieve("provinces").val().append(baseprov)
                     vanilla_data.retrieve("provinces").val().remove(baseprov)
 
+        for prov in [c for c in provinces]:
+            if int(str(prov).strip()) not in shared_provinces:
+                new_data.retrieve("provinces").val().append(prov)
+
         old_vps = 0
         new_vps = 0
 
