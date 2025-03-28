@@ -187,6 +187,23 @@ class State(fileType):
         new_data.retrieve("manpower").set(max(math.ceil(int(manpower.val())*(state_manpower_ratio*manpower_ratio_muliplier)),0))
         manpower.set(max(math.ceil(int(manpower.val())*(1-(state_manpower_ratio*manpower_ratio_muliplier))),0))
 
+        for b in ["industrial_complex", "arms_factory"]: #Split up factories to new states
+            try:
+                building = vanilla_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
+                r = max(min(state_resource_ratio, 1), 0)
+                amt = round(int(str(building.val()).strip()) * r)
+
+                if amt > 0:
+                    try:
+                        nb = new_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
+                        nb.set(int(str(nb.val()))+amt)
+                    except:
+                        new_data.retrieve("history").val().retrieve("buildings").val().append(get(b+"="+str(amt))[0])
+
+                    building.set(int(str(building.val()))-amt)
+
+            except: pass
+
         for pair in data.retrieve("history").val(): #Append custom history={} block contents
             if pair[0] != "owner":
                 try:
