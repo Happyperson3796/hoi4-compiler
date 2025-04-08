@@ -216,7 +216,7 @@ class State(fileType):
 
         #Write to file
         with open(parent_dir+"/history/states/"+str(num_id)+"-"+name+".txt", "w") as file:
-            file.write("#Parent: "+str(parent)+"\n"+format(new_data_collection))
+            file.write("#Parent: "+str(parent)+"\n"+"#ID: "+str(full_id)+"\n"+format(new_data_collection))
 
         with open(vanilla_file, "w") as file:
             file.write(format(get("state="+str(vanilla_data))))
