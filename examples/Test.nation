@@ -1,0 +1,49 @@
+namespace = NAMESPACE
+tag = TAG
+
+loc = {
+    $ = "Test"
+    $_DEF = "The "
+    $_ADJ = ""
+
+    $_democratic = "Test"
+    $_DEF_democratic = "The "
+
+    $_communism = "Test"
+    $_DEF_communism = "The "
+
+    $_fascism = "Test"
+    $_DEF_fascism = "The "
+
+    $_neutrality = "Test"
+    $_DEF_neutrality = "The "
+}
+
+color = { 1 1 1 }
+
+cores = {  }
+
+history = {
+    capital = CAPITAL
+    
+    set_research_slots = 2
+    set_stability = 0.5
+    set_war_support = 0.5
+    set_convoys = 10
+
+    set_politics = {
+        ruling_party = democratic/communism/fascism/neutrality
+        last_election = "1936.1.1"
+        election_frequency = 48
+        elections_allowed = no
+    }
+
+    set_popularities = {
+        democratic = 25
+        neutrality = 25
+        fascism = 25
+        communism = 25
+    }
+
+    setup_starting_tech = yes
+}
