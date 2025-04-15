@@ -228,7 +228,7 @@ class State(fileType):
                     raise Exception
         except:
             template = """
-#Want to block dynamic transfer? Set the "bdt" flag for either state.
+#Want to block dynamic transfer? Set the "bdto" or "bdt" flag for either state.
 
 on_actions = {
 
@@ -246,6 +246,7 @@ on_actions = {
                 if = {
                     limit = {
                         NOT = { has_state_flag = bdt }
+                        NOT = { has_state_flag = bdto }
                         NOT = {
                             check_variable = { prev_owner = OWNER } 
                         }
@@ -300,6 +301,7 @@ on_actions = {
                             state = {parent}
                             {num_id} = {{
                                 NOT = {{ has_state_flag = bdt }}
+                                NOT = {{ has_state_flag = bdto }}
                                 OWNER = {{
                                     check_variable = {{ PREV.PREV.prev_owner = THIS }}
                                 }}
@@ -312,29 +314,39 @@ on_actions = {
 
                 {parent} = {{
                     if = {{
-                        limit = {{ is_demilitarized_zone = yes }}
-                        {num_id} = {{ set_demilitarized_zone = yes }}
-                    }}
-                    else_if = {{
-                        limit = {{ is_demilitarized_zone = no }}
-                        {num_id} = {{ set_demilitarized_zone = no }}
+                        limit = {{
+                            NOT = {{ has_state_flag = bdt }}
+                        }}
+                        if = {{
+                            limit = {{ is_demilitarized_zone = yes }}
+                            {num_id} = {{ set_demilitarized_zone = yes }}
+                        }}
+                        else_if = {{
+                            limit = {{ is_demilitarized_zone = no }}
+                            {num_id} = {{ set_demilitarized_zone = no }}
+                        }}
                     }}
                 }}"""
             
             every_country_template = f"""<every>
             if = {{
                 limit = {{
-                    {parent} = {{ is_core_of = PREV }}
-                    {num_id} = {{ NOT = {{ is_core_of = PREV }} }}
+                    NOT = {{ has_state_flag = bdt }}
                 }}
-                {num_id} = {{ add_core_of = PREV }}
-            }}
-            if = {{
-                limit = {{
-                    {parent} = {{ is_claimed_by = PREV }}
-                    {num_id} = {{ NOT = {{ is_claimed_by = PREV }} }}
+                if = {{
+                    limit = {{
+                        {parent} = {{ is_core_of = PREV }}
+                        {num_id} = {{ NOT = {{ is_core_of = PREV }} }}
+                    }}
+                    {num_id} = {{ add_core_of = PREV }}
                 }}
-                {num_id} = {{ add_claim_by = PREV }}
+                if = {{
+                    limit = {{
+                        {parent} = {{ is_claimed_by = PREV }}
+                        {num_id} = {{ NOT = {{ is_claimed_by = PREV }} }}
+                    }}
+                    {num_id} = {{ add_claim_by = PREV }}
+                }}
             }}"""
 
             template = template.replace("<states>", state_template, 1)
