@@ -8,6 +8,9 @@ import re
 
 
 def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
+    if (not dir.strip().endswith("states")):
+        return os.scandir(dir)
+
     entries = list(os.scandir(dir))
     entries.sort(key=lambda x: (int(re.match(r'\d+', x.name).group()) if re.match(r'\d+', x.name) else float('inf'), x.name))
     return entries

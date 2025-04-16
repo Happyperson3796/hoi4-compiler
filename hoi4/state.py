@@ -4,6 +4,7 @@ import os
 from .filetypes import fileType
 from .globals import vanilla_path
 import math
+import chardet
 
 def get_top_state_id(parent_dir):
     top_num = 0
@@ -392,7 +393,10 @@ on_actions = {
                                 write = True
                                 
                         if write:
-                            with open(filepath.path, "w", encoding="utf-8-sig") as file:
+                            bin = open(filepath.path, "rb")
+                            encoding = chardet.detect(bin.read())["encoding"] #TODO: probably horribly inefficient
+                            bin.close()
+                            with open(filepath.path, "w", encoding=encoding) as file:
                                 file.write(text)
                     except: pass
 
