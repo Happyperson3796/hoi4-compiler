@@ -229,7 +229,7 @@ class State(fileType):
                     raise Exception
         except:
             template = """
-#Want to block dynamic transfer? Set the "bdto" or "bdt" flag for either state.
+#Want to block dynamic transfer? Set the "bdt" flag for either state.
 
 on_actions = {
 
@@ -247,7 +247,6 @@ on_actions = {
                 if = {
                     limit = {
                         NOT = { has_state_flag = bdt }
-                        NOT = { has_state_flag = bdto }
                         NOT = {
                             check_variable = { prev_owner = OWNER } 
                         }
@@ -302,7 +301,6 @@ on_actions = {
                             state = {parent}
                             {num_id} = {{
                                 NOT = {{ has_state_flag = bdt }}
-                                NOT = {{ has_state_flag = bdto }}
                                 OWNER = {{
                                     check_variable = {{ PREV.PREV.prev_owner = THIS }}
                                 }}
@@ -317,6 +315,7 @@ on_actions = {
                     if = {{
                         limit = {{
                             NOT = {{ has_state_flag = bdt }}
+                            {num_id} = {{ NOT = {{ has_state_flag = bdt }} }}
                         }}
                         if = {{
                             limit = {{ is_demilitarized_zone = yes }}
@@ -333,6 +332,7 @@ on_actions = {
             if = {{
                 limit = {{
                     NOT = {{ has_state_flag = bdt }}
+                    {num_id} = {{ NOT = {{ has_state_flag = bdt }} }}
                 }}
                 if = {{
                     limit = {{
