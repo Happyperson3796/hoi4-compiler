@@ -95,8 +95,14 @@ class Collection(list):
     def search(self, search, debug=False):
         return self.get(search, debug, False)
     
-    def retrieve(self, retrieve, debug=False):
-        return self.get(retrieve, debug, True)
+    def retrieve(self, retrieve, default=None):
+        try:
+            return self.get(retrieve, False, True)
+        except Exception as e:
+            if default != None:
+                return default
+            else:
+                raise e
     
     def merge(self, collection):
         for override in collection:
