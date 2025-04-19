@@ -94,7 +94,7 @@ class State(fileType):
         new_data = new_data_collection[0][-1].val()
 
         new_data.append(get("id="+str(num_id))[0])
-        new_data.append(get("name=\""+name+"\"")[0])
+        new_data.append(get("name=\"STATE_"+str(num_id)+"\"")[0])
         new_data.append(get("manpower=0")[0])
         new_data.append(get("state_category="+state_category)[0])
         new_data.append(get("resources={"+format(data.retrieve("resources").val())+"}")[0])
@@ -221,6 +221,14 @@ class State(fileType):
 
         with open(vanilla_file, "w") as file:
             file.write(format(get("state="+str(vanilla_data))))
+
+        locfile = parent_dir+"/localisation/"+namespace+"_generated_state_names_loc_l_english.yml"
+        if not os.path.exists(locfile):
+            with open(locfile, "w") as file:
+                file.write("l_english: ")
+        with open(locfile, "a") as file:
+            file.write("\n  STATE_"+str(num_id)+": \""+name+"\"")
+            
 
         try:
             with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt", "r") as file:
@@ -430,6 +438,10 @@ on_actions = {
 
         try:
             os.remove(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt")
+        except: pass
+
+        try:
+            os.remove(parent_dir+"/localisation/"+namespace+"_generated_state_names_loc_l_english.yml")
         except: pass
 
 
