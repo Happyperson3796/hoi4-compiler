@@ -383,7 +383,7 @@ on_actions = {
             for filepath in os.scandir(dir):
                 if filepath.is_dir():
                     scan_subdirs(filepath.path)
-                elif filepath.path.endswith(".txt"):
+                elif filepath.path.endswith(".txt") or filepath.path.endswith(".yml"):
                     try:
                         write = False
                         with open(filepath.path, "r", encoding="utf-8-sig") as file:
