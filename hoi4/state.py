@@ -224,10 +224,10 @@ class State(fileType):
 
         locfile = parent_dir+"/localisation/"+namespace+"_generated_state_names_loc_l_english.yml"
         if not os.path.exists(locfile):
-            with open(locfile, "w") as file:
+            with open(locfile, "w", encoding="utf-8-sig") as file:
                 file.write("l_english: ")
-        with open(locfile, "a") as file:
-            file.write("\n  STATE_"+str(num_id)+": \""+name+"\"")
+        with open(locfile, "a", encoding="utf-8-sig") as file:
+            file.write("\n STATE_"+str(num_id)+": \""+name+"\"")
             
 
         try:
