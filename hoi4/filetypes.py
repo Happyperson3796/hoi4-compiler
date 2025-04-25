@@ -1,5 +1,5 @@
 from .filetype import fileType
-from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology
+from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable
 import os
 
 def clean_suffix(path):
@@ -16,6 +16,8 @@ def get(path: str):
         return nation.Nation(path)
     elif path.endswith(".state"):
         return state.State(path)
+    elif path.endswith(".formable"):
+        return formable.Formable(path)
     elif path.endswith(".character"):
         return character.Character(path)
     elif path.endswith(".subideology"):

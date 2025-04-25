@@ -5,7 +5,7 @@ from .filetypes import fileType
 from . import globals
 import shutil
 
-class Subideology(fileType):
+class Character(fileType):
     def run(self):
         head, tail = os.path.split(self.path)
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
