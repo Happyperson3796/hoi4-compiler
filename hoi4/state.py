@@ -101,6 +101,16 @@ class State(fileType):
         new_data.append(get("history={owner="+owner+"}")[0])
         new_data.append(get("provinces={}")[0])
         new_data.append(get("local_supplies="+local_supplies)[0])
+        
+        try:
+            impassable = data.retrieve("impassable").val()
+            new_data.append(get("impassable="+impassable)[0])
+        except:
+            try:
+                impassable = vanilla_data.retrieve("impassable").val()
+                new_data.append(get("impassable="+impassable)[0])
+            except: pass
+
                 
                 
         try: #Set buildings & infrastructure... this is useless, cut out and replace with text parsing later
