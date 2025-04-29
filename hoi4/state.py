@@ -276,6 +276,7 @@ on_actions = {
                     # Update the stored owner
                     set_variable = { prev_owner = OWNER }
                 }
+
             }
         }
     }
@@ -327,6 +328,19 @@ on_actions = {
                         {num_id} = {{ transfer_state_to = {parent}.OWNER }}
                     }}"""
             
+            contested_state_template = f"""<contested>
+
+                    if = {{
+                        limit = {{
+                            state = {parent}
+                            {num_id} = {{
+                                check_variable = {{ has_contested_owner = no }}
+                                NOT = {{ has_state_flag = bdt }}
+                            }}
+                        }}
+                        {num_id} = {{ transfer_state_to = {parent}.OWNER }}
+                    }}"""
+            
             monthly_state_template = f"""<monthly>
 
                 {parent} = {{
@@ -369,6 +383,7 @@ on_actions = {
             }}"""
 
             template = template.replace("<states>", state_template, 1)
+            template = template.replace("<contested>", contested_state_template, 1)
             template = template.replace("<monthly>", monthly_state_template, 1)
             template = template.replace("<every>", every_country_template, 1)
 
