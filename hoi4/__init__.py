@@ -1,4 +1,4 @@
-#HASH = b4b4eda592a53dae9e577925f862706c84bf8af12372b40c573092cf74e4c307
+#HASH = c4b379d00b9dd6c0ad898b8cc84aa87b56d7d906bb678c6a1daa0168c05b0f1d
 import hashlib
 import os
 import re
@@ -28,7 +28,7 @@ text = "#HASH = "+hash+"\n"+text
 with open(__file__, "w") as file:
     file.write(text)
 
-def get_remote_variable_value(repo, file_path, variable_name, token=None):
+def get_remote_variable_value(repo, file_path, token=None):
     url = f'https://raw.githubusercontent.com/{repo}/{file_path}'
     headers = {'Authorization': f'token {token}'} if token else {}
     response = requests.get(url, headers=headers)
@@ -39,13 +39,12 @@ def get_remote_variable_value(repo, file_path, variable_name, token=None):
     return r.split("=")[-1].strip()
 
 # === Remote repo config ===
-variable_name = "#HASH"
 repo = "Happyperson3796/hoi4-compiler"
 file_path = "refs/heads/main/hoi4/__init__.py"
 token = "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"
 
 # === Compare ===
-remote_value = get_remote_variable_value(repo, file_path, variable_name, token)
+remote_value = get_remote_variable_value(repo, file_path, token)
 
 print(f"Local Version:  {hash}")
 print(f"Remote Version: {remote_value}")
