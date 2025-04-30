@@ -1,4 +1,4 @@
-#HASH = 6cb0ade32ce704365356ab902bea021fd17044aa4ad89b70061f1dafde133ff2
+#HASH = 3a21a3fcae766a41d00af3989fe73327a0c2570c1858bcbe32a3e0fd33ce870e
 import hashlib
 import os
 import requests
@@ -43,11 +43,11 @@ token = "github_pat_11ASP6H2Q06tshTi6vofRV_i1mRdRXIBp1VIOJ5pCyqDzZW1KQhkvyRd6dF4
 
 try:
     remote_value = get_remote_variable_value(repo, file_path, token)
+    if hash != remote_value:
+        if not os.path.exists(package_dir+"/~nochecks"):
+            print("\nOutdated or Modified Version! Run < git pull > in your install directory")
+            print("Local:  "+hash+"\nRemote: "+remote_value+"\n")
+            print("If this is intentional, create a file called ~nochecks in "+package_dir+"\\\n")
 except Exception as e:
     print(e)
     print("\nFailed to check version! Please consider updating https://github.com/"+repo+"\n")
-
-if hash != remote_value:
-    if not os.path.exists(package_dir+"/~nochecks"):
-        print("\nOutdated or Modified Version! Run < git pull > in your install directory")
-        print("Local:  "+hash+"\nRemote: "+remote_value+"\n")
