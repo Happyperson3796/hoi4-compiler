@@ -1,4 +1,4 @@
-#HASH = 5c610abd67a550a1afec902fdeefeb9da48ce80adeb20f30b5ed8b35926a11a7
+#HASH = b4b4eda592a53dae9e577925f862706c84bf8af12372b40c573092cf74e4c307
 import hashlib
 import os
 import re
@@ -28,30 +28,27 @@ text = "#HASH = "+hash+"\n"+text
 with open(__file__, "w") as file:
     file.write(text)
 
-def extract_variable_value(text, variable_name):
-    pattern = rf'{variable_name}\s*=\s*["\']([^"\']+)["\']'
-    match = re.search(pattern, text)
-    return match.group(1) if match else None
-
 def get_remote_variable_value(repo, file_path, variable_name, token=None):
     url = f'https://raw.githubusercontent.com/{repo}/{file_path}'
     headers = {'Authorization': f'token {token}'} if token else {}
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
         raise Exception(f"Failed to fetch remote file: {response.status_code} {response.text}")
-    return extract_variable_value(response.text, variable_name)
+    r = response.text.splitlines()[0]
+    if not r.startswith("#HASH"): raise Exception(f"Failed to fetch remote file hash!")
+    return r.split("=")[-1].strip()
 
 # === Remote repo config ===
 variable_name = "#HASH"
 repo = "Happyperson3796/hoi4-compiler"
-file_path = "refs/heads/main/hoi4/hoi4.py"
+file_path = "refs/heads/main/hoi4/__init__.py"
 token = "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"
 
 # === Compare ===
 remote_value = get_remote_variable_value(repo, file_path, variable_name, token)
 
-print(f"Local {variable_name}:  {hash}")
-print(f"Remote {variable_name}: {remote_value}")
+print(f"Local Version:  {hash}")
+print(f"Remote Version: {remote_value}")
 
 if hash == remote_value:
     print("! Versions match.")
