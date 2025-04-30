@@ -189,6 +189,13 @@ class State(fileType):
             if pair[0] != "victory_points" and pair[0] != "owner" and pair[0] != "buildings":
                 new_data.retrieve("history").val().append(get(format(pair))[0])
 
+        n = -1 #Move dynamic modifiers to top so forts etc. don't bug out
+        for x in new_data.retrieve("history").val():
+            n += 1
+            if x[0] == "add_dynamic_modifier":
+                new_data.retrieve("history").val().insert(1, new_data.retrieve("history").val().pop(n))
+                n -= 1
+
         manpower_ratio_muliplier = 1
         try:
             manpower_ratio_muliplier = float(data.retrieve("manpower_ratio_mult").val())
