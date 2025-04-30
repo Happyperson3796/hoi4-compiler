@@ -1,7 +1,6 @@
-#HASH = 6f51aa6faea036508b8d98e400adbbe68c926c27782d07f3cb20bbc9cc2f9135
+#HASH = 6cb0ade32ce704365356ab902bea021fd17044aa4ad89b70061f1dafde133ff2
 import hashlib
 import os
-import re
 import requests
 
 def hash_directory(path):
@@ -33,23 +32,22 @@ def get_remote_variable_value(repo, file_path, token=None):
     headers = {'Cache-Control': 'no-cache', 'Authorization': f'token {token}'} if token else {}
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch remote file: {response.status_code} {response.text}")
+        raise Exception(f"Failed to fetch remote file: {response.status_code}")
     r = response.text.splitlines()[0]
     if not r.startswith("#HASH"): raise Exception(f"Failed to fetch remote file hash!")
     return r.split("=")[-1].strip()
 
-# === Remote repo config ===
 repo = "Happyperson3796/hoi4-compiler"
 file_path = "refs/heads/main/hoi4/__init__.py"
 token = "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"
 
-# === Compare ===
-remote_value = get_remote_variable_value(repo, file_path, token)
+try:
+    remote_value = get_remote_variable_value(repo, file_path, token)
+except Exception as e:
+    print(e)
+    print("\nFailed to check version! Please consider updating https://github.com/"+repo+"\n")
 
-print(f"Local Version:  {hash}")
-print(f"Remote Version: {remote_value}")
-
-if hash == remote_value:
-    print("! Versions match.")
-else:
-    print("X Versions do NOT match.")
+if hash != remote_value:
+    if not os.path.exists(package_dir+"/~nochecks"):
+        print("\nOutdated or Modified Version! Run < git pull > in your install directory")
+        print("Local:  "+hash+"\nRemote: "+remote_value+"\n")
