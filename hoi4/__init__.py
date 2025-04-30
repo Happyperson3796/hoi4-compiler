@@ -1,4 +1,4 @@
-#HASH = c4b379d00b9dd6c0ad898b8cc84aa87b56d7d906bb678c6a1daa0168c05b0f1d
+#HASH = 6f51aa6faea036508b8d98e400adbbe68c926c27782d07f3cb20bbc9cc2f9135
 import hashlib
 import os
 import re
@@ -30,7 +30,7 @@ with open(__file__, "w") as file:
 
 def get_remote_variable_value(repo, file_path, token=None):
     url = f'https://raw.githubusercontent.com/{repo}/{file_path}'
-    headers = {'Authorization': f'token {token}'} if token else {}
+    headers = {'Cache-Control': 'no-cache', 'Authorization': f'token {token}'} if token else {}
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
         raise Exception(f"Failed to fetch remote file: {response.status_code} {response.text}")
