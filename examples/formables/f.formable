@@ -1,24 +1,23 @@
-{
-    "id": "greater_indochina",
-    "Name": "Greater Indochina",
-    "Name_Adj": "Indochinese",
-    "Name_Def": "Greater Indochina",
-    "Name_Extras": {},
-    "Color": "rgb(85 70 153)",
-    "Allowed": [
-        "VIN", "CAM", "LAO", "SIA", "BRM", "YUN"
-    ],
-    "States": [
-        670, 286, 671, 741, 289, 724, 868, 869
-    ],
-    "Extras": [
-        288, 640
-    ],
-    "Claims": [
-        325, 747
-    ],
-    "GFX": "GFX_decision_cat_generic_hre",
-    "Exclusive": false,
-    "on_formed": "",
-    "extra_reqs": ""
+greater_indochina = {
+    name = "Greater Indochina"
+    name_adj = "Indochinese"
+    name_def = "Greater Indochina"
+    name_extras = {}
+    color = { 85 70 153 }
+    allowed = {
+        VIN CAM LAO SIA BRM YUN
+    }
+    states = {
+        670 286 671 741 289 724 868 869
+    }
+    extras = {
+        288 640
+    }
+    claims = {
+        325 747
+    }
+    gfx = GFX_decision_cat_generic_hre
+    exclusive = no
+    on_formed = ""
+    extra_reqs = ""
 }
