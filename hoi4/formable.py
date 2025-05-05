@@ -1,5 +1,5 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection, reformat
+from .pdxscript import get, format, reformat, Pair, Collection
 import os
 from .filetypes import fileType
 from . import globals
@@ -8,36 +8,33 @@ import json
 
 class Formable(fileType):
     def define(self):
-        head, tail = os.path.split(self.path)
-        parent_dir = os.path.abspath(os.path.join(head, os.pardir))
-
         with open(self.path, "r") as file:
             data = get(file.read())[0]
 
         id = data[0]
         data = data[-1].val()
 
+        return id, data
+
+    def run(self):
+        head, tail = os.path.split(self.path)
+        parent_dir = os.path.abspath(os.path.join(head, os.pardir))
+
+        id, data = self.define()
+
         name = data.extract("name")
         name_adj = data.extract("name_adj")
         name_def = data.extract("name_def")
-        name_extras = data.extract("name_extras", Collection()).convert()
-        color = data.extract("color").convert()
-        allowed = data.extract("allowed").convert()
-        states = data.extract("states").convert()
-        extras = data.extract("extras", Collection()).convert()
-        claims = data.extract("claims", Collection()).convert()
+        name_extras = data.extract("name_extras", Collection())
+        color = data.extract("color")
+        allowed = data.extract("allowed")
+        states = data.extract("states")
+        extras = data.extract("extras", Collection())
+        claims = data.extract("claims", Collection())
         gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
         exclusive = data.extract("exclusive", "no")
         on_formed = data.extract("on_formed", "")
         extra_reqs = data.extract("extra_reqs", "")
-
-        return head, tail, parent_dir, id, name, name_adj, name_def, name_extras, color, allowed, states, extras, claims, gfx, exclusive, on_formed, extra_reqs
-
-    def run(self):
-        head, tail, parent_dir, id, name, name_adj, name_def, name_extras, color, allowed, states, extras, claims, gfx, exclusive, on_formed, extra_reqs = self.define()
-
-        #print(id, name, name_adj, name_def, name_extras, color, allowed, states, extras, claims, gfx, exclusive, on_formed, extra_reqs)        
-        #print(name)
 
         #os.makedirs(parent_dir+"/localisation/", exist_ok=True)
         #loc_file = parent_dir+"/localisation/"+namespace+"_dynamic_subideology_l_english.yml"
@@ -60,33 +57,18 @@ class Formable(fileType):
 
 class JsonFormable(Formable):
     def define(self):
-        head, tail = os.path.split(self.path)
-        parent_dir = os.path.abspath(os.path.join(head, os.pardir))
-
         file = open(self.path, "r")
         data = json.loads(file.read())
         file.close()
 
         temp = {}
-        for k in data.keys():
+        for k in data.keys(): #Not case sensitive
             temp[k.lower()] = data[k]
         data = temp
 
-        id = data["id"]
-        name = data["name"]
-        name_adj = data["name_adj"]
-        name_def = data["name_def"]
-        name_extras = data["name_extras"]
-        color = data["color"].removeprefix("rgb(").removesuffix(")").replace(","," ").replace("  ", " ").split(" ")
-        allowed = data["allowed"]
-        states = data["states"]
-        extras = data["extras"]
-        claims = data["claims"]
-        gfx = data["gfx"]
-        exclusive = data["exclusive"]
-        on_formed = data["on_formed"]
-        extra_reqs = data["extra_reqs"]
+        data = reformat(data)
 
-        print(format(reformat(data)))
+        id = data.extract("id")
+        data.remove(data.select("id"))
 
-        return head, tail, parent_dir, id, name, name_adj, name_def, name_extras, color, allowed, states, extras, claims, gfx, exclusive, on_formed, extra_reqs
+        return id, data
