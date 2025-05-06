@@ -29,7 +29,7 @@ class Formable(fileType):
         name = data.extract("name").replace("\"", "")
         name_adj = data.extract("name_adj").replace("\"", "")
         name_def = data.extract("name_def").replace("\"", "")
-        name_extras = data.extract("name_extras", Collection())
+        extra_loc = data.extract("extra_loc", Collection())
         color = data.extract("color")
         allowed = data.extract("allowed")
         states = data.extract("states")
@@ -43,6 +43,46 @@ class Formable(fileType):
         hist_player = data.extract("hist_player", "yes")
         ai = data.extract("ai", "yes")
         hist_ai = data.extract("hist_ai", "no")
+
+        conversion_list = [] #Add any custom states
+        if os.path.exists(parent_dir+"/history/states/"):
+            for path in os.scandir(parent_dir+"/history/states/"):
+                with open(path.path, "r") as file:
+                    text = file.readlines()
+
+                if text[0].startswith("#Parent:") and text[1].startswith("#ID:"):
+                    parent = text[0].removeprefix("#Parent:").strip()
+                    state = path.name.split("-")[0].strip()
+
+                    state_id = "$"+text[1].removeprefix("#ID:").strip()
+
+                    conversion_list.append((parent, state, state_id))
+
+        def convert_states(c):
+            for state in [x for x in c]:
+                if not state.startswith("-"):
+                    for x, y, z in conversion_list:
+                        if x == state:
+                            c.append(z)
+
+        convert_states(states)
+        convert_states(extras)
+        convert_states(claims)
+
+        def clean_states(c): #Remove any states marked with -
+            for state in [x for x in c]:
+                if state.startswith("-"):
+                    c.remove(state)
+                    state = state.removeprefix("-")
+                    for y in [x for x in c]:
+                        if y == state:
+                            c.remove(y)
+
+
+        clean_states(states)
+        clean_states(extras)
+        clean_states(claims)
+
 
         os.makedirs(parent_dir+"/localisation/", exist_ok=True)
         loc_file = parent_dir+"/localisation/"+namespace+"_dynamic_formable_loc_l_english.yml"
@@ -71,6 +111,11 @@ class Formable(fileType):
   formable_{id}_core_desc:0 "Cores [FROM.GetName] once over 50% compliance"
   form_exclusive_nation_tier_{tier}:0 "Has not formed a Tier {tier} Nation"
 """
+            
+            for x in extra_loc:
+                k = x[0].replace("$", id+"_formable_cosmetic")
+                v = "\""+x[-1].removeprefix("\"").removesuffix("\"")+"\""
+                template += "  "+k+":0 "+v+"\n"
 
             if exclusive == "yes":
                 template += f"  formable_form_{id}_desc:0 \"§RTier {tier} Formable§!\"\n"
