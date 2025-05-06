@@ -1,16 +1,16 @@
-formable_albania_egypt_category = {
+formable_example_category = {
     icon = generic_formable_nations
     priority = 0
     picture = GFX_decision_cat_generic_hre
     allowed = {}
 }
-formable_albania_egypt_category = {
+formable_angevin_category = {
     icon = generic_formable_nations
     priority = 0
     picture = GFX_decision_cat_generic_european_union
     allowed = {}
 }
-formable_albania_egypt_category = {
+formable_greater_indochina_category = {
     icon = generic_formable_nations
     priority = 0
     picture = GFX_decision_cat_generic_hre

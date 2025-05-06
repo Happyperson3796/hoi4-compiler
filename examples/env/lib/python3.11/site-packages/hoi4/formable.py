@@ -36,7 +36,7 @@ class Formable(fileType):
         extras = data.extract("extras", Collection())
         claims = data.extract("claims", Collection())
         gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
-        tier = int(data.extract("tier", "0"))
+        tier = data.extract("tier", "0")
         exclusive = data.extract("exclusive", "yes")
         on_formed = data.extract("on_formed", Collection())
         extra_reqs = data.extract("extra_reqs", Collection())
@@ -49,7 +49,13 @@ class Formable(fileType):
 
         if not os.path.exists(loc_file):
             with open(loc_file, "w", encoding="utf-8-sig") as file:
-                file.write("l_english:")
+                file.write("""l_english:
+  generic_dynamic_formable_events.1.t:0 "[ROOT.GetNameDefCap]"
+  generic_dynamic_formable_events.1.desc:0 "[ROOT.GetOldNameDefCap] has formed [ROOT.GetNameDef]"
+  generic_dynamic_formable_events.1.a:0 "Ok"
+  controls_highlighted_states:0 "Controls all highlighted states"
+  core_highlighted_states:0 "Allows integration for all highlighted states"
+  formable_allow_integration:0 "Allows Integration of §H[PREV.GetName]§!"\n\n""")
 
         with open(loc_file, "a", encoding="utf-8-sig") as file:
             template = f"""
@@ -63,10 +69,11 @@ class Formable(fileType):
   {id}_formable_cosmetic_DEF:0 "{name_def}"
   formable_{id}_core:0 "Integrate [FROM.GetName]"
   formable_{id}_core_desc:0 "Cores [FROM.GetName] once over 50% compliance"
+  form_exclusive_nation_tier_{tier}:0 "Has not formed a Tier {tier} Nation"
 """
 
             if exclusive == "yes":
-                template += f"  formable_form_{id}_desc:0 \"This is an exclusive formable! You will not be able to form any others after this.\"\n"
+                template += f"  formable_form_{id}_desc:0 \"§RTier {tier} Formable§!\"\n"
 
             file.write(template)
 
@@ -87,7 +94,7 @@ class Formable(fileType):
         categories_file = parent_dir+"/common/decisions/categories/"+namespace+"_formable_categories.txt"
 
         with open(categories_file, "a") as file:
-            template = f"""formable_albania_egypt_category = {{
+            template = f"""formable_{id}_category = {{
     icon = generic_formable_nations
     priority = 0
     picture = {gfx}
@@ -106,7 +113,7 @@ class Formable(fileType):
             if ai == "yes": ai_prio = 200
             else: ai_prio = 0
 
-            hist_ai_can_form = """
+            hist_ai_can_form = f"""
             modifier = {{
                 factor = 0
                 is_historical_focus_on = yes
@@ -116,6 +123,20 @@ class Formable(fileType):
             hist_player_can_form = ""
             if hist_player == "no":
                 hist_player_can_form = "is_historical_focus_on = no"
+
+            exclusive_can_form = ""
+            exclusive_no_tier_flag = ""
+            if exclusive == "yes":
+                exclusive_can_form = f"""custom_trigger_tooltip = {{
+                tooltip = form_exclusive_nation_tier_{tier}
+                hidden_trigger = {{
+                    NOT = {{ has_country_flag = form_exclusive_nation_tier_{tier} }}
+                }}
+            }}
+"""
+                exclusive_no_tier_flag = f"NOT = {{ has_country_flag = form_exclusive_nation_tier_{tier} }}"
+
+
 
             text = f"""
 # $ID
@@ -138,7 +159,7 @@ formable_$ID_category = {{
             OR = {{
                 original_tag = $TAGS
             }}
-            NOT = {{ has_country_flag = form_exclusive_nation_flag }}
+            {exclusive_no_tier_flag}
             NOT = {{ has_global_flag = form_$ID_flag }}
         }}
 
@@ -172,13 +193,7 @@ formable_$ID_category = {{
         }}
 
         available = {{
-            custom_trigger_tooltip = {{
-                tooltip = form_exclusive_nation_flag
-                hidden_trigger = {{
-                    NOT = {{ has_country_flag = form_exclusive_nation_flag }}
-                }}
-            }}
-
+            {exclusive_can_form}
             {hist_player_can_form}
             $REQS
             controls_state = $CONTROLS_STATES
@@ -189,7 +204,7 @@ formable_$ID_category = {{
             OR = {{
                 original_tag = $TAGS
             }}
-            NOT = {{ has_country_flag = form_exclusive_nation_flag }}
+            {exclusive_no_tier_flag}
             NOT = {{ has_global_flag = form_$ID_flag }}
         }}
 
@@ -309,7 +324,7 @@ formable_$ID_category = {{
 
             t_exclusive = ""
             if exclusive == "yes":
-                t_exclusive = "set_country_flag = form_exclusive_nation_flag"
+                t_exclusive = "set_country_flag = form_exclusive_nation_tier_"+tier
             text = text.replace("$EXCLUSIVE", t_exclusive)
 
             rgb = color
@@ -378,7 +393,7 @@ news_event = {
         namespace = data.extract("namespace")
 
         try:
-            os.remove(parent_dir+"/localisation/"+namespace+"_dynamic_formable_loc_"+"_l_english.yml")
+            os.remove(parent_dir+"/localisation/"+namespace+"_dynamic_formable_loc_l_english.yml")
         except: pass
 
         try:

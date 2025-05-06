@@ -25,4 +25,5 @@ greater_indochina = {
     extra_reqs = {
         test = no
     }
+    tier = 2
 }

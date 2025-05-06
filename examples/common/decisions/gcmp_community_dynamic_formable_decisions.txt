@@ -19,7 +19,7 @@ formable_example_category = {
             OR = {
                 original_tag = USA
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_country_flag = form_exclusive_nation_tier_3 }
             NOT = { has_global_flag = form_example_flag }
         }
 
@@ -56,9 +56,9 @@ formable_example_category = {
 
         available = {
             custom_trigger_tooltip = {
-                tooltip = form_exclusive_nation_flag
+                tooltip = form_exclusive_nation_tier_3
                 hidden_trigger = {
-                    NOT = { has_country_flag = form_exclusive_nation_flag }
+                    NOT = { has_country_flag = form_exclusive_nation_tier_3 }
                 }
             }
 
@@ -72,7 +72,7 @@ formable_example_category = {
             OR = {
                 original_tag = USA
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_country_flag = form_exclusive_nation_tier_3 }
             NOT = { has_global_flag = form_example_flag }
         }
 
@@ -104,7 +104,7 @@ formable_example_category = {
                 set_global_flag = form_example_flag
                 set_country_flag = form_example_flag
                 
-                set_country_flag = form_exclusive_nation_flag
+                set_country_flag = form_exclusive_nation_tier_3
             }
         }
 
@@ -208,7 +208,7 @@ formable_angevin_category = {
                 original_tag = ENG
                 original_tag = FRA
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_country_flag = form_exclusive_nation_tier_0 }
             NOT = { has_global_flag = form_angevin_flag }
         }
 
@@ -302,9 +302,9 @@ formable_angevin_category = {
 
         available = {
             custom_trigger_tooltip = {
-                tooltip = form_exclusive_nation_flag
+                tooltip = form_exclusive_nation_tier_0
                 hidden_trigger = {
-                    NOT = { has_country_flag = form_exclusive_nation_flag }
+                    NOT = { has_country_flag = form_exclusive_nation_tier_0 }
                 }
             }
 
@@ -336,7 +336,7 @@ formable_angevin_category = {
                 original_tag = ENG
                 original_tag = FRA
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_country_flag = form_exclusive_nation_tier_0 }
             NOT = { has_global_flag = form_angevin_flag }
         }
 
@@ -413,16 +413,16 @@ formable_angevin_category = {
                 set_global_flag = form_angevin_flag
                 set_country_flag = form_angevin_flag
                 
-                set_country_flag = form_exclusive_nation_flag
+                set_country_flag = form_exclusive_nation_tier_0
             }
         }
 
         ai_will_do = {
             factor = 200
-            modifier = {{
+            modifier = {
                 factor = 0
                 is_historical_focus_on = yes
-            }}
+            }
         }
     }
 
@@ -530,7 +530,7 @@ formable_greater_indochina_category = {
                 original_tag = BRM
                 original_tag = YUN
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            
             NOT = { has_global_flag = form_greater_indochina_flag }
         }
 
@@ -587,13 +587,7 @@ formable_greater_indochina_category = {
         }
 
         available = {
-            custom_trigger_tooltip = {
-                tooltip = form_exclusive_nation_flag
-                hidden_trigger = {
-                    NOT = { has_country_flag = form_exclusive_nation_flag }
-                }
-            }
-
+            
             
             test = no
             
@@ -617,7 +611,7 @@ formable_greater_indochina_category = {
                 original_tag = BRM
                 original_tag = YUN
             }
-            NOT = { has_country_flag = form_exclusive_nation_flag }
+            
             NOT = { has_global_flag = form_greater_indochina_flag }
         }
 
@@ -672,10 +666,10 @@ formable_greater_indochina_category = {
 
         ai_will_do = {
             factor = 200
-            modifier = {{
+            modifier = {
                 factor = 0
                 is_historical_focus_on = yes
-            }}
+            }
         }
     }
 
