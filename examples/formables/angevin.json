@@ -1,0 +1,27 @@
+{
+    "namespace": "gcmp_community",
+    "id": "angevin",
+    "Name": "Angevin Empire",
+    "Name_Adj": "Angevin",
+    "Name_Def": "the Angevin Empire",
+    "Name_Extras": {
+        "angevin_formable_cosmetic_democratic": "Angevin Republic",
+        "angevin_formable_cosmetic_democratic_DEF": "The Angevin Republic",
+        "angevin_formable_cosmetic_communism": "Angevin Union",
+        "angevin_formable_cosmetic_communism_DEF": "the Union of Angeva"
+    },
+    "Color": "rgb(67 143 195)",
+    "Allowed": [
+        "ENG", "FRA"
+    ],
+    "States": [
+        123, 125, 126, 127, 128, 129, 130, 131, 132, 338, 931, 932, 14, 30, 15, 23, 19
+    ],
+    "Extras": [
+        122, 133, 121, 120, 136, 933, 113, 23, 33, 19, 806, 31, 25
+    ],
+    "GFX": "GFX_decision_cat_generic_european_union",
+    "Exclusive": true,
+    "on_formed": "",
+    "extra_reqs": ""
+}

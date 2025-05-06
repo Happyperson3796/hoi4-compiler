@@ -1,4 +1,5 @@
 greater_indochina = {
+    namespace = gcmp_community
     name = "Greater Indochina"
     name_adj = "Indochinese"
     name_def = "Greater Indochina"
