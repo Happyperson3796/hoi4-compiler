@@ -1,0 +1,571 @@
+
+# angevin
+formable_angevin_category = {
+    formable_view_angevin = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = ENG
+                original_tag = FRA
+            }
+        }
+
+        available = {
+            always = no
+        }
+
+        visible = {
+            OR = {
+                original_tag = ENG
+                original_tag = FRA
+            }
+            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_global_flag = form_angevin_flag }
+        }
+
+        highlight_states = {
+            highlight_state_targets = {
+                state = 122
+                state = 133
+                state = 121
+                state = 120
+                state = 136
+                state = 933
+                state = 113
+                state = 23
+                state = 33
+                state = 19
+                state = 806
+                state = 31
+                state = 25
+                state = 123
+                state = 125
+                state = 126
+                state = 127
+                state = 128
+                state = 129
+                state = 130
+                state = 131
+                state = 132
+                state = 338
+                state = 931
+                state = 932
+                state = 14
+                state = 30
+                state = 15
+                state = 23
+                state = 19
+            }
+            highlight_color_while_active = 0
+            highlight_color_before_active = 0
+        }
+
+        complete_effect = {
+            effect_tooltip = {
+                122 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                133 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                121 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                120 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                136 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                933 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                113 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                23 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                33 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                19 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                806 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                31 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                25 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                123 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                125 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                126 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                127 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                128 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                129 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                130 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                131 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                132 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                338 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                931 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                932 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                14 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                30 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                15 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                23 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                19 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+            }
+        }
+
+        ai_will_do = {
+            factor = 0
+        }
+    }
+
+    formable_form_angevin = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = ENG
+                original_tag = FRA
+            }
+        }
+
+        available = {
+            custom_trigger_tooltip = {
+                tooltip = form_exclusive_nation_flag
+                hidden_trigger = {
+                    NOT = { has_country_flag = form_exclusive_nation_flag }
+                }
+            }
+
+            #OR = { is_subject = no  is_ai = no }
+            req = yes
+            
+            controls_state = 123
+            controls_state = 125
+            controls_state = 126
+            controls_state = 127
+            controls_state = 128
+            controls_state = 129
+            controls_state = 130
+            controls_state = 131
+            controls_state = 132
+            controls_state = 338
+            controls_state = 931
+            controls_state = 932
+            controls_state = 14
+            controls_state = 30
+            controls_state = 15
+            controls_state = 23
+            controls_state = 19
+
+        }
+
+        visible = {
+            OR = {
+                original_tag = ENG
+                original_tag = FRA
+            }
+            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_global_flag = form_angevin_flag }
+        }
+
+        highlight_states = {
+            highlight_state_targets = {
+                state = 123
+                state = 125
+                state = 126
+                state = 127
+                state = 128
+                state = 129
+                state = 130
+                state = 131
+                state = 132
+                state = 338
+                state = 931
+                state = 932
+                state = 14
+                state = 30
+                state = 15
+                state = 23
+                state = 19
+            }
+            highlight_color_while_active = 1
+            highlight_color_before_active = 1
+        }
+
+        complete_effect = {
+            add_stability = 0.5
+            
+            set_cosmetic_tag = angevin_formable_cosmetic
+            
+            custom_effect_tooltip = core_highlighted_states
+
+            hidden_effect = {
+
+            }
+
+            hidden_effect = {
+                122 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                133 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                121 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                120 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                136 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                933 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                113 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                23 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                33 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                19 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                806 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                31 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                25 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                123 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                125 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                126 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                127 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                128 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                129 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                130 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                131 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                132 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                338 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                931 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                932 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                14 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                30 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                15 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                23 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+                19 = { set_state_flag = angevin_core_state    add_claim_by = ROOT }
+            }
+
+            hidden_effect = {
+                news_event = { id = generic_dynamic_formable_events.1 hours = 6 }
+                set_global_flag = form_angevin_flag
+                set_country_flag = form_angevin_flag
+                
+                set_country_flag = form_exclusive_nation_flag
+            }
+        }
+
+        ai_will_do = {
+            factor = 200
+            modifier = {
+                factor = 0
+                is_historical_focus_on = yes
+            }
+        }
+    }
+
+    formable_apply_angevin = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = ENG
+                original_tag = FRA
+            }
+        }
+
+        available = {
+        }
+
+        visible = {
+            has_country_flag = form_angevin_flag
+            NOT = { has_cosmetic_tag = angevin_formable_cosmetic }
+        }
+
+        complete_effect = {
+            set_cosmetic_tag = angevin_formable_cosmetic
+        }
+
+        ai_will_do = {
+            #factor = 200
+            factor = 0
+        }
+    }
+
+    formable_angevin_core = {
+        state_target = any_controlled_state
+        visible = {
+            has_country_flag = form_angevin_flag
+        }
+        target_trigger = {
+            FROM = {
+                has_state_flag = angevin_core_state
+                NOT = {
+                    is_core_of = ROOT
+                }
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        icon = generic_form_nation
+        cost = 10
+        days_remove = 70
+        modifier = {
+            political_power_cost = 0.10
+        }
+        remove_effect = {
+            FROM = {
+                if = {
+                    limit = { compliance > 50 }
+                    add_core_of = ROOT
+                }
+                else = {
+                    add_compliance = 20
+                    if = { 
+                        limit = {
+                            ROOT = { is_ai = yes }
+                        }
+                        add_compliance = 15
+                        ROOT = { add_political_power = 25 }
+                    }
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 500
+        }
+    }
+
+}
+
+# greater_indochina
+formable_greater_indochina_category = {
+    formable_view_greater_indochina = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = VIN
+                original_tag = CAM
+                original_tag = LAO
+                original_tag = SIA
+                original_tag = BRM
+                original_tag = YUN
+            }
+        }
+
+        available = {
+            always = no
+        }
+
+        visible = {
+            OR = {
+                original_tag = VIN
+                original_tag = CAM
+                original_tag = LAO
+                original_tag = SIA
+                original_tag = BRM
+                original_tag = YUN
+            }
+            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_global_flag = form_greater_indochina_flag }
+        }
+
+        highlight_states = {
+            highlight_state_targets = {
+                state = 288
+                state = 640
+                state = 670
+                state = 286
+                state = 671
+                state = 741
+                state = 289
+                state = 724
+                state = 868
+                state = 869
+            }
+            highlight_color_while_active = 0
+            highlight_color_before_active = 0
+        }
+
+        complete_effect = {
+            effect_tooltip = {
+                288 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                640 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                670 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                286 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                671 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                741 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                289 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                724 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                868 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+                869 = { PREV = { custom_effect_tooltip = formable_allow_integration } }
+            }
+        }
+
+        ai_will_do = {
+            factor = 0
+        }
+    }
+
+    formable_form_greater_indochina = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = VIN
+                original_tag = CAM
+                original_tag = LAO
+                original_tag = SIA
+                original_tag = BRM
+                original_tag = YUN
+            }
+        }
+
+        available = {
+            custom_trigger_tooltip = {
+                tooltip = form_exclusive_nation_flag
+                hidden_trigger = {
+                    NOT = { has_country_flag = form_exclusive_nation_flag }
+                }
+            }
+
+            #OR = { is_subject = no  is_ai = no }
+            test = no
+            
+            controls_state = 670
+            controls_state = 286
+            controls_state = 671
+            controls_state = 741
+            controls_state = 289
+            controls_state = 724
+            controls_state = 868
+            controls_state = 869
+
+        }
+
+        visible = {
+            OR = {
+                original_tag = VIN
+                original_tag = CAM
+                original_tag = LAO
+                original_tag = SIA
+                original_tag = BRM
+                original_tag = YUN
+            }
+            NOT = { has_country_flag = form_exclusive_nation_flag }
+            NOT = { has_global_flag = form_greater_indochina_flag }
+        }
+
+        highlight_states = {
+            highlight_state_targets = {
+                state = 670
+                state = 286
+                state = 671
+                state = 741
+                state = 289
+                state = 724
+                state = 868
+                state = 869
+            }
+            highlight_color_while_active = 1
+            highlight_color_before_active = 1
+        }
+
+        complete_effect = {
+            add_political_power = -0.5
+            
+            set_cosmetic_tag = greater_indochina_formable_cosmetic
+            
+            custom_effect_tooltip = core_highlighted_states
+
+            hidden_effect = {
+                add_state_claim = 325
+                add_state_claim = 747
+            }
+
+            hidden_effect = {
+                288 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                640 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                670 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                286 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                671 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                741 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                289 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                724 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                868 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+                869 = { set_state_flag = greater_indochina_core_state    add_claim_by = ROOT }
+            }
+
+            hidden_effect = {
+                news_event = { id = generic_dynamic_formable_events.1 hours = 6 }
+                set_global_flag = form_greater_indochina_flag
+                set_country_flag = form_greater_indochina_flag
+                
+                
+            }
+        }
+
+        ai_will_do = {
+            factor = 200
+            modifier = {
+                factor = 0
+                is_historical_focus_on = yes
+            }
+        }
+    }
+
+    formable_apply_greater_indochina = {
+        on_map_mode = decision_view_only
+        icon = generic_form_nation
+
+        allowed = {
+            OR = {
+                original_tag = VIN
+                original_tag = CAM
+                original_tag = LAO
+                original_tag = SIA
+                original_tag = BRM
+                original_tag = YUN
+            }
+        }
+
+        available = {
+        }
+
+        visible = {
+            has_country_flag = form_greater_indochina_flag
+            NOT = { has_cosmetic_tag = greater_indochina_formable_cosmetic }
+        }
+
+        complete_effect = {
+            set_cosmetic_tag = greater_indochina_formable_cosmetic
+        }
+
+        ai_will_do = {
+            #factor = 200
+            factor = 0
+        }
+    }
+
+    formable_greater_indochina_core = {
+        state_target = any_controlled_state
+        visible = {
+            has_country_flag = form_greater_indochina_flag
+        }
+        target_trigger = {
+            FROM = {
+                has_state_flag = greater_indochina_core_state
+                NOT = {
+                    is_core_of = ROOT
+                }
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        icon = generic_form_nation
+        cost = 10
+        days_remove = 70
+        modifier = {
+            political_power_cost = 0.10
+        }
+        remove_effect = {
+            FROM = {
+                if = {
+                    limit = { compliance > 50 }
+                    add_core_of = ROOT
+                }
+                else = {
+                    add_compliance = 20
+                    if = { 
+                        limit = {
+                            ROOT = { is_ai = yes }
+                        }
+                        add_compliance = 15
+                        ROOT = { add_political_power = 25 }
+                    }
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 500
+        }
+    }
+
+}

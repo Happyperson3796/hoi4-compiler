@@ -29,7 +29,7 @@ def parse(text):
                 if buffer != "":
                     parsed.append(buffer)
                 buffer = ""
-            elif is_connector(char) or char == "{" or char == "}":
+            elif (is_connector(char) or char == "{" or char == "}") and not is_quoted:
                 if buffer != "":
                     parsed.append(buffer)
                 parsed.append(char)
@@ -302,8 +302,8 @@ def reformat(d):
         for x in d:
             r.append(Value(reformat(x)))
 
-    elif isinstance(d, bool) or str(d) == "False" or str(d) == "True":
-        if d == "True":
+    elif isinstance(d, bool):
+        if d == True:
             r = "yes"
         else:
             r = "no"

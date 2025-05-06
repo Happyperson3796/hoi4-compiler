@@ -1,0 +1,8 @@
+angevin_formable_cosmetic = {
+    color = rgb { 67 143 195 }
+    color_ui = rgb { 67 143 195 }
+}
+greater_indochina_formable_cosmetic = {
+    color = rgb { 85 70 153 }
+    color_ui = rgb { 85 70 153 }
+}

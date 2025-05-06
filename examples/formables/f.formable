@@ -19,6 +19,10 @@ greater_indochina = {
     }
     gfx = GFX_decision_cat_generic_hre
     exclusive = no
-    on_formed = ""
-    extra_reqs = ""
+    on_formed = {
+        add_political_power = -0.5
+    }
+    extra_reqs = {
+        test = no
+    }
 }

@@ -22,6 +22,6 @@
     ],
     "GFX": "GFX_decision_cat_generic_european_union",
     "Exclusive": true,
-    "on_formed": "",
-    "extra_reqs": ""
+    "on_formed": "add_stability = 0.5",
+    "extra_reqs": "req = yes"
 }

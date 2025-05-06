@@ -1,0 +1,6 @@
+formable_albania_egypt_category = {
+    icon = generic_formable_nations
+    priority = 0
+    picture = gfx
+    allowed = {}
+}
