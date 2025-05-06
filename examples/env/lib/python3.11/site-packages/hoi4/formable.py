@@ -36,9 +36,13 @@ class Formable(fileType):
         extras = data.extract("extras", Collection())
         claims = data.extract("claims", Collection())
         gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
-        exclusive = data.extract("exclusive", "no")
+        tier = int(data.extract("tier", "0"))
+        exclusive = data.extract("exclusive", "yes")
         on_formed = data.extract("on_formed", Collection())
         extra_reqs = data.extract("extra_reqs", Collection())
+        hist_player = data.extract("hist_player", "yes")
+        ai = data.extract("ai", "yes")
+        hist_ai = data.extract("hist_ai", "no")
 
         os.makedirs(parent_dir+"/localisation/", exist_ok=True)
         loc_file = parent_dir+"/localisation/"+namespace+"_dynamic_formable_loc_l_english.yml"
@@ -98,6 +102,21 @@ class Formable(fileType):
         os.makedirs(parent_dir+"/common/decisions/", exist_ok=True)
         categories_file = parent_dir+"/common/decisions/"+namespace+"_dynamic_formable_decisions.txt"
         with open(categories_file, "a") as file:
+
+            if ai == "yes": ai_prio = 200
+            else: ai_prio = 0
+
+            hist_ai_can_form = """
+            modifier = {{
+                factor = 0
+                is_historical_focus_on = yes
+            }}"""
+            if hist_ai == "yes": hist_ai_can_form = ""
+
+            hist_player_can_form = ""
+            if hist_player == "no":
+                hist_player_can_form = "is_historical_focus_on = no"
+
             text = f"""
 # $ID
 formable_$ID_category = {{
@@ -160,7 +179,7 @@ formable_$ID_category = {{
                 }}
             }}
 
-            #OR = {{ is_subject = no  is_ai = no }}
+            {hist_player_can_form}
             $REQS
             controls_state = $CONTROLS_STATES
 
@@ -206,11 +225,7 @@ formable_$ID_category = {{
         }}
 
         ai_will_do = {{
-            factor = 200
-            modifier = {{
-                factor = 0
-                is_historical_focus_on = yes
-            }}
+            factor = {ai_prio}{hist_ai_can_form}
         }}
     }}
 

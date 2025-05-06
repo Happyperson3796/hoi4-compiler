@@ -1,3 +1,7 @@
+example_formable_cosmetic = {
+    color = rgb { 200 200 200 }
+    color_ui = rgb { 200 200 200 }
+}
 angevin_formable_cosmetic = {
     color = rgb { 67 143 195 }
     color_ui = rgb { 67 143 195 }
