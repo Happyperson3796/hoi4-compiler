@@ -1,0 +1,32 @@
+add_state_core = 5
+add_state_core = 85
+add_state_core = 188
+add_state_core = 763
+add_state_core = 807
+add_state_core = 1020
+add_state_core = 1123
+capital = 763
+set_technology = {
+    infantry_weapons = 1
+    infantry_weapons1 = 1
+    gw_artillery = 1
+    interwar_antiair = 1
+    tech_support = 1
+    tech_engineers = 1
+    early_fighter = 1
+    early_bomber = 1
+    CAS1 = 1
+}
+set_popularities = {
+    neutrality = 30
+    fascism = 18
+    communism = 12
+    democratic = 40
+}
+set_politics = {
+    ruling_party = neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+setup_starting_tech = yes

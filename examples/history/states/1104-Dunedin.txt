@@ -1,0 +1,31 @@
+#Parent: 723
+#ID: DUNEDIN
+state = {
+    id = 1104
+    name = "STATE_1104"
+    manpower = 171000
+    state_category = rural
+    resources = {
+        tungsten = 2
+    }
+    history = {
+        owner = NZL
+        buildings = {
+            infrastructure = 3
+        }
+        victory_points = {
+            2211
+            1
+        }
+        add_core_of = NZL
+        set_variable = { var = state_event_parent value = 723 }
+    }
+    provinces = {
+        2211
+        8241
+        8232
+        2203
+        5195
+    }
+    local_supplies = 0.0
+}

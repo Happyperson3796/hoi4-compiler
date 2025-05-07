@@ -1,0 +1,27 @@
+#Parent: 371
+#ID: NORTH_LOUISIANA
+state = {
+    id = 1076
+    name = "STATE_1076"
+    manpower = 337756
+    state_category = city
+    resources = {
+        oil = 13
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 371 }
+    }
+    provinces = {
+        1559
+        4522
+        7555
+        7599
+    }
+    local_supplies = 0.0
+}

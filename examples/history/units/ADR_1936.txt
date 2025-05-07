@@ -1,0 +1,26 @@
+#Create units
+division_template = {
+	name = "Andorran Militia"
+	division_names_group = "AND_DIV_0_0"
+	regiments = {
+		infantry = { x = 0 y = 0}
+		mountaineers = { x = 0 y = 1}
+	}
+	support = {
+	}
+
+}
+
+#Spawn units
+units = {
+	division= {
+		name = "1st Andorran Militia"
+		location = 3899
+		division_template = "Andorran Militia"
+	}
+	division= {
+		name = "2nd Andorran Militia"
+		location = 3899
+		division_template = "Andorran Militia"
+	}
+}

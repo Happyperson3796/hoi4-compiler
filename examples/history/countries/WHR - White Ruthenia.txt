@@ -1,0 +1,79 @@
+add_state_core = 194
+add_state_core = 204
+add_state_core = 206
+add_state_core = 207
+add_state_core = 95
+add_state_core = 96
+add_state_core = 94
+add_state_core = 1038
+capital = 206
+starting_train_buffer = 1
+if = {
+    limit = {
+        NOT = {
+            has_dlc = "No Step Back"
+        }
+    }
+    set_technology = {
+        gwtank = 1
+    }
+}
+if = {
+    limit = {
+        has_dlc = "No Step Back"
+    }
+    set_technology = {
+        gwtank_chassis = 1
+    }
+}
+set_technology = {
+    basic_train = 1
+    infantry_weapons = 1
+    infantry_weapons1 = 1
+    gw_artillery = 1
+    tech_support = 1
+    tech_engineers = 1
+    tech_recon = 1
+}
+if = {
+    limit = {
+        has_dlc = "By Blood Alone"
+    }
+    set_technology = {
+        aa_lmg = 1
+        early_bombs = 1
+        engines_1 = 1
+        iw_small_airframe = 1
+        iw_medium_airframe = 1
+    }
+    GER_GUNERIC_BBA_air_variants = yes
+    else = {
+        set_technology = {
+            early_fighter = 1
+        }
+    }
+}
+set_research_slots = 3
+set_war_support = 0.10
+if = {
+    limit = {
+        has_dlc = "La Resistance"
+    }
+    create_intelligence_agency = {
+        name = "NBP"
+        icon = GFX_intelligence_agency_logo_KX_belarus
+    }
+}
+set_politics = {
+    ruling_party = neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+set_popularities = {
+    democratic = 15
+    neutrality = 60
+    fascism = 15
+    communism = 10
+}
+setup_starting_tech = yes

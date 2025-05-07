@@ -1,0 +1,24 @@
+#Parent: 102
+#ID: PREKMURJE
+state = {
+    id = 1137
+    name = "STATE_1137"
+    manpower = 125037
+    state_category = large_town
+    resources = {
+        
+    }
+    history = {
+        owner = YUG
+        buildings = {
+            infrastructure = 3
+        }
+        add_core_of = YUG
+        add_core_of = SLV
+        set_variable = { var = state_event_parent value = 102 }
+    }
+    provinces = {
+        6672
+    }
+    local_supplies = 0.0
+}

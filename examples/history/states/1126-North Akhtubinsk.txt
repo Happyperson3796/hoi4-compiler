@@ -1,0 +1,40 @@
+#Parent: 402
+#ID: NORTH_AKHTUBINSK
+state = {
+    id = 1126
+    name = "STATE_1126"
+    manpower = 114716
+    state_category = rural
+    resources = {
+        
+    }
+    history = {
+        owner = SOV
+        buildings = {
+            infrastructure = 2
+        }
+        victory_points = {
+            7341
+            1
+        }
+        add_core_of = KAZ
+        add_core_of = SOV
+        set_variable = { var = state_event_parent value = 402 }
+    }
+    provinces = {
+        12235
+        1247
+        12254
+        7370
+        4254
+        10253
+        7341
+        4294
+        7313
+        4394
+        1429
+        12227
+        7410
+    }
+    local_supplies = 0.0
+}

@@ -1,0 +1,35 @@
+#Parent: 261
+#ID: SOUTHERN_OHIO
+state = {
+    id = 1085
+    name = "STATE_1085"
+    manpower = 348952
+    state_category = metropolis
+    resources = {
+        steel = 7
+        aluminium = 3
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 4
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        1939.1.1 = {
+            buildings = {
+                industrial_complex = 7
+            }
+        }
+        set_variable = { var = state_event_parent value = 261 }
+    }
+    provinces = {
+        827
+        971
+        3829
+        7528
+        9760
+        9808
+    }
+    local_supplies = 11.0
+}

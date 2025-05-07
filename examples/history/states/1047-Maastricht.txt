@@ -1,0 +1,28 @@
+#Parent: 35
+#ID: MAASTRICHT
+state = {
+    id = 1047
+    name = "STATE_1047"
+    manpower = 80213
+    state_category = city
+    resources = {
+        
+    }
+    history = {
+        owner = HOL
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        victory_points = {
+            11562
+            1
+        }
+        add_core_of = HOL
+        set_variable = { var = state_event_parent value = 35 }
+    }
+    provinces = {
+        11562
+    }
+    local_supplies = 0.0
+}

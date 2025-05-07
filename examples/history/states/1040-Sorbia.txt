@@ -1,0 +1,36 @@
+#Parent: 65
+#ID: SORBIA
+state = {
+    id = 1040
+    name = "STATE_1040"
+    manpower = 686362
+    state_category = metropolis
+    resources = {
+        steel = 12
+    }
+    history = {
+        owner = GER
+        buildings = {
+            infrastructure = 4
+            industrial_complex = 2
+            arms_factory = 1
+        }
+        add_core_of = GER
+        add_core_of = SAX
+        1939.1.1 = {
+            buildings = {
+                synthetic_refinery = 2
+                arms_factory = 5
+                industrial_complex = 10
+            }
+        }
+        add_core_of = SRB
+        set_variable = { var = state_event_parent value = 65 }
+    }
+    provinces = {
+        573
+        3514
+        9535
+    }
+    local_supplies = 0.0
+}

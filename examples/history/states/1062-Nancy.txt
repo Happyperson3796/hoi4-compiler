@@ -1,0 +1,28 @@
+#Parent: 17
+#ID: NANCY
+state = {
+    id = 1062
+    name = "STATE_1062"
+    manpower = 366730
+    state_category = city
+    resources = {
+        steel = 6
+    }
+    history = {
+        owner = FRA
+        buildings = {
+            infrastructure = 4
+        }
+        victory_points = {
+            11516
+            5
+        }
+        add_core_of = FRA
+        set_variable = { var = state_event_parent value = 17 }
+    }
+    provinces = {
+        521
+        11516
+    }
+    local_supplies = 0.0
+}

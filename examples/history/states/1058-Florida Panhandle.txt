@@ -1,0 +1,27 @@
+#Parent: 366
+#ID: FLORIDA_PANHANDLE
+state = {
+    id = 1058
+    name = "STATE_1058"
+    manpower = 91764
+    state_category = city
+    resources = {
+        
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 2
+            10352 = {
+                naval_base = 1
+            }
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 366 }
+    }
+    provinces = {
+        10352
+        10380
+    }
+    local_supplies = 10.0
+}

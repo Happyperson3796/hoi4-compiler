@@ -1,0 +1,23 @@
+#Parent: 719
+#ID: ESWATINI
+state = {
+    id = 1112
+    name = "STATE_1112"
+    manpower = 279002
+    state_category = city
+    resources = {
+        chromium = 7
+    }
+    history = {
+        owner = SAF
+        buildings = {
+            infrastructure = 3
+        }
+        add_core_of = SAF
+        set_variable = { var = state_event_parent value = 719 }
+    }
+    provinces = {
+        7900
+    }
+    local_supplies = 0.0
+}

@@ -1,0 +1,42 @@
+#Parent: 284
+#ID: AUCKLAND
+state = {
+    id = 1103
+    name = "STATE_1103"
+    manpower = 393679
+    state_category = city
+    resources = {
+        
+    }
+    history = {
+        owner = NZL
+        buildings = {
+            infrastructure = 3
+            4543 = {
+                naval_base = 3
+            }
+            industrial_complex = 2
+        }
+        victory_points = {
+            4543
+            5
+        }
+        add_core_of = NZL
+        set_variable = { var = state_event_parent value = 284 }
+    }
+    provinces = {
+        4615
+        10334
+        10373
+        4543
+        1565
+        7887
+        12664
+        12362
+        1713
+        7783
+        12617
+        12604
+    }
+    local_supplies = 0.0
+}

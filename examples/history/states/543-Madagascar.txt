@@ -1,0 +1,26 @@
+state = {
+    id = 543
+    name = "STATE_543"
+    manpower = 2170584
+    state_category = rural
+    history = {
+        add_core_of = MAD
+        owner = FRA
+        buildings = {
+            infrastructure = 1
+            air_base = 1
+            5222 = {
+                naval_base = 1
+            }
+        }
+    }
+    provinces = {
+        5185
+        5222
+        8180
+        8188
+        11015
+        12956
+    }
+    local_supplies = 0.0
+}

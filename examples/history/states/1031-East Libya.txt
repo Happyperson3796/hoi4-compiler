@@ -1,0 +1,30 @@
+#Parent: 273
+#ID: EAST_LIBYA
+state = {
+    id = 1031
+    name = "STATE_1031"
+    manpower = 18652
+    state_category = wasteland
+    resources = {
+        
+    }
+    history = {
+        owner = ITA
+        buildings = {
+            infrastructure = 0
+        }
+        add_core_of = LBA
+        set_variable = { var = state_event_parent value = 273 }
+    }
+    provinces = {
+        4191
+        1057
+        10104
+        1140
+        10785
+        11951
+        1060
+    }
+    local_supplies = 0.0
+    impassable = yes
+}

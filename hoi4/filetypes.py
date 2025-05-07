@@ -32,6 +32,23 @@ def get(path: str):
         return flag.Flag(path)
     else:
         return fileType(path)
+    
+def order():
+    return [
+        pull_file.Pulled,
+        focus.Focus,
+        achievements.Achievement,
+        nation.Nation,
+        state.State,
+        formable.JsonFormable,
+        formable.Formable,
+        character.Character,
+        subideology.Subideology,
+        merge_file.Merged,
+        append_file.Appended,
+        flag.Flag,
+        fileType
+    ]
 
 def should_run(path: str):
     file = get(path)

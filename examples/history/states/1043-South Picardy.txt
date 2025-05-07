@@ -1,0 +1,28 @@
+#Parent: 785
+#ID: SOUTH_PICARDY
+state = {
+    id = 1043
+    name = "STATE_1043"
+    manpower = 804108
+    state_category = town
+    resources = {
+        steel = 7
+        aluminium = 3
+    }
+    history = {
+        owner = FRA
+        buildings = {
+            infrastructure = 4
+            industrial_complex = 1
+        }
+        add_core_of = FRA
+        set_variable = { var = state_event_parent value = 785 }
+    }
+    provinces = {
+        9561
+        11549
+        3402
+        3447
+    }
+    local_supplies = 0.0
+}

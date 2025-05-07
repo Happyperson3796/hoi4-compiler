@@ -1,0 +1,36 @@
+#Parent: 160
+#ID: NORTH_VENETO
+state = {
+    id = 1118
+    name = "STATE_1118"
+    manpower = 1288025
+    state_category = large_city
+    resources = {
+        steel = 10
+        aluminium = 6
+    }
+    history = {
+        owner = ITA
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 2
+            arms_factory = 1
+        }
+        add_core_of = ITA
+        add_core_of = LBV
+        1939.1.1 = {
+            buildings = {
+                dockyard = 2
+                industrial_complex = 5
+            }
+        }
+        set_variable = { var = state_event_parent value = 160 }
+    }
+    provinces = {
+        628
+        9613
+        3657
+        6656
+    }
+    local_supplies = 5.0
+}

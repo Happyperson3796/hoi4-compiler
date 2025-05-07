@@ -1,0 +1,31 @@
+#Parent: 546
+#ID: LAKE_VICTORIA
+state = {
+    id = 1117
+    name = "STATE_1117"
+    manpower = 2318313
+    state_category = rural
+    resources = {
+        rubber = 1
+    }
+    history = {
+        owner = ENG
+        buildings = {
+            infrastructure = 2
+        }
+        add_core_of = TZN
+        set_variable = { var = state_event_parent value = 546 }
+    }
+    provinces = {
+        2308
+        11017
+        10932
+        4171
+        8144
+        5180
+        2176
+        2281
+        10988
+    }
+    local_supplies = 0.0
+}

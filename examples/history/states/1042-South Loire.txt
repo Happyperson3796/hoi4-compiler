@@ -1,0 +1,27 @@
+#Parent: 30
+#ID: SOUTH_LOIRE
+state = {
+    id = 1042
+    name = "STATE_1042"
+    manpower = 544316
+    state_category = city
+    resources = {
+        
+    }
+    history = {
+        owner = FRA
+        buildings = {
+            infrastructure = 4
+        }
+        add_core_of = FRA
+        set_variable = { var = state_event_parent value = 30 }
+    }
+    provinces = {
+        11616
+        9867
+        11613
+        9478
+        11463
+    }
+    local_supplies = 0.0
+}

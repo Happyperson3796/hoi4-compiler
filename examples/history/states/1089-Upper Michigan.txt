@@ -1,0 +1,37 @@
+#Parent: 393
+#ID: UPPER_MICHIGAN
+state = {
+    id = 1089
+    name = "STATE_1089"
+    manpower = 121059
+    state_category = metropolis
+    resources = {
+        steel = 11
+        oil = 2
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        1939.1.1 = {
+            buildings = {
+                industrial_complex = 7
+                6710 = {
+                    land_facility = 1
+                }
+            }
+        }
+        set_variable = { var = state_event_parent value = 393 }
+    }
+    provinces = {
+        709
+        751
+        4854
+        5205
+        10599
+    }
+    local_supplies = 0.0
+}

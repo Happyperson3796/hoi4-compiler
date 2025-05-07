@@ -1,0 +1,46 @@
+state = {
+    id = 386
+    name = "STATE_386"
+    manpower = 1028643
+    state_category = large_town
+    history = {
+        owner = USA
+        add_core_of = USA
+        buildings = {
+            infrastructure = 3
+            arms_factory = 1
+            industrial_complex = 1
+            dockyard = 1
+            air_base = 5
+            7315 = {
+                naval_base = 3
+            }
+        }
+        victory_points = {
+            7315
+            10
+        }
+        1939.1.1 = {
+            buildings = {
+                7315 = {
+                    air_facility = 1
+                }
+            }
+        }
+    }
+    provinces = {
+        1320
+        4296
+        4398
+        7255
+        7315
+        7386
+        7414
+        7442
+        10157
+        10242
+        10271
+        12214
+    }
+    local_supplies = 0.0
+}

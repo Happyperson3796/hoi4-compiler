@@ -1,0 +1,33 @@
+#Parent: 229
+#ID: CENTRAL_AZERBAIJAN
+state = {
+    id = 1131
+    name = "STATE_1131"
+    manpower = 692723
+    state_category = large_town
+    resources = {
+        oil = 25
+    }
+    history = {
+        owner = SOV
+        buildings = {
+            infrastructure = 2
+        }
+        victory_points = {
+            11674
+            1
+        }
+        add_core_of = SOV
+        add_core_of = AZR
+        set_variable = { var = state_event_parent value = 229 }
+    }
+    provinces = {
+        1539
+        11674
+        1467
+        1610
+        9715
+        11704
+    }
+    local_supplies = 7.0
+}

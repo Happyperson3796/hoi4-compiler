@@ -1,0 +1,27 @@
+#Parent: 377
+#ID: SOUTHERN_ARIZONA
+state = {
+    id = 1082
+    name = "STATE_1082"
+    manpower = 77003
+    state_category = rural
+    resources = {
+        steel = 5
+        oil = 2
+        aluminium = 2
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 2
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 377 }
+    }
+    provinces = {
+        3834
+        7920
+        10783
+    }
+    local_supplies = 8.0
+}

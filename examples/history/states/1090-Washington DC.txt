@@ -1,0 +1,33 @@
+#Parent: 361
+#ID: WASHINGTON_DC
+state = {
+    id = 1090
+    name = "STATE_1090"
+    manpower = 1456396
+    state_category = city
+    resources = {
+        
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 4
+            3957 = {
+                naval_base = 1
+                naval_facility = 1
+            }
+            industrial_complex = 1
+        }
+        victory_points = {
+            3957
+            40
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 361 }
+    }
+    provinces = {
+        3957
+        11892
+    }
+    local_supplies = 0.0
+}

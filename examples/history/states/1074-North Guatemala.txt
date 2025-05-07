@@ -1,0 +1,23 @@
+#Parent: 313
+#ID: NORTH_GUATEMALA
+state = {
+    id = 1074
+    name = "STATE_1074"
+    manpower = 376338
+    state_category = town
+    resources = {
+        chromium = 1
+    }
+    history = {
+        owner = GUA
+        buildings = {
+            infrastructure = 2
+        }
+        add_core_of = GUA
+        set_variable = { var = state_event_parent value = 313 }
+    }
+    provinces = {
+        4991
+    }
+    local_supplies = 0.0
+}

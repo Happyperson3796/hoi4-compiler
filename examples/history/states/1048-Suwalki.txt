@@ -1,0 +1,29 @@
+#Parent: 97
+#ID: SUWALKI
+state = {
+    id = 1048
+    name = "STATE_1048"
+    manpower = 184831
+    state_category = rural
+    resources = {
+        
+    }
+    history = {
+        owner = POL
+        buildings = {
+            infrastructure = 3
+        }
+        victory_points = {
+            3254
+            1
+        }
+        add_core_of = POL
+        add_core_of = BLR
+        set_variable = { var = state_event_parent value = 97 }
+    }
+    provinces = {
+        3254
+        400
+    }
+    local_supplies = 5.0
+}

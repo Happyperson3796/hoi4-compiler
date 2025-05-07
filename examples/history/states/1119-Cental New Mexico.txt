@@ -1,0 +1,32 @@
+#Parent: 376
+#ID: CENTAL_NEW_MEXICO
+state = {
+    id = 1119
+    name = "STATE_1119"
+    manpower = 147346
+    state_category = rural
+    resources = {
+        oil = 5
+        aluminium = 11
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 2
+        }
+        victory_points = {
+            4975
+            1
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 376 }
+    }
+    provinces = {
+        3867
+        3883
+        4975
+        8070
+        12791
+    }
+    local_supplies = 0.0
+}

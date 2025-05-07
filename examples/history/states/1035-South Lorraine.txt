@@ -1,0 +1,26 @@
+#Parent: 17
+#ID: SOUTH_LORRAINE
+state = {
+    id = 1035
+    name = "STATE_1035"
+    manpower = 417313
+    state_category = city
+    resources = {
+        steel = 12
+    }
+    history = {
+        owner = FRA
+        buildings = {
+            infrastructure = 4
+        }
+        add_core_of = FRA
+        set_variable = { var = state_event_parent value = 17 }
+    }
+    provinces = {
+        11488
+        11642
+        6698
+        698
+    }
+    local_supplies = 0.0
+}

@@ -1,0 +1,28 @@
+#Parent: 584
+#ID: BLACK_STRAIT
+state = {
+    id = 1097
+    name = "STATE_1097"
+    manpower = 155841
+    state_category = pastoral
+    resources = {
+        
+    }
+    history = {
+        owner = SOV
+        buildings = {
+            infrastructure = 1
+        }
+        add_core_of = SOV
+        add_core_of = TMS
+        set_variable = { var = state_event_parent value = 584 }
+    }
+    provinces = {
+        4563
+        7477
+        7563
+        10406
+        7635
+    }
+    local_supplies = 4.0
+}

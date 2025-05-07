@@ -1,0 +1,54 @@
+add_state_core = 283
+add_state_core = 753
+capital = 283
+set_war_support = 0.75
+set_stability = 1.00
+add_manpower = 600000
+add_equipment_to_stockpile = {
+    type = infantry_equipment_2
+    amount = 3000
+    producer = JAP
+}
+add_equipment_to_stockpile = {
+    type = anti_tank_equipment_1
+    amount = 800
+    producer = JAP
+}
+add_equipment_to_stockpile = {
+    type = motorized_equipment_1
+    amount = 800
+    producer = JAP
+}
+add_equipment_to_stockpile = {
+    type = support_equipment_1
+    amount = 800
+    producer = JAP
+}
+add_equipment_to_stockpile = {
+    type = artillery_equipment_3
+    amount = 800
+    producer = JAP
+}
+add_equipment_to_stockpile = {
+    type = transport_helicopter_equipment_1
+    amount = 500
+    producer = MAN
+}
+add_equipment_to_stockpile = {
+    type = attack_helicopter_equipment_1
+    amount = 500
+    producer = MAN
+}
+set_politics = {
+    ruling_party = neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+set_popularities = {
+    democratic = 0
+    neutrality = 60
+    fascism = 40
+    communism = 0
+}
+setup_starting_tech = yes

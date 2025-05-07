@@ -1,0 +1,32 @@
+#Parent: 454
+#ID: GAZA
+state = {
+    id = 1060
+    name = "STATE_1060"
+    manpower = 151636
+    state_category = rural
+    resources = {
+        
+    }
+    history = {
+        owner = PAL
+        buildings = {
+            infrastructure = 3
+            4206 = {
+                naval_base = 3
+            }
+        }
+        victory_points = {
+            4206
+            1
+        }
+        add_core_of = PAL
+        add_core_of = ISR
+        set_variable = { var = state_event_parent value = 454 }
+    }
+    provinces = {
+        4088
+        4206
+    }
+    local_supplies = 0.0
+}

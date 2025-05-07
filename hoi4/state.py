@@ -10,13 +10,13 @@ def get_top_state_id(parent_dir):
     top_num = 0
     for path in os.scandir(vanilla_path+"/history/states/"):
         try:
-            num = int(path.name.split("-")[0].strip())
+            num = int(path.name.split("-",1)[0].strip())
             if num > top_num: top_num = num
         except: pass
 
     for path in os.scandir(parent_dir+"/history/states/"):
         try:
-            num = int(path.name.split("-")[0].strip())
+            num = int(path.name.split("-",1)[0].strip())
             if num > top_num: top_num = num
         except: pass
 
@@ -415,8 +415,8 @@ on_actions = {
 
         for path in os.scandir(parent_dir+"/history/states/"):
             try:
-                if path.name.split("-")[1].strip().removesuffix(".txt") == name:
-                    num_id = path.name.split("-")[0].strip()
+                if path.name.split("-",1)[1].strip().removesuffix(".txt") == name:
+                    num_id = path.name.split("-",1)[0].strip()
             except: pass
 
         def scan_subdirs(dir):

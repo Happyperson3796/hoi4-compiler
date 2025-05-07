@@ -1,0 +1,38 @@
+#Parent: 680
+#ID: NORTH_SYRIA
+state = {
+    id = 1077
+    name = "STATE_1077"
+    manpower = 178573
+    state_category = wasteland
+    resources = {
+        
+    }
+    history = {
+        owner = SYR
+        buildings = {
+            infrastructure = 1
+        }
+        victory_points = {
+            1549
+            1
+        }
+        victory_points = {
+            6883
+            1
+        }
+        add_core_of = SYR
+        add_core_of = KUR
+        set_variable = { var = state_event_parent value = 680 }
+    }
+    provinces = {
+        901
+        1549
+        1578
+        1606
+        1634
+        6883
+        10882
+    }
+    local_supplies = 4.0
+}

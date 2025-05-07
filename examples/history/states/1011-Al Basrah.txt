@@ -1,0 +1,36 @@
+state = {
+    id = 1011
+    name = "STATE_1011"
+    resources = {
+        steel = 2
+        aluminium = 3
+    }
+    state_category = town
+    manpower = 412486
+    history = {
+        owner = IRQ
+        add_core_of = IRQ
+        victory_points = {
+            2089
+            5
+        }
+        victory_points = {
+            8001
+            3
+        }
+        buildings = {
+            infrastructure = 2
+            arms_factory = 0
+            industrial_complex = 0
+            2089 = {
+                naval_base = 1
+            }
+        }
+    }
+    provinces = {
+        2089
+        8001
+    }
+    buildings_max_level_factor = 1.000
+    local_supplies = 0.000
+}

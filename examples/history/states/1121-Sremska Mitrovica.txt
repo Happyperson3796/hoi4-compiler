@@ -1,0 +1,26 @@
+#Parent: 109
+#ID: SREMSKA_MITROVICA
+state = {
+    id = 1121
+    name = "STATE_1121"
+    manpower = 321022
+    state_category = large_town
+    resources = {
+        
+    }
+    history = {
+        owner = YUG
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        add_core_of = YUG
+        add_core_of = CRO
+        set_variable = { var = state_event_parent value = 109 }
+    }
+    provinces = {
+        11577
+        11580
+    }
+    local_supplies = 0.0
+}

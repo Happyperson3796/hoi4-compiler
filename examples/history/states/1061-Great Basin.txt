@@ -1,0 +1,31 @@
+#Parent: 379
+#ID: GREAT_BASIN
+state = {
+    id = 1061
+    name = "STATE_1061"
+    manpower = 39838
+    state_category = rural
+    resources = {
+        steel = 35
+        tungsten = 16
+        aluminium = 13
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 2
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 379 }
+    }
+    provinces = {
+        1862
+        4816
+        7756
+        7827
+        7879
+        10591
+        12399
+    }
+    local_supplies = 0.0
+}

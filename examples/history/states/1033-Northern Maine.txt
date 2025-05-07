@@ -1,0 +1,26 @@
+#Parent: 357
+#ID: NORTHERN_MAINE
+state = {
+    id = 1033
+    name = "STATE_1033"
+    manpower = 196986
+    state_category = metropolis
+    resources = {
+        steel = 2
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 4
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 357 }
+    }
+    provinces = {
+        4287
+        12221
+        10247
+    }
+    local_supplies = 0.0
+}

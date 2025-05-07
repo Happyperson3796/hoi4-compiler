@@ -52,7 +52,7 @@ class Formable(fileType):
 
                 if text[0].startswith("#Parent:") and text[1].startswith("#ID:"):
                     parent = text[0].removeprefix("#Parent:").strip()
-                    state = path.name.split("-")[0].strip()
+                    state = path.name.split("-",1)[0].strip()
 
                     state_id = "$"+text[1].removeprefix("#ID:").strip()
 
@@ -77,7 +77,6 @@ class Formable(fileType):
                     for y in [x for x in c]:
                         if y == state:
                             c.remove(y)
-
 
         clean_states(states)
         clean_states(extras)
@@ -481,8 +480,10 @@ class JsonFormable(Formable):
         data = reformat(data)
 
         for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
-            var = data.retrieve(x)
-            var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1].val())
+            try:
+                var = data.retrieve(x)
+                var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1].val())
+            except: pass
 
         id = data.extract("id")
         data.remove(data.select("id"))

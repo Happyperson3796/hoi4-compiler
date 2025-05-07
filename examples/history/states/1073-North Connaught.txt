@@ -1,0 +1,23 @@
+#Parent: 134
+#ID: NORTH_CONNAUGHT
+state = {
+    id = 1073
+    name = "STATE_1073"
+    manpower = 40768
+    state_category = town
+    resources = {
+        
+    }
+    history = {
+        owner = IRE
+        buildings = {
+            infrastructure = 3
+        }
+        add_core_of = IRE
+        set_variable = { var = state_event_parent value = 134 }
+    }
+    provinces = {
+        337
+    }
+    local_supplies = 13.0
+}

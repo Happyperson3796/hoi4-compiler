@@ -1,0 +1,35 @@
+state = {
+    id = 379
+    name = "STATE_379"
+    manpower = 51220
+    state_category = rural
+    resources = {
+        steel = 35
+        tungsten = 16
+        aluminium = 13
+    }
+    history = {
+        owner = USA
+        add_core_of = USA
+        buildings = {
+            infrastructure = 2
+            4799 = {
+                dam_mountain = 1
+            }
+        }
+        victory_points = {
+            4799
+            5
+        }
+    }
+    provinces = {
+        4521
+        4607
+        4736
+        4799
+        10422
+        12134
+        12425
+    }
+    local_supplies = 0.0
+}

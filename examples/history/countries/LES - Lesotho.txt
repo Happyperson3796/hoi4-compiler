@@ -1,0 +1,15 @@
+add_state_core = 1111
+capital = 1111
+set_popularities = {
+    democratic = 40
+    neutrality = 40
+    fascism = 15
+    communism = 5
+}
+set_politics = {
+    ruling_party = democratic
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+setup_starting_tech = yes

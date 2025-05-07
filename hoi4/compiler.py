@@ -28,33 +28,45 @@ def compute_file_hash(file_path, algorithm='sha256'):
     return hash_func.hexdigest()
 
 
-def sub_scan(dir, parsed_files = []): #Scan all subdirs and files
-    running_files = 0
 
-    for path in scandir(dir):
-        if path.is_dir() and path.name != "build" and path.name != "Hoi4 modding tools":
-            running_files += sub_scan(path.path)
-        elif filetypes.should_run(path.path):
-            if filetypes.should_run(path.path):
+def scan(home_dir):
+    obj = Scan(home_dir)
+
+class Scan():
+    def __init__(self, home_dir):
+
+        self.running_files = 0
+
+        self.home_dir = home_dir
+        self.hashes = []
+        self.runnable = []
+
+        def rerun():
+            self.scan(self.home_dir)
+            self.execute()
+            if self.running_files > 0:
+                self.running_files = 0
+                rerun()
+        rerun()
+
+    def scan(self, dir): #Base scan func
+        for path in os.scandir(dir):
+            if path.is_dir() and path.name != "build":
+                self.scan(path.path)
+            elif filetypes.should_run(path.path):
                 hash = compute_file_hash(path.path)
+                if hash not in self.hashes:
+                    self.hashes.append(hash)
+                    
+                    self.runnable.append(filetypes.get(path.path))
+                    self.running_files += 1
 
-                if hash not in parsed_files:
-                    head, tail = os.path.split(path.path)
-
-                    filetypes.get(path.path).run()
-                    running_files += 1
-
-                    parsed_files.append(hash)
-
-    return running_files
-
-
-def scan(dir, parsed_files = []): #Base scan func
-    running_files = sub_scan(dir, parsed_files)
-
-    if running_files > 0:
-        scan(dir, parsed_files)
-
+    def execute(self):
+        for o in filetypes.order():
+            for r in [x for x in self.runnable]:
+                if isinstance(r, o):
+                    self.runnable.remove(r)
+                    r.run()
 
 
 
@@ -78,8 +90,6 @@ class Build():
             self.deposit_compiler_files(self.mod+"/build")
             shutil.rmtree(self.mod+"/build")
         self.clean()
-
-        self.parsed_files = []
 
     def collect_compiler_files(self, dir=""): #Collect to /build/
         if dir == "": dir = self.mod
@@ -184,7 +194,7 @@ class Build():
 
         self.fire_build_scripts("", -1)
 
-        scan(self.mod, self.parsed_files)
+        scan(self.mod)
 
         self.fire_build_scripts("", 0)
 

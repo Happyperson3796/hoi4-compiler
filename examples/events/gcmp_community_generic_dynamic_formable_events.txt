@@ -1,0 +1,17 @@
+add_namespace = generic_dynamic_formable_events
+
+#Generic formable
+news_event = {
+	id = generic_dynamic_formable_events.1
+	title = generic_dynamic_formable_events.1.t
+	desc = generic_dynamic_formable_events.1.desc
+	picture = GFX_news_event_generic_parliament
+
+	is_triggered_only = yes
+	major = yes
+	
+	option = {
+		name = generic_dynamic_formable_events.1.a
+		trigger = {}
+	}
+}

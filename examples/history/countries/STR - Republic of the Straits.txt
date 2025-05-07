@@ -1,0 +1,20 @@
+add_state_core = 340
+add_state_core = 341
+add_state_core = 797
+add_state_core = 1134
+add_state_core = 1133
+add_state_core = 1059
+capital = 797
+set_politics = {
+    ruling_party = neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+set_popularities = {
+    democratic = 25
+    neutrality = 25
+    fascism = 25
+    communism = 25
+}
+setup_starting_tech = yes

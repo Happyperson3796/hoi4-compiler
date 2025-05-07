@@ -1,0 +1,29 @@
+#Parent: 816
+#ID: NORTH_APPALACHIANS
+state = {
+    id = 1072
+    name = "STATE_1072"
+    manpower = 806511
+    state_category = town
+    resources = {
+        
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        set_variable = { var = state_event_parent value = 816 }
+    }
+    provinces = {
+        3941
+        4627
+        6958
+        7466
+        7646
+        11888
+    }
+    local_supplies = 0.0
+}

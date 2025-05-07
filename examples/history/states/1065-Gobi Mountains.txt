@@ -1,0 +1,32 @@
+#Parent: 817
+#ID: GOBI_MOUNTAINS
+state = {
+    id = 1065
+    name = "STATE_1065"
+    manpower = 3656
+    state_category = wasteland
+    resources = {
+        
+    }
+    history = {
+        owner = MON
+        buildings = {
+            infrastructure = 1
+        }
+        add_core_of = MON
+        set_variable = { var = state_event_parent value = 817 }
+    }
+    provinces = {
+        1781
+        1855
+        4858
+        7864
+        10560
+        10634
+        10695
+        12541
+        12544
+        12614
+    }
+    local_supplies = 0.000
+}

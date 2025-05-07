@@ -1,0 +1,41 @@
+#Parent: 211
+#ID: SOUTH_BURGAS
+state = {
+    id = 1125
+    name = "STATE_1125"
+    manpower = 599149
+    state_category = town
+    resources = {
+        
+    }
+    history = {
+        owner = BUL
+        buildings = {
+            infrastructure = 2
+            9902 = {
+                naval_base = 1
+            }
+            industrial_complex = 1
+        }
+        victory_points = {
+            9902
+            3
+        }
+        victory_points = {
+            6967
+            3
+        }
+        victory_points = {
+            9888
+            1
+        }
+        add_core_of = BUL
+        set_variable = { var = state_event_parent value = 211 }
+    }
+    provinces = {
+        6967
+        9888
+        9902
+    }
+    local_supplies = 4.0
+}

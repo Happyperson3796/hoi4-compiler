@@ -1,0 +1,28 @@
+#Parent: 473
+#ID: EAST_BRITISH_COLUMBIA
+state = {
+    id = 1053
+    name = "STATE_1053"
+    manpower = 54390
+    state_category = town
+    resources = {
+        oil = 1
+    }
+    history = {
+        owner = CAN
+        buildings = {
+            infrastructure = 3
+        }
+        add_core_of = CAN
+        set_variable = { var = state_event_parent value = 473 }
+    }
+    provinces = {
+        4343
+        4877
+        7677
+        7761
+        7820
+        12578
+    }
+    local_supplies = 4.0
+}

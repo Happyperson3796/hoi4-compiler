@@ -1,0 +1,31 @@
+#Parent: 845
+#ID: GENEVA
+state = {
+    id = 1039
+    name = "STATE_1039"
+    manpower = 1240378
+    state_category = large_town
+    resources = {
+        aluminium = 11
+    }
+    history = {
+        owner = SWI
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+            arms_factory = 1
+        }
+        victory_points = {
+            6666
+            5
+        }
+        add_core_of = SWI
+        set_variable = { var = state_event_parent value = 845 }
+    }
+    provinces = {
+        13124
+        6666
+        9622
+    }
+    local_supplies = 0.0
+}

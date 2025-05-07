@@ -1,0 +1,58 @@
+#Parent: 378
+#ID: SOUTHERN_CALIFORNIA
+state = {
+    id = 1083
+    name = "STATE_1083"
+    manpower = 3075876
+    state_category = metropolis
+    resources = {
+        oil = 45
+        aluminium = 3
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+            1562 = {
+                naval_base = 10
+            }
+            9814 = {
+                naval_base = 5
+            }
+            industrial_complex = 2
+            arms_factory = 1
+        }
+        victory_points = {
+            9814
+            30
+        }
+        victory_points = {
+            1562
+            15
+        }
+        add_core_of = USA
+        1939.1.1 = {
+            buildings = {
+                industrial_complex = 7
+            }
+        }
+        set_variable = { var = state_event_parent value = 378 }
+    }
+    provinces = {
+        823
+        1562
+        4727
+        6881
+        7517
+        7986
+        9814
+        9855
+        10483
+        11757
+        11795
+        11859
+        12303
+        12374
+    }
+    local_supplies = 0.0
+}

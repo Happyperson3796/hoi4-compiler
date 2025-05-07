@@ -1,0 +1,28 @@
+state = {
+    id = 785
+    name = "STATE_785"
+    manpower = 775893
+    state_category = town
+    resources = {
+        steel = 6
+        aluminium = 2
+    }
+    history = {
+        victory_points = {
+            11420
+            5
+        }
+        owner = FRA
+        add_core_of = FRA
+        buildings = {
+            infrastructure = 4
+            industrial_complex = 0
+        }
+    }
+    provinces = {
+        454
+        6585
+        11420
+    }
+    local_supplies = 0.0
+}

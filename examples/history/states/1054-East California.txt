@@ -1,0 +1,42 @@
+#Parent: 378
+#ID: EAST_CALIFORNIA
+state = {
+    id = 1054
+    name = "STATE_1054"
+    manpower = 141932
+    state_category = metropolis
+    resources = {
+        oil = 42
+        aluminium = 2
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 1
+        }
+        add_core_of = USA
+        1939.1.1 = {
+            buildings = {
+                industrial_complex = 7
+            }
+        }
+        set_variable = { var = state_event_parent value = 378 }
+    }
+    provinces = {
+        710
+        766
+        941
+        1432
+        1601
+        1651
+        4331
+        4657
+        7667
+        10159
+        10387
+        11698
+        11763
+    }
+    local_supplies = 0.0
+}

@@ -1,0 +1,30 @@
+#Parent: 986
+#ID: AMRITSAR
+state = {
+    id = 1124
+    name = "STATE_1124"
+    manpower = 6995901
+    state_category = town
+    resources = {
+        
+    }
+    history = {
+        owner = RAJ
+        buildings = {
+            infrastructure = 1
+        }
+        victory_points = {
+            10729
+            3
+        }
+        add_core_of = RAJ
+        add_core_of = KHL
+        set_variable = { var = state_event_parent value = 986 }
+    }
+    provinces = {
+        2002
+        12868
+        10729
+    }
+    local_supplies = 0.0
+}

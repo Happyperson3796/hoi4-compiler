@@ -1,0 +1,30 @@
+#Parent: 232
+#ID: NORTH_DAGESTAN
+state = {
+    id = 1120
+    name = "STATE_1120"
+    manpower = 526339
+    state_category = rural
+    resources = {
+        oil = 5
+    }
+    history = {
+        owner = SOV
+        buildings = {
+            infrastructure = 2
+        }
+        add_core_of = SOV
+        add_core_of = DAG
+        set_variable = { var = state_event_parent value = 232 }
+    }
+    provinces = {
+        11632
+        712
+        728
+        6748
+        6730
+        683
+        700
+    }
+    local_supplies = 0.0
+}

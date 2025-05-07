@@ -1,0 +1,25 @@
+#Parent: 471
+#ID: NORTHEAST_BRITISH_COLUMBIA
+state = {
+    id = 1069
+    name = "STATE_1069"
+    manpower = 9227
+    state_category = wasteland
+    resources = {
+        
+    }
+    history = {
+        owner = CAN
+        buildings = {
+            infrastructure = 1
+        }
+        add_core_of = CAN
+        set_variable = { var = state_event_parent value = 471 }
+    }
+    provinces = {
+        917
+        1411
+        4678
+    }
+    local_supplies = 3.000
+}

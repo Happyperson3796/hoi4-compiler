@@ -1,0 +1,41 @@
+add_state_core = 752
+add_state_core = 751
+capital = 752
+load_focus_tree = china_warlord_focus
+set_war_support = 0.70
+set_stability = 1.00
+add_manpower = 300000
+recruit_character = XIK_liu_wenhui
+add_equipment_to_stockpile = {
+    type = infantry_equipment_2
+    amount = 1500
+    producer = XIK
+}
+add_equipment_to_stockpile = {
+    type = artillery_equipment_2
+    amount = 800
+    producer = XIK
+}
+add_equipment_to_stockpile = {
+    type = support_equipment_1
+    amount = 600
+    producer = XIK
+}
+add_equipment_to_stockpile = {
+    type = anti_tank_equipment_1
+    amount = 600
+    producer = XIK
+}
+set_politics = {
+    ruling_party = neutrality
+    last_election = "1936.1.1"
+    election_frequency = 48
+    elections_allowed = no
+}
+set_popularities = {
+    democratic = 50
+    neutrality = 50
+    fascism = 0
+    communism = 0
+}
+setup_starting_tech = yes

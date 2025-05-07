@@ -1,0 +1,43 @@
+#Parent: 386
+#ID: WASHINGTON_PLAINS
+state = {
+    id = 1091
+    name = "STATE_1091"
+    manpower = 534753
+    state_category = large_town
+    resources = {
+        
+    }
+    history = {
+        owner = USA
+        buildings = {
+            infrastructure = 3
+        }
+        victory_points = {
+            1690
+            1
+        }
+        add_core_of = USA
+        1939.1.1 = {
+            buildings = {
+                7315 = {
+                    air_facility = 1
+                }
+            }
+        }
+        set_variable = { var = state_event_parent value = 386 }
+    }
+    provinces = {
+        1690
+        4747
+        10155
+        10198
+        10327
+        10687
+        10690
+        10693
+        12155
+        12673
+    }
+    local_supplies = 0.0
+}

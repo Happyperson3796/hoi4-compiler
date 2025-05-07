@@ -1,0 +1,25 @@
+#Parent: 981
+#ID: SOUTH_BAROTSELAND
+state = {
+    id = 1110
+    name = "STATE_1110"
+    manpower = 163886
+    state_category = rural
+    resources = {
+        chromium = 4
+        tungsten = 1
+    }
+    history = {
+        owner = ENG
+        buildings = {
+            infrastructure = 1
+        }
+        add_core_of = ZAM
+        add_core_of = BAR
+        set_variable = { var = state_event_parent value = 981 }
+    }
+    provinces = {
+        7872
+    }
+    local_supplies = 0.0
+}

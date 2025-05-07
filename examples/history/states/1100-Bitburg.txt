@@ -1,0 +1,58 @@
+#Parent: 42
+#ID: BITBURG
+state = {
+    id = 1100
+    name = "STATE_1100"
+    manpower = 324694
+    state_category = metropolis
+    resources = {
+        steel = 6
+        aluminium = 2
+    }
+    history = {
+        owner = GER
+        buildings = {
+            infrastructure = 4
+        }
+        victory_points = {
+            11435
+            1
+        }
+        add_core_of = GER
+        add_core_of = RHI
+        add_core_of = PRE
+        set_demilitarized_zone = yes
+        1936.3.7 = {
+            set_demilitarized_zone = no
+        }
+        1939.1.1 = {
+            buildings = {
+                radar_station = 1
+                synthetic_refinery = 3
+                11470 = {
+                    bunker = 2
+                }
+                11435 = {
+                    bunker = 2
+                }
+                9575 = {
+                    bunker = 2
+                }
+                11531 = {
+                    bunker = 2
+                }
+                563 = {
+                    bunker = 2
+                }
+                3558 = {
+                    bunker = 2
+                }
+            }
+        }
+        set_variable = { var = state_event_parent value = 42 }
+    }
+    provinces = {
+        11435
+    }
+    local_supplies = 0.0
+}

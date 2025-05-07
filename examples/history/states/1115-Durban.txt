@@ -1,0 +1,33 @@
+#Parent: 719
+#ID: DURBAN
+state = {
+    id = 1115
+    name = "STATE_1115"
+    manpower = 1560751
+    state_category = city
+    resources = {
+        chromium = 21
+    }
+    history = {
+        owner = SAF
+        buildings = {
+            infrastructure = 3
+            1468 = {
+                naval_base = 2
+            }
+            industrial_complex = 1
+        }
+        victory_points = {
+            1468
+            3
+        }
+        add_core_of = SAF
+        set_variable = { var = state_event_parent value = 719 }
+    }
+    provinces = {
+        1468
+        1494
+        8178
+    }
+    local_supplies = 0.0
+}

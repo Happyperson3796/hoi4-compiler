@@ -1,0 +1,23 @@
+#Parent: 719
+#ID: LESOTHO
+state = {
+    id = 1111
+    name = "STATE_1111"
+    manpower = 242132
+    state_category = city
+    resources = {
+        chromium = 7
+    }
+    history = {
+        owner = SAF
+        buildings = {
+            infrastructure = 3
+        }
+        add_core_of = SAF
+        set_variable = { var = state_event_parent value = 719 }
+    }
+    provinces = {
+        4556
+    }
+    local_supplies = 0.0
+}

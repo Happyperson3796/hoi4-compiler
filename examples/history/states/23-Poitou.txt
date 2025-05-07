@@ -1,0 +1,31 @@
+state = {
+    id = 23
+    name = "STATE_23"
+    manpower = 741434
+    state_category = town
+    resources = {
+        steel = 5
+    }
+    history = {
+        owner = FRA
+        victory_points = {
+            6657
+            5
+        }
+        buildings = {
+            infrastructure = 3
+            industrial_complex = 0
+            6657 = {
+                naval_base = 3
+            }
+        }
+        add_core_of = FRA
+    }
+    provinces = {
+        595
+        6657
+        9597
+        11582
+    }
+    local_supplies = 0.0
+}
