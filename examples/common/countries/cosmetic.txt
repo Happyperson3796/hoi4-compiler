@@ -1,4 +1,0 @@
-east_rome_formable_cosmetic = {
-    color = rgb { 114 52 106 }
-    color_ui = rgb { 114 52 106 }
-}
