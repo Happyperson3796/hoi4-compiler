@@ -129,6 +129,17 @@ class Formable(fileType):
             with open(cosmetics_file, "w") as file:
                 file.write("#cosmetic.txt\n\n")
 
+        rgb = color
+        for x in range(len(rgb)):
+            rgb[x] = int(rgb[x])
+
+        color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+        color = colorsys.hsv_to_rgb(color[0], color[1]/0.6, color[2]/0.8)
+        colors = []
+        for x in range(len(color)):
+            colors.append(str(round(color[x])))
+        color = colors
+
         with open(cosmetics_file, "a") as file:
             template = id+"_formable_cosmetic = { color = rgb { "+" ".join(color)+" }  color_ui = rgb { "+str(" ".join(color))+" } }\n"
             file.write(template)
@@ -370,19 +381,6 @@ formable_$ID_category = {{
             if exclusive == "yes":
                 t_exclusive = "set_country_flag = form_exclusive_nation_tier_"+tier
             text = text.replace("$EXCLUSIVE", t_exclusive)
-
-            rgb = color
-            for x in range(len(rgb)):
-                rgb[x] = int(rgb[x])
-
-            color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
-            color = colorsys.hsv_to_rgb(color[0], color[1]/0.6, color[2]/0.8)
-            colors = []
-            for x in range(len(color)):
-                colors.append(str(round(color[x])))
-            color = " ".join(colors)
-
-            text = text.replace("$COLOR", color)
 
             text = text.splitlines()
 
