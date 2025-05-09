@@ -36,13 +36,28 @@ class Formable(fileType):
         extras = data.extract("extras", Collection())
         claims = data.extract("claims", Collection())
         gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
-        tier = data.extract("tier", "1")
+        tier = str(data.extract("tier", "1"))
         exclusive = data.extract("exclusive", "yes")
         on_formed = data.extract("on_formed", Collection())
         extra_reqs = data.extract("extra_reqs", Collection())
         hist_player = data.extract("hist_player", "yes")
         ai = data.extract("ai", "yes")
         hist_ai = data.extract("hist_ai", "no")
+
+        if tier == "0":
+            tier_color = "§g"
+        elif tier == "1":
+            tier_color = "§R"
+        elif tier == "2":
+            tier_color = "§O"
+        elif tier == "3":
+            tier_color = "§2"
+        elif tier == "4":
+            tier_color = "§G"
+        elif tier == "5":
+            tier_color = "§0"
+
+        else: tier_color = "§R"
 
         conversion_list = [] #Add any custom states
         if os.path.exists(parent_dir+"/history/states/"):
@@ -99,7 +114,7 @@ class Formable(fileType):
         with open(loc_file, "a", encoding="utf-8-sig") as file:
             template = f"""
   formable_{id}_category:0 "Form {name_def}"
-  formable_{id}_category_desc:0 "Form {name_def}"
+  formable_{id}_category_desc:0 "Form {name_def}\\n\\n{tier_color}Tier {tier} Formable§!"
   formable_view_{id}:0 "View Cores"
   formable_form_{id}:0 "Form {name_def}"
   formable_apply_{id}:0 "Re-Apply Cosmetic"
@@ -117,7 +132,7 @@ class Formable(fileType):
                 template += "  "+k+":0 "+v+"\n"
 
             if exclusive == "yes":
-                template += f"  formable_form_{id}_desc:0 \"§RTier {tier} Formable§!\"\n"
+                template += f"  formable_form_{id}_desc:0 \"{tier_color}Tier {tier} Formable§!\"\n"
 
             file.write(template)
 
