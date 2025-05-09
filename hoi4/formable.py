@@ -113,7 +113,7 @@ class Formable(fileType):
 
         with open(loc_file, "a", encoding="utf-8-sig") as file:
             tier_desc = f"\\n\\n{tier_color}Tier {tier} Formable§!"
-            if exclusive == "yes": tier_desc = ""
+            if exclusive != "yes": tier_desc = ""
 
             template = f"""
   formable_{id}_category:0 "Form {name_def}"
