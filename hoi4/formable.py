@@ -36,7 +36,7 @@ class Formable(fileType):
         extras = data.extract("extras", Collection())
         claims = data.extract("claims", Collection())
         gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
-        tier = data.extract("tier", "0")
+        tier = data.extract("tier", "1")
         exclusive = data.extract("exclusive", "yes")
         on_formed = data.extract("on_formed", Collection())
         extra_reqs = data.extract("extra_reqs", Collection())
