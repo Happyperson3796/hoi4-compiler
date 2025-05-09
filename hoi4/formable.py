@@ -112,9 +112,12 @@ class Formable(fileType):
   formable_allow_integration:0 "Allows Integration of §H[PREV.GetName]§!"\n\n""")
 
         with open(loc_file, "a", encoding="utf-8-sig") as file:
+            tier_desc = f"\\n\\n{tier_color}Tier {tier} Formable§!"
+            if exclusive == "yes": tier_desc = ""
+
             template = f"""
   formable_{id}_category:0 "Form {name_def}"
-  formable_{id}_category_desc:0 "Form {name_def}\\n\\n{tier_color}Tier {tier} Formable§!"
+  formable_{id}_category_desc:0 "Form {name_def}{tier_desc}"
   formable_view_{id}:0 "View Cores"
   formable_form_{id}:0 "Form {name_def}"
   formable_apply_{id}:0 "Re-Apply Cosmetic"
