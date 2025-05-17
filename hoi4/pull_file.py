@@ -41,6 +41,6 @@ class Pulled(fileType):
             os.remove(head+"/"+dest_file)
         except: pass
 
-        try:
-            os.remove(self.path)
-        except: pass
+        #try:
+        #    os.remove(self.path) #removed for now, potentially unstable
+        #except: pass

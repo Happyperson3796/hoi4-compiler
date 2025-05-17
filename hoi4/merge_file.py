@@ -41,6 +41,6 @@ class Merged(fileType):
             os.remove(head+"/"+base_file)
         except: pass
 
-        try:
-            os.remove(self.path)
-        except: pass
+        #try:
+        #    os.remove(self.path) #removed for now, potentially unstable
+        #except: pass
