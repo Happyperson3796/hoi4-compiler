@@ -135,7 +135,8 @@ class Collection(list):
     def merge(self, collection, reverse=False):
         this = self
 
-        if len(collection) == 1 and isinstance(collection[0], Pair) and isinstance(collection[0][-1], Value) and isinstance(collection[0][-1].val(), Collection): #Work for grouped collection types like thing = { contents }
+        known_singletons = ["equipments"]
+        if len(collection) == 1 and isinstance(collection[0], Pair) and isinstance(collection[0][-1], Value) and isinstance(collection[0][-1].val(), Collection) and str(collection[0][0]) in known_singletons: #Work for grouped collection types like thing = { contents }, add more to list
             collection = collection[0][-1].val()
             this = self[0][-1].val()
 
