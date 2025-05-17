@@ -132,16 +132,32 @@ class Collection(list):
             else:
                 raise e
     
-    def merge(self, collection):
+    def merge(self, collection, reverse=False):
+        this = self
+
+        if len(collection) == 1 and isinstance(collection[0], Pair) and isinstance(collection[0][-1], Value) and isinstance(collection[0][-1].val(), Collection): #Work for grouped collection types like thing = { contents }
+            collection = collection[0][-1].val()
+            this = self[0][-1].val()
+
+        to_append = Collection()
+
         for override in collection:
             append = True
-            for pair in self:
+            for pair in this:
                 if override[0] == pair[0]:
                     append = False
                     pair.set(override[-1])
 
             if append:
-                self.append(override)
+                to_append.append(override)
+
+        if not reverse:
+            this.extend(to_append)
+        else:
+            l = -1
+            for x in to_append:
+                l += 1
+                this.insert(l, x)
 
     def unwrap(self):
         """Unwrap all Values in the collection"""

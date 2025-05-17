@@ -9,7 +9,12 @@ class Merged(fileType):
         head, tail = os.path.split(self.path)
         
         with open(self.path, "r") as file:
-            base_file = file.readlines().copy()[0].replace("#","").strip()
+            line = file.readlines()
+
+            base_file = line[0].replace("#","").strip()
+
+            reverse = line[1].strip()
+            if (reverse == "#reverse = yes"): reverse = True
             
         with open(self.path, "r") as file:
             override = get(file.read())
@@ -20,7 +25,7 @@ class Merged(fileType):
         with open(head+"/"+base_file, "r") as file:
             base = get(file.read())
 
-        override.merge(base)
+        override.merge(base, reverse)
 
         with open(head+"/"+base_file, "w") as file:
             file.write(format(override))
