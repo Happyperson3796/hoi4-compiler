@@ -36,7 +36,6 @@ class Nation(fileType):
                         tdata = get(file.read())
                         parent = str(tdata.retrieve("parent").val()[0])
                         id = "$"+str(tdata.retrieve("id").val())
-                        print(parent)
                         cached_state_mappings[id] = parent
 
         for s in cores: #Integration for .state files, add cores
