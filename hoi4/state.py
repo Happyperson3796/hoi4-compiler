@@ -4,7 +4,7 @@ import os
 from .filetypes import fileType
 from .globals import vanilla_path
 import math
-import chardet
+from charset_normalizer import from_path
 
 def get_top_state_id(parent_dir):
     top_num = 0
@@ -21,6 +21,11 @@ def get_top_state_id(parent_dir):
         except: pass
 
     return top_num
+
+
+postbuild_tree_cache_run = False
+postbuild_ids_cache = {}
+
 
 class State(fileType):
     def run(self):
@@ -398,12 +403,11 @@ on_actions = {
 
 
 
-
-
-    def postbuild(self): #Replace all $ID with state ids
+    def build(self): #Cache all state id conversions for postbuild
+        global postbuild_ids_cache
+        
         head, tail = os.path.split(self.path)
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
-        parent_dir = os.path.abspath(os.path.join(parent_dir, os.pardir))
 
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
@@ -419,28 +423,41 @@ on_actions = {
                     num_id = path.name.split("-",1)[0].strip()
             except: pass
 
-        def scan_subdirs(dir):
-            for filepath in os.scandir(dir):
-                if filepath.is_dir():
-                    scan_subdirs(filepath.path)
-                elif filepath.path.endswith(".txt") or filepath.path.endswith(".yml"):
-                    try:
-                        write = False
-                        with open(filepath.path, "r", encoding="utf-8-sig") as file:
-                            text = file.read()
-                            if "$"+str(full_id) in text:
-                                text = text.replace("$"+str(full_id), str(num_id))
-                                write = True
-                                
-                        if write:
-                            bin = open(filepath.path, "rb")
-                            encoding = chardet.detect(bin.read())["encoding"] #TODO: probably horribly inefficient
-                            bin.close()
-                            with open(filepath.path, "w", encoding=encoding) as file:
-                                file.write(text)
-                    except: pass
+        postbuild_ids_cache[full_id] = num_id
 
-        scan_subdirs(parent_dir)
+    def postbuild(self): #Replace all $ID with state ids
+        global postbuild_tree_cache_run
+        global postbuild_ids_cache
+        
+        head, tail = os.path.split(self.path)
+        parent_dir = os.path.abspath(os.path.join(head, os.pardir))
+        parent_dir = os.path.abspath(os.path.join(parent_dir, os.pardir))
+
+        if not postbuild_tree_cache_run: #Run once for all state files
+            postbuild_tree_cache_run = True
+
+            def scan_subdirs(dir):
+                for filepath in os.scandir(dir):
+                    if filepath.is_dir() and not filepath.path.endswith("build"):
+                        scan_subdirs(filepath.path)
+                    elif filepath.path.endswith(".txt") or filepath.path.endswith(".yml"):
+                        try:
+                            write = False
+                            with open(filepath.path, "r", encoding="utf-8-sig") as file:
+                                text = file.read()
+                                if "$" in text:
+                                    write = True
+
+                            if write:
+                                encoding = from_path(filepath.path).best().encoding
+
+                                for full, num in postbuild_ids_cache.items():
+                                    text = text.replace("$"+full, num)
+                                with open(filepath.path, "w", encoding=encoding) as file:
+                                    file.write(text)
+                        except: pass
+
+            scan_subdirs(parent_dir)
 
 
 

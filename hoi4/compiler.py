@@ -5,6 +5,8 @@ import distutils.dir_util
 import json
 import hashlib
 import re
+import time
+from tqdm import tqdm
 
 
 def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
@@ -51,7 +53,7 @@ class Scan():
 
     def scan(self, dir): #Base scan func
         for path in os.scandir(dir):
-            if path.is_dir() and path.name != "build":
+            if path.is_dir() and path.name != "build" and path.name != "Hoi4 modding tools":
                 self.scan(path.path)
             elif filetypes.should_run(path.path):
                 hash = compute_file_hash(path.path)
@@ -62,12 +64,15 @@ class Scan():
                     self.running_files += 1
 
     def execute(self):
-        for o in filetypes.order():
+        bar = tqdm(filetypes.order())
+        for o in bar:
+            bar.set_description(f"Processing: {o}")
+            start = time.time()
             for r in [x for x in self.runnable]:
                 if isinstance(r, o):
                     self.runnable.remove(r)
                     r.run()
-
+                    bar.set_postfix_str(str(round(time.time() - start, 1))+" Seconds")
 
 
 class Build():
@@ -176,34 +181,47 @@ class Build():
             #scan(self.mod, self.parsed_files)
 
     def fire_build_scripts(self, dir="", mode=0):
+        scripts = []
+
         if dir == "": dir = self.mod
         for path in scandir(dir):
             if path.is_dir():
                 self.fire_build_scripts(path.path, mode=mode)
             elif filetypes.should_run(path.path):
                 file = filetypes.get(path.path)
-                if mode == -1:
-                    file.prebuild()
-                elif mode == 0:
-                    file.build()
-                elif mode == 1:
-                    file.postbuild()
+                scripts.append(file)
+
+        if mode == -1:
+            [file.prebuild() for file in scripts]
+        elif mode == 0:
+            [file.build() for file in scripts]
+        elif mode == 1:
+            [file.postbuild() for file in scripts]
 
     def build(self):
         self.apply_overrides()
 
+        start = time.time()
+
+        print("Prebuild scripts...")
         self.fire_build_scripts("", -1)
 
+        print("Running files...")
         scan(self.mod)
 
+        print("Build scripts...")
         self.fire_build_scripts("", 0)
 
         print("Cleaning build files...")
         self.collect_compiler_files()
 
+        print("Postbuild scripts...")
         self.fire_build_scripts("", 1)
 
-        print("Cleaning empty dirs...")
+        print("Finished build in "+str(round(time.time() - start, 1))+" Seconds")
+
+        #print("Cleaning empty dirs...")
         self.clean_empty_dirs()
+
 
 
