@@ -4,8 +4,14 @@ import os
 from .filetypes import fileType
 from PIL import Image
 
+cached_state_mappings = {}
+build_cached_state_mappings = False
+
 class Nation(fileType):
     def run(self):
+        global cached_state_mappings
+        global build_cached_state_mappings
+
         head, tail = os.path.split(self.path)
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
         
@@ -22,16 +28,23 @@ class Nation(fileType):
             history_data = data.get("history").val()
             cores = data.get("cores").val()
 
-        for s in cores: #Integration for .state files, add cores
+        if not build_cached_state_mappings:
+            build_cached_state_mappings = True
             for path in os.scandir(parent_dir+"/states/"):
                 if path.name.endswith(".state"):
                     with open(path.path, "r") as file:
                         tdata = get(file.read())
-                        parent = tdata.retrieve("parent").val()[0]
-                        if str(parent) == str(s):
-                            tcore = "$"+str(tdata.retrieve("id").val())
-                            if tcore not in cores:
-                                cores.append(tcore)
+                        parent = str(tdata.retrieve("parent").val()[0])
+                        id = "$"+str(tdata.retrieve("id").val())
+                        print(parent)
+                        cached_state_mappings[id] = parent
+
+        for s in cores: #Integration for .state files, add cores
+            for id in cached_state_mappings:
+                if cached_state_mappings[id] == str(s):
+                    if id not in cores:
+                        cores.append(id)
+
 
         history = Collection()
         for s in cores:
