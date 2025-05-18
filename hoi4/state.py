@@ -27,6 +27,23 @@ postbuild_tree_cache_run = False
 postbuild_ids_cache = {}
 
 
+def get_encoding(path):
+    # Fast initial detection
+    encoding = from_path(path).best().encoding
+    normalized = encoding.lower().replace('-', '_')
+
+    # Most files will hit this and skip the BOM check
+    if normalized != 'utf_8':
+        return encoding
+
+    # Only check BOM if it's detected as plain utf_8
+    with open(path, 'rb') as f:
+        if f.read(3).startswith(b'\xef\xbb\xbf'):
+            return 'utf_8_sig'
+
+    return encoding
+
+
 class State(fileType):
     def run(self):
         head, tail = os.path.split(self.path)
@@ -449,7 +466,7 @@ on_actions = {
                                     write = True
 
                             if write:
-                                encoding = from_path(filepath.path).best().encoding
+                                encoding = get_encoding(filepath.path)
 
                                 for full, num in postbuild_ids_cache.items():
                                     text = text.replace("$"+full, num)
