@@ -1,5 +1,5 @@
 from .filetype import fileType
-from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable, equipment
+from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable, equipment, focus_icon
 import os
 
 def clean_suffix(path):
@@ -32,6 +32,8 @@ def get(path: str):
         return append_file.Appended(path)
     elif path.endswith(".flag.tga"):
         return flag.Flag(path)
+    elif path.endswith(".focus.dds"):
+        return focus_icon.FocusIcon(path)
     else:
         return fileType(path)
     
@@ -50,6 +52,7 @@ def order():
         merge_file.Merged,
         append_file.Appended,
         flag.Flag,
+        focus_icon.FocusIcon,
         fileType
     ]
 
