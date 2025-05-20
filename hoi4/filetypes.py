@@ -1,5 +1,5 @@
 from .filetype import fileType
-from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable, equipment, focus_icon
+from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable, equipment, focus_icon, state_patch
 import os
 
 def clean_suffix(path):
@@ -14,6 +14,8 @@ def get(path: str):
         return achievements.Achievement(path)
     elif path.endswith(".nation"):
         return nation.Nation(path)
+    elif path.endswith(".state_patch"):
+        return state_patch.StatePatch(path)
     elif path.endswith(".state"):
         return state.State(path)
     elif path.endswith(".formable.json"):
@@ -43,6 +45,7 @@ def order():
         focus.Focus,
         achievements.Achievement,
         nation.Nation,
+        state_patch.StatePatch,
         state.State,
         formable.JsonFormable,
         formable.Formable,
