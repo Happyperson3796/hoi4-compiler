@@ -7,6 +7,15 @@ import hashlib
 import re
 import time
 from tqdm import tqdm
+import builtins
+
+oprint = builtins.print
+def nprint(*args, **kwargs):
+    def sanitize(arg):
+        return str(arg).replace(os.path.expanduser("~").split("\\")[-1].strip(), "$USER")
+    args = [sanitize(arg) for arg in args]
+    oprint(*args, **kwargs)
+builtins.print = nprint
 
 
 def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
@@ -161,7 +170,7 @@ class Build():
         head, tail = os.path.split(self.mod)
 
         overrides = []
-        for file in scandir(self.data["overrides"].replace("$USER", os.path.expanduser("~"))):
+        for file in scandir(self.data["overrides"].replace("$USER", os.path.expanduser("~")).replace("/", "\\")):
             if file.is_dir():
                 if file.name.startswith(tail+"_overrides"):
                     overrides.append(file.path)
