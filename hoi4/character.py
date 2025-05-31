@@ -68,7 +68,7 @@ class Character(fileType):
             characters_full = get(file.read())
             characters = characters_full[0][-1].val()
             characters.append(Pair(id, "=", Value(Collection())))
-            characters = characters[0][-1].val()
+            characters = characters[-1][-1].val()
 
         portraits_included = False
 
