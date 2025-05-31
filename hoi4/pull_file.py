@@ -32,12 +32,12 @@ class Pulled(fileType):
     def clean(self):
         head, tail = os.path.split(self.path)
 
-        with open(self.path, "r") as file:
-            lines = file.readlines()
-            base_file = lines[0].replace("#","").strip()
-            dest_file = lines[1].replace("#","").strip()
+        #with open(self.path, "r") as file:
+        #    lines = file.readlines()
+        #    base_file = lines[0].replace("#","").strip()
+        #    dest_file = lines[1].replace("#","").strip()
 
-        #try: #Breaks... so much
+        #try:
         #    os.remove(head+"/"+dest_file)
         #except: pass
 

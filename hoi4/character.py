@@ -1,5 +1,5 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from .pdxscript import get, format, Pair, Collection, Value
 import os
 from .filetypes import fileType
 from . import globals
@@ -25,7 +25,7 @@ class Character(fileType):
 
         small_portrait = True
         try:
-            shutil.copyfile(head+"/"+id+"_small.dds", parent_dir+"/gfx/interface/ideas/"+namespace+"/"+id+"_small.dds")
+            shutil.move(head+"/"+id+"_small.dds", parent_dir+"/gfx/interface/ideas/"+namespace+"/"+id+"_small.dds")
             gfx_path = parent_dir+"/interface/"+namespace+"_generated_ideas.gfx"
             if not os.path.exists(gfx_path):
                 with open(gfx_path, "w", encoding="utf-8-sig") as file:
@@ -42,7 +42,7 @@ class Character(fileType):
 
         large_portrait = True
         try:
-            shutil.copyfile(head+"/"+id+".dds", parent_dir+"/gfx/leaders/"+namespace+"/"+id+".dds")
+            shutil.move(head+"/"+id+".dds", parent_dir+"/gfx/leaders/"+namespace+"/"+id+".dds")
             gfx_path = parent_dir+"/interface/"+namespace+"_generated_leader_portraits.gfx"
             if not os.path.exists(gfx_path):
                 with open(gfx_path, "w", encoding="utf-8-sig") as file:
@@ -67,6 +67,8 @@ class Character(fileType):
         with open(characters_path, "r", encoding="utf-8-sig") as file:
             characters_full = get(file.read())
             characters = characters_full[0][-1].val()
+            characters.append(Pair(id, "=", Value(Collection())))
+            characters = characters[0][-1].val()
 
         portraits_included = False
 

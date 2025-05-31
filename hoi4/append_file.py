@@ -12,9 +12,9 @@ class Appended(fileType):
             text = file.readlines()
             base_file = text[0].replace("#","").strip()
 
-            if text[1].startswith("#override"): #Don't append if #override is set and the file already includes this
-                override_existing = True
-            else: override_existing = False
+            if text[1].startswith("#disable_override"): #Always append if #disable_override is set
+                override_existing = False
+            else: override_existing = True
             
         with open(self.path, "r") as file:
             override = get(file.read())
