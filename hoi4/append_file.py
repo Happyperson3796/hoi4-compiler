@@ -9,7 +9,12 @@ class Appended(fileType):
         head, tail = os.path.split(self.path)
         
         with open(self.path, "r") as file:
-            base_file = file.readlines().copy()[0].replace("#","").strip()
+            text = file.readlines()
+            base_file = text[0].replace("#","").strip()
+
+            if text[1].startswith("#override"): #Don't append if #override is set and the file already includes this
+                override_existing = True
+            else: override_existing = False
             
         with open(self.path, "r") as file:
             override = get(file.read())
@@ -20,7 +25,10 @@ class Appended(fileType):
         with open(head+"/"+base_file, "r") as file:
             base = get(file.read())
 
-        base.append(override[0])
+        for x in override:
+            if str(x) in str(base) and override_existing:
+                continue
+            base.append(x)
 
         with open(head+"/"+base_file, "w") as file:
             file.write(format(base))
@@ -32,6 +40,6 @@ class Appended(fileType):
         with open(self.path, "r") as file:
             base_file = file.readlines()[0].replace("#","").strip()
 
-        try:
-            os.remove(self.path)
-        except: pass
+        #try: #Mostly replaced by #override toggle
+        #    os.remove(self.path)
+        #except: pass

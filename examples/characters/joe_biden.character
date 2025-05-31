@@ -1,0 +1,20 @@
+
+namespace = test
+id = joe_biden
+name = "Joe Biden"
+
+advisor = {
+    slot = air_chief
+    idea_token = joe_biden
+    allowed = {}
+    available = {}
+    
+    traits = {
+        air_chief_all_weather_2
+    }
+
+    cost = 100
+    ai_will_do = {
+        base = 0.0
+    }
+}

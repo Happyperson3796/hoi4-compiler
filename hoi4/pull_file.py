@@ -37,9 +37,9 @@ class Pulled(fileType):
             base_file = lines[0].replace("#","").strip()
             dest_file = lines[1].replace("#","").strip()
 
-        try:
-            os.remove(head+"/"+dest_file)
-        except: pass
+        #try: #Breaks... so much
+        #    os.remove(head+"/"+dest_file)
+        #except: pass
 
         #try:
         #    os.remove(self.path) #removed for now, potentially unstable

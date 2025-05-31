@@ -1,0 +1,20 @@
+from hoi4.pdxscript import get, format, reformat, Pair, Collection
+
+with open("japan.txt", "r", encoding="utf-8-sig") as file:
+    data = get(file.read())
+
+for x in data[0][-1].val():
+    focus = x[-1]
+    
+    new = Collection()
+
+    for y in focus.val():
+        if y[0] == "x" or y[0] == "y" or y[0] == "id" or y[0] == "relative_position_id":
+            new.append(y)
+
+    focus.set(new)
+
+print(format(data))
+
+with open("japan.txt", "w", encoding="utf-8-sig") as file:
+    file.write(format(data).replace("    ", "	"))
