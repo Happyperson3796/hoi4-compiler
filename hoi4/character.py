@@ -28,15 +28,15 @@ class Character(fileType):
             shutil.move(head+"/"+id+"_small.dds", parent_dir+"/gfx/interface/ideas/"+namespace+"/"+id+"_small.dds")
             gfx_path = parent_dir+"/interface/"+namespace+"_generated_ideas.gfx"
             if not os.path.exists(gfx_path):
-                with open(gfx_path, "w", encoding="utf-8-sig") as file:
+                with open(gfx_path, "w", encoding="utf-8") as file:
                     file.write("spriteTypes = {}")
 
-            with open(gfx_path, "r", encoding="utf-8-sig") as file:
+            with open(gfx_path, "r", encoding="utf-8") as file:
                 gfx = get(file.read())
 
-            gfx[0][-1].val().append(get(f"spriteType = {{ name = \"GFX_idea_{namespace}_{id}\" texturefile = \"gfx/interface/ideas/{namespace}/{id}_small.dds\" }}")[0])
+            gfx[0][-1].val().append(get(f"SpriteType = {{ name = \"GFX_idea_{namespace}_{id}\" texturefile = \"gfx/interface/ideas/{namespace}/{id}_small.dds\" }}")[0])
 
-            with open(gfx_path, "w", encoding="utf-8-sig") as file:
+            with open(gfx_path, "w", encoding="utf-8") as file:
                 file.write(format(gfx))
         except FileNotFoundError: small_portrait = False
 
@@ -45,15 +45,15 @@ class Character(fileType):
             shutil.move(head+"/"+id+".dds", parent_dir+"/gfx/leaders/"+namespace+"/"+id+".dds")
             gfx_path = parent_dir+"/interface/"+namespace+"_generated_leader_portraits.gfx"
             if not os.path.exists(gfx_path):
-                with open(gfx_path, "w", encoding="utf-8-sig") as file:
+                with open(gfx_path, "w", encoding="utf-8") as file:
                     file.write("spriteTypes = {}")
 
-            with open(gfx_path, "r", encoding="utf-8-sig") as file:
+            with open(gfx_path, "r", encoding="utf-8") as file:
                 gfx = get(file.read())
 
-            gfx[0][-1].val().append(get(f"spriteType = {{ name = \"GFX_portrait_{namespace}_{id}\" texturefile = \"gfx/leaders/{namespace}/{id}.dds\" }}")[0])
+            gfx[0][-1].val().append(get(f"SpriteType = {{ name = \"GFX_portrait_{namespace}_{id}\" texturefile = \"gfx/leaders/{namespace}/{id}.dds\" }}")[0])
 
-            with open(gfx_path, "w", encoding="utf-8-sig") as file:
+            with open(gfx_path, "w", encoding="utf-8") as file:
                 file.write(format(gfx))
         except FileNotFoundError: large_portrait = False
 
@@ -82,13 +82,13 @@ class Character(fileType):
             portraits = "portraits = {"
 
             if large_portrait and small_portrait:
-                portraits += f"civilian = {{ large = GFX_portrait_{namespace}_{id} }}"
-                portraits += f"army = {{ large = GFX_portrait_{namespace}_{id}  small = GFX_idea_{namespace}_{id} }}"
+                portraits += f"civilian = {{ large = \"GFX_portrait_{namespace}_{id}\" }}"
+                portraits += f"army = {{ large = \"GFX_portrait_{namespace}_{id}\"  small = \"GFX_idea_{namespace}_{id}\" }}"
             elif large_portrait:
-                portraits += f"civilian = {{ large = GFX_portrait_{namespace}_{id} }}"
-                portraits += f"army = {{ large = GFX_portrait_{namespace}_{id} }}"
+                portraits += f"civilian = {{ large = \"GFX_portrait_{namespace}_{id}\" }}"
+                portraits += f"army = {{ large = \"GFX_portrait_{namespace}_{id}\" }}"
             elif small_portrait:
-                portraits += f"army = {{ small = GFX_idea_{namespace}_{id} }}"
+                portraits += f"army = {{ small = \"GFX_idea_{namespace}_{id}\" }}"
 
             characters.append(get(portraits+"}")[0])
 
