@@ -1,0 +1,23 @@
+import colorsys
+
+print("0 - Converts RGB to hoi4\n1 - converts hoi4 to RGB")
+mode = input("Mode: ")
+if mode == "": mode = "0"
+
+rgb = input("RGB: ")
+rgb = rgb.replace(",", "").replace("  "," ")
+rgb = rgb.split(" ")
+for x in range(len(rgb)):
+    rgb[x] = float(rgb[x])
+
+if mode == "0":
+    color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+    color = colorsys.hsv_to_rgb(color[0], color[1]/0.6, color[2]/0.8)
+elif mode == "1":
+    color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+    color = colorsys.hsv_to_rgb(color[0], color[1]*0.6, color[2]*0.8)
+
+c = []
+for x in color:
+    c.append(str(round(x)))
+print(" ".join(c))
