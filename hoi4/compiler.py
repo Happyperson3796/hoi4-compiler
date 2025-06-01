@@ -93,8 +93,9 @@ class Build():
         try:
             with open("build.hoi4", "r") as file:
                 self.data = json.load(file)
-        except:
+        except Exception as e:
             print("No build file found")
+            print(e)
             self.data = {
                 "excludes": [],
                 "overrides": ""
