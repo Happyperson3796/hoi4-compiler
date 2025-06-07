@@ -31,6 +31,7 @@ class Focus(fileType):
         with open(file_from, "r", encoding="utf-8-sig") as file:
             data = get(file.read()).get().val()
 
+            remove = []
             inline_ideas = ""
             inline_loc = ""
             def traverse(x, parent):
@@ -47,7 +48,7 @@ class Focus(fileType):
 
                     if x[0] == "define_idea":
                         idea: Collection = get(str(x))[0][-1].val()
-                        parent.remove(x)
+                        remove.append([parent, x])
 
                         name = idea.extract("name")
                         idea.remove(idea.select("name"))
@@ -64,6 +65,8 @@ class Focus(fileType):
                         inline_ideas += "\n        " + id +" = {"+(("\n"+format(idea)).replace("\n", "\n            ")).removesuffix("    ")+"}"
                         
             traverse(data, None)
+            for x, y in remove:
+                x.remove(y)
 
             if inline_ideas != "":
                 os.makedirs(base_dir+"/common/ideas/", exist_ok=True)
