@@ -77,12 +77,12 @@ class Focus(fileType):
 
             if inline_loc != "":
                 os.makedirs(base_dir+"/localisation/", exist_ok=True)            
-                if os.path.exists(base_dir+"/localisation/"+tail+"_inline_localisation.yml"):
-                    with open(base_dir+"/localisation/"+tail+"_inline_localisation.yml", "r") as loc:
+                if os.path.exists(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml"):
+                    with open(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml", "r", encoding="utf-8-sig") as loc:
                         inline_loc = loc.read() + "\n" + inline_loc
                 else: inline_loc = "l_english:\n" + inline_loc
 
-                with open(base_dir+"/localisation/"+tail+"_inline_localisation.yml", "w") as loc:
+                with open(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml", "w", encoding="utf-8-sig") as loc:
                     loc.write(inline_loc)
             
 
@@ -159,7 +159,7 @@ class Focus(fileType):
         except: pass
 
         try:
-            os.remove(base_dir+"/localisation/"+tail+"_inline_localisation.yml")
+            os.remove(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml")
         except: pass
 
 
