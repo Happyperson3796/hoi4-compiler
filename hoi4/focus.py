@@ -1,5 +1,5 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from .pdxscript import get, format, Pair, Collection, Value
 import shutil
 import os
 from . import globals
@@ -29,6 +29,61 @@ class Focus(fileType):
         
         with open(file_from, "r", encoding="utf-8-sig") as file:
             data = get(file.read()).get().val()
+
+            inline_ideas = ""
+            inline_loc = ""
+            def traverse(x, parent):
+                nonlocal inline_ideas
+                nonlocal inline_loc
+                if isinstance(x, Collection):
+                    for y in x:
+                        traverse(y, x)
+                elif isinstance(x, Value):
+                    traverse(x.val(), x)
+                elif isinstance(x, Pair):
+                    traverse(x[-1], x)
+
+
+                    if x[0] == "define_idea":
+                        idea: Collection = get(str(x))[0][-1].val()
+                        parent.remove(x)
+
+                        name = idea.extract("name")
+                        idea.remove(idea.select("name"))
+
+                        desc = idea.extract("desc", "")
+                        if desc != "": idea.remove(idea.select("desc"))
+
+                        id = idea.extract("id")
+                        idea.remove(idea.select("id"))
+                        
+                        inline_loc += " "+id+": "+name+"\n"
+                        if desc != "": inline_loc += " "+id+"_desc: "+desc+"\n"
+
+                        inline_ideas += "\n        " + id +" = {"+(("\n"+format(idea)).replace("\n", "\n            ")).removesuffix("    ")+"}"
+                        
+            traverse(data, None)
+
+            os.makedirs(head+"/common/ideas/", exist_ok=True)
+            if os.path.exists(head+"/common/ideas/"+tail+"_inline_ideas.txt"):
+                with open(head+"/common/ideas/"+tail+"_inline_ideas.txt", "r") as ideas:
+                    lines = ideas.readlines()
+                    inline_ideas = "".join(lines[2:-2]) + inline_ideas
+
+            with open(head+"/common/ideas/"+tail+"_inline_ideas.txt", "w") as ideas:
+                ideas.write("ideas = {\n    country = {\n" + inline_ideas.removeprefix("\n") + "\n    }\n}")
+
+
+            os.makedirs(head+"/localisation/", exist_ok=True)            
+            if os.path.exists(head+"/localisation/"+tail+"_inline_localisation.yml"):
+                with open(head+"/localisation/"+tail+"_inline_localisation.yml", "r") as loc:
+                    inline_loc = loc.read() + "\n" + inline_loc
+            else: inline_loc = "l_english:\n" + inline_loc
+
+            with open(head+"/localisation/"+tail+"_inline_localisation.yml", "w") as loc:
+                loc.write(inline_loc)
+            
+
 
             for x in data:
                 try:
@@ -90,6 +145,16 @@ class Focus(fileType):
 
 
     def clean(self):
+        head, tail = os.path.split(self.path)
+
         try:
             os.remove(strip(self.path))
+        except: pass
+
+        try:
+            os.remove(head+"/common/ideas/"+tail+"_inline_ideas.txt")
+        except: pass
+
+        try:
+            os.remove(head+"/localisation/"+tail+"_inline_localisation.yml")
         except: pass
