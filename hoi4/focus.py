@@ -15,6 +15,7 @@ class Focus(fileType):
 
     def run(self):
         head, tail = os.path.split(self.path)
+        base_dir = os.path.abspath(os.path.join(os.path.abspath(os.path.join(head, os.pardir)), os.pardir))
 
         vanilla_path = globals.vanilla_path+"/common/national_focus/"
 
@@ -64,24 +65,25 @@ class Focus(fileType):
                         
             traverse(data, None)
 
-            os.makedirs(head+"/common/ideas/", exist_ok=True)
-            if os.path.exists(head+"/common/ideas/"+tail+"_inline_ideas.txt"):
-                with open(head+"/common/ideas/"+tail+"_inline_ideas.txt", "r") as ideas:
-                    lines = ideas.readlines()
-                    inline_ideas = "".join(lines[2:-2]) + inline_ideas
+            if inline_ideas != "":
+                os.makedirs(base_dir+"/common/ideas/", exist_ok=True)
+                if os.path.exists(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt"):
+                    with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "r") as ideas:
+                        lines = ideas.readlines()
+                        inline_ideas = "".join(lines[2:-2]) + inline_ideas
 
-            with open(head+"/common/ideas/"+tail+"_inline_ideas.txt", "w") as ideas:
-                ideas.write("ideas = {\n    country = {\n" + inline_ideas.removeprefix("\n") + "\n    }\n}")
+                with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "w") as ideas:
+                    ideas.write("ideas = {\n    country = {\n" + inline_ideas.removeprefix("\n") + "\n    }\n}")
 
+            if inline_loc != "":
+                os.makedirs(base_dir+"/localisation/", exist_ok=True)            
+                if os.path.exists(base_dir+"/localisation/"+tail+"_inline_localisation.yml"):
+                    with open(base_dir+"/localisation/"+tail+"_inline_localisation.yml", "r") as loc:
+                        inline_loc = loc.read() + "\n" + inline_loc
+                else: inline_loc = "l_english:\n" + inline_loc
 
-            os.makedirs(head+"/localisation/", exist_ok=True)            
-            if os.path.exists(head+"/localisation/"+tail+"_inline_localisation.yml"):
-                with open(head+"/localisation/"+tail+"_inline_localisation.yml", "r") as loc:
-                    inline_loc = loc.read() + "\n" + inline_loc
-            else: inline_loc = "l_english:\n" + inline_loc
-
-            with open(head+"/localisation/"+tail+"_inline_localisation.yml", "w") as loc:
-                loc.write(inline_loc)
+                with open(base_dir+"/localisation/"+tail+"_inline_localisation.yml", "w") as loc:
+                    loc.write(inline_loc)
             
 
 
@@ -146,15 +148,21 @@ class Focus(fileType):
 
     def clean(self):
         head, tail = os.path.split(self.path)
+        base_dir = os.path.abspath(os.path.join(os.path.abspath(os.path.join(head, os.pardir)), os.pardir))
 
         try:
             os.remove(strip(self.path))
         except: pass
 
         try:
-            os.remove(head+"/common/ideas/"+tail+"_inline_ideas.txt")
+            os.remove(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt")
         except: pass
 
         try:
-            os.remove(head+"/localisation/"+tail+"_inline_localisation.yml")
+            os.remove(base_dir+"/localisation/"+tail+"_inline_localisation.yml")
         except: pass
+
+
+
+    def required_dir(self):
+        return ["common/national_focus"]
