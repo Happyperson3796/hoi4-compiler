@@ -61,7 +61,7 @@ class Scan():
         rerun()
 
     def scan(self, dir): #Base scan func
-        for path in os.scandir(dir):
+        for path in scandir(dir):
             if path.is_dir() and path.name != "build" and path.name != "Hoi4 modding tools":
                 self.scan(path.path)
             elif filetypes.should_run(path.path):
@@ -77,6 +77,7 @@ class Scan():
         for o in bar:
             bar.set_description(f"Processing: {o}")
             start = time.time()
+
             for r in [x for x in self.runnable]:
                 if isinstance(r, o):
                     self.runnable.remove(r)
