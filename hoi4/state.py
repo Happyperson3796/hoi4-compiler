@@ -255,7 +255,7 @@ class State(fileType):
         new_data.retrieve("history").val().append("set_variable = { var = state_event_parent value = "+str(parent)+" }")
 
         #Write to file
-        with open(parent_dir+"/history/states/"+str(num_id)+"-"+name+".txt", "w") as file:
+        with open(parent_dir+"/history/states/"+str(num_id)+"-"+full_id.capitalize()+".txt", "w") as file:
             file.write("#Parent: "+str(parent)+"\n"+"#ID: "+str(full_id)+"\n"+format(new_data_collection))
 
         with open(vanilla_file, "w") as file:
@@ -436,7 +436,7 @@ on_actions = {
 
         for path in os.scandir(parent_dir+"/history/states/"):
             try:
-                if path.name.split("-",1)[1].strip().removesuffix(".txt") == name:
+                if path.name.split("-",1)[1].strip().removesuffix(".txt") == full_id.capitalize():
                     num_id = path.name.split("-",1)[0].strip()
             except: pass
 
@@ -498,7 +498,7 @@ on_actions = {
 
         try:
             for path in os.scandir(parent_dir+"/history/states/"):
-                if path.name.split("-",1)[1].strip() == name+".txt":
+                if path.name.split("-",1)[1].strip() == full_id.capitalize()+".txt":
                     os.remove(path.path)
         except: pass
 
