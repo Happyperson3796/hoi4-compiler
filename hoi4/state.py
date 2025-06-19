@@ -109,6 +109,9 @@ class State(fileType):
         try:
             state_category = vanilla_data.retrieve("state_category").val()
         except: pass
+        try:
+            state_category = data.retrieve("state_category").val()
+        except: pass
 
         num_id = get_top_state_id(parent_dir) + 1
 
