@@ -5,36 +5,39 @@ import os
 def clean_suffix(path):
     return str(path).replace("\\","/").replace("//","/").removesuffix("/").removesuffix("/").removeprefix("/").removeprefix("/").strip()
 
+def endswith(path: str, suffix: str):
+    return path.endswith(suffix) or path.endswith(suffix+"_temp")
+
 def get(path: str):
-    if path.endswith(".pull"):
+    if endswith(path, ".pull"):
         return pull_file.Pulled(path)
-    elif path.endswith(".focus"):
+    elif endswith(path, ".focus"):
         return focus.Focus(path)
-    elif path.endswith(".achievement"):
+    elif endswith(path, ".achievement"):
         return achievements.Achievement(path)
-    elif path.endswith(".nation"):
+    elif endswith(path, ".nation"):
         return nation.Nation(path)
-    elif path.endswith(".state_patch"):
+    elif endswith(path, ".state_patch"):
         return state_patch.StatePatch(path)
-    elif path.endswith(".state"):
+    elif endswith(path, ".state"):
         return state.State(path)
-    elif path.endswith(".formable.json"):
+    elif endswith(path, ".formable.json"):
         return formable.JsonFormable(path)
-    elif path.endswith(".formable"):
+    elif endswith(path, ".formable"):
         return formable.Formable(path)
-    elif path.endswith(".character"):
+    elif endswith(path, ".character"):
         return character.Character(path)
-    elif path.endswith(".subideology"):
+    elif endswith(path, ".subideology"):
         return subideology.Subideology(path)
-    elif path.endswith(".equipment"):
+    elif endswith(path, ".equipment"):
         return equipment.Equipment(path)
-    elif path.endswith(".merge"):
+    elif endswith(path, ".merge"):
         return merge_file.Merged(path)
-    elif path.endswith(".append"):
+    elif endswith(path, ".append"):
         return append_file.Appended(path)
-    elif path.endswith(".flag.tga"):
+    elif endswith(path, ".flag.tga"):
         return flag.Flag(path)
-    elif path.endswith(".focus.dds"):
+    elif endswith(path, ".focus.dds"):
         return focus_icon.FocusIcon(path)
     else:
         return fileType(path)

@@ -140,7 +140,7 @@ class Formable(fileType):
 
 
         os.makedirs(parent_dir+"/common/countries/", exist_ok=True)
-        cosmetics_file = parent_dir+"/common/countries/"+namespace+"_dynamic_formable_cosmetics.merge"
+        cosmetics_file = parent_dir+"/common/countries/"+namespace+"_dynamic_formable_cosmetics.merge_temp"
 
         if not os.path.exists(cosmetics_file):
             with open(cosmetics_file, "w") as file:
@@ -456,7 +456,7 @@ news_event = {
         except: pass
 
         try:
-            os.remove(parent_dir+"/common/countries/"+namespace+"_dynamic_formable_cosmetics.merge")
+            os.remove(parent_dir+"/common/countries/"+namespace+"_dynamic_formable_cosmetics.merge_temp")
         except: pass
 
         try:

@@ -2,6 +2,7 @@
 class fileType():
     def __init__(self, path: str):
         self.path = path
+        self.tmp = path.endswith("_temp")
     def run(self): #Fires on Scan
         pass
     def clean(self):

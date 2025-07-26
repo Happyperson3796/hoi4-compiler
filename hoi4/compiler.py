@@ -151,7 +151,9 @@ class Build():
                 self.clean(path.path)
             else:
                 if filetypes.should_run(path.path):
-                    filetypes.get(path.path).clean()
+                    obj = filetypes.get(path.path)
+                    obj.clean()
+                    if obj.tmp: os.remove(obj.path)
 
     def exclude(self, text):
         if text in self.data["excludes"]:
