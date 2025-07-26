@@ -1,5 +1,5 @@
-from .filetype import fileType
-from . import focus, achievements, nation, merge_file, flag, pull_file, state, append_file, character, subideology, formable, equipment, focus_icon, state_patch
+from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology
+from .objects.filetype import fileType
 import os
 
 def clean_suffix(path):

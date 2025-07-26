@@ -1,8 +1,8 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection
 import os
-from .filetypes import fileType
-from .globals import vanilla_path
+from ..filetypes import fileType
+from ..globals import vanilla_path
 import math
 from charset_normalizer import from_path
 

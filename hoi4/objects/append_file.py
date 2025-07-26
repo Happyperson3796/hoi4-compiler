@@ -1,20 +1,20 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection
 import os
-from .filetypes import fileType
+from ..filetypes import fileType
 import json
 
-class Merged(fileType):
+class Appended(fileType):
     def run(self):
         head, tail = os.path.split(self.path)
         
         with open(self.path, "r") as file:
-            line = file.readlines()
+            text = file.readlines()
+            base_file = text[0].replace("#","").strip()
 
-            base_file = line[0].replace("#","").strip()
-
-            reverse = line[1].strip()
-            if (reverse == "#reverse = yes"): reverse = True
+            if text[1].startswith("#disable_override"): #Always append if #disable_override is set
+                override_existing = False
+            else: override_existing = True
             
         with open(self.path, "r") as file:
             override = get(file.read())
@@ -25,10 +25,13 @@ class Merged(fileType):
         with open(head+"/"+base_file, "r") as file:
             base = get(file.read())
 
-        override.merge(base, reverse)
+        for x in override:
+            if str(x) in str(base) and override_existing:
+                continue
+            base.append(x)
 
         with open(head+"/"+base_file, "w") as file:
-            file.write(format(override))
+            file.write(format(base))
 
 
     def clean(self):
@@ -37,10 +40,6 @@ class Merged(fileType):
         with open(self.path, "r") as file:
             base_file = file.readlines()[0].replace("#","").strip()
 
-        try:
-            os.remove(head+"/"+base_file)
-        except: pass
-
-        #try:
-        #    os.remove(self.path) #removed for now, potentially unstable
+        #try: #Mostly replaced by #override toggle
+        #    os.remove(self.path)
         #except: pass

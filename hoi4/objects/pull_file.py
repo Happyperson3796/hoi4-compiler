@@ -1,8 +1,8 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection
 import os
-from .filetypes import fileType
-from . import globals
+from ..filetypes import fileType
+from .. import globals
 import shutil
 
 class Pulled(fileType):

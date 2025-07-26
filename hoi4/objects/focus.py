@@ -1,8 +1,8 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection, Value
+from ..pdxscript import get, format, Pair, Collection, Value
 import shutil
 import os
-from . import globals
+from .. import globals
 
 def strip(text):
     texts = text.replace(".focus", ".txt").split(".")

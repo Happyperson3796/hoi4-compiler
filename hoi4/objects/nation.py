@@ -1,7 +1,7 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection
 import os
-from .filetypes import fileType
+from ..filetypes import fileType
 from PIL import Image
 
 cached_state_mappings = {}

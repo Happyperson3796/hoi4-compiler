@@ -1,8 +1,8 @@
 from .filetype import fileType
-from .pdxscript import get, format, Pair, Collection, Value
+from ..pdxscript import get, format, Pair, Collection, Value
 import os
-from .filetypes import fileType
-from . import globals
+from ..filetypes import fileType
+from .. import globals
 import shutil
 
 #Example/Template
