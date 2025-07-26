@@ -1,7 +1,6 @@
 from .filetype import fileType
 from ..pdxscript import get, format, Pair, Collection
 import os
-from ..filetypes import fileType
 import PIL
 
 class Equipment(fileType):

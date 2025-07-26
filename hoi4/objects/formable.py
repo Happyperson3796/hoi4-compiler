@@ -1,7 +1,6 @@
 from .filetype import fileType
 from ..pdxscript import get, format, reformat, Pair, Collection
 import os
-from ..filetypes import fileType
 from .. import globals
 import shutil
 import json
