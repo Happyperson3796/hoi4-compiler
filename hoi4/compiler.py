@@ -27,21 +27,17 @@ def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
     return entries
 
 
-def compute_file_hash(file_path, algorithm='sha256'):
-    """Compute the hash of a file using the specified algorithm."""
-    hash_func = hashlib.new(algorithm)
-    
+def compute_file_hash(file_path):
+    hash_func = hashlib.new("sha256")
     with open(file_path, 'rb') as file:
-        # Read the file in chunks of 8192 bytes
-        while chunk := file.read(8192):
+        while chunk := file.read(8192): #chunks of 8192 bytes
             hash_func.update(chunk)
-    
     return hash_func.hexdigest()
 
 
 
 def scan(home_dir):
-    obj = Scan(home_dir)
+    Scan(home_dir)
 
 class Scan():
     def __init__(self, home_dir):
@@ -62,7 +58,7 @@ class Scan():
 
     def scan(self, dir): #Base scan func
         for path in scandir(dir):
-            if path.is_dir() and path.name != "build" and path.name != "Hoi4 modding tools":
+            if path.is_dir() and path.name != ".build" and path.name != "Hoi4 modding tools":
                 self.scan(path.path)
             elif filetypes.should_run(path.path):
                 hash = compute_file_hash(path.path)
@@ -102,19 +98,19 @@ class Build():
                 "overrides": ""
             }
 
-        if os.path.exists(self.mod+"/build"):
-            self.deposit_compiler_files(self.mod+"/build")
-            shutil.rmtree(self.mod+"/build")
+        if os.path.exists(self.mod+"/.build"):
+            self.deposit_compiler_files(self.mod+"/.build")
+            shutil.rmtree(self.mod+"/.build")
         self.clean()
 
-    def collect_compiler_files(self, dir=""): #Collect to /build/
+    def collect_compiler_files(self, dir=""): #Collect to /.build/
         if dir == "": dir = self.mod
         for path in scandir(dir):
-            if path.is_dir() and path.name != "build":
+            if path.is_dir() and path.name != ".build":
                 self.collect_compiler_files(path.path)
             else:
                 if filetypes.should_run(path.path):
-                    build_path = self.mod+"\\build\\"+path.path.removeprefix(self.mod)
+                    build_path = self.mod+"/.build/"+path.path.removeprefix(self.mod)
                     build_dir = build_path.removesuffix(path.name)
 
                     os.makedirs(build_dir, exist_ok=True)
@@ -123,14 +119,14 @@ class Build():
                     
                     os.remove(path.path)
 
-    def deposit_compiler_files(self, dir=""): #Deposit from /build/
+    def deposit_compiler_files(self, dir=""): #Deposit from /.build/
         if dir == "": dir = self.mod
 
         for path in scandir(dir):
             if path.is_dir():
                 self.deposit_compiler_files(path.path)
             else:
-                orig_path = self.mod+"/"+path.path.removeprefix(self.mod+"/build")
+                orig_path = self.mod+"/"+path.path.removeprefix(self.mod+"/.build")
                 os.makedirs(os.path.split(orig_path)[0], exist_ok=True)
                 shutil.copyfile(path.path, orig_path)
                 os.remove(path.path)
@@ -147,7 +143,7 @@ class Build():
     def clean(self, dir=""):
         if dir == "": dir = self.mod
         for path in scandir(dir):
-            if path.is_dir() and path.name != "build":
+            if path.is_dir() and path.name != ".build":
                 self.clean(path.path)
             else:
                 if filetypes.should_run(path.path):

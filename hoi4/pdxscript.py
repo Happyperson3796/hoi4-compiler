@@ -62,6 +62,34 @@ class Value():
 
     def val(self):
         return self.value
+    
+class Pair():
+    holder = []
+    def __init__(self, *args):
+        self.holder = [*args]
+
+    def text(self):
+        return " ".join(map(str, self.holder))
+
+    def __str__(self):
+        return self.text()
+    def __repr__(self):
+        return self.text()
+    
+    def __getitem__(self, index):
+        return self.holder[index]
+    
+    def __setitem__(self, index, value):
+        self.holder[index] = value
+
+    def get(self):
+        return self.holder[-1]
+
+    def set(self, value):
+        self.holder[-1] = value
+
+    def size(self):
+        return len(self.holder)
 
 class Collection(list):
     def text(self):
@@ -131,6 +159,18 @@ class Collection(list):
                 return default
             else:
                 raise e
+            
+    def set(self, set: Pair):
+        """Sets a wrapped value if it exists, otherwise appends it."""
+        if (isinstance(set[-1], Value)):
+            value = set[-1].val()
+        else:
+            value = set[-1]
+
+        try:
+            self.retrieve(set[0]).set(value)
+        except:
+            self.append(set)
     
     def merge(self, collection, reverse=False):
         this = self
@@ -204,34 +244,6 @@ def collect(parsed):
 
     return collect_value()
 
-
-class Pair():
-    holder = []
-    def __init__(self, *args):
-        self.holder = [*args]
-
-    def text(self):
-        return " ".join(map(str, self.holder))
-
-    def __str__(self):
-        return self.text()
-    def __repr__(self):
-        return self.text()
-    
-    def __getitem__(self, index):
-        return self.holder[index]
-    
-    def __setitem__(self, index, value):
-        self.holder[index] = value
-
-    def get(self):
-        return self.holder[-1]
-
-    def set(self, value):
-        self.holder[-1] = value
-
-    def size(self):
-        return len(self.holder)
 
 def merge_pairs(collection):
     merged = Collection()

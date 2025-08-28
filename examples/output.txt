@@ -1,0 +1,66 @@
+focus_tree = {
+    focus = {
+        id = begin
+        icon = gfx
+        cost = 10
+    }
+    focus = {
+        id = SEATO_Enhanced_Naval_Patrols
+        icon = GFX_goal_generic_navy_battleship
+        cost = 10
+        mutually_exclusive = {
+            focus = SEATO_Enhanced_Naval_Patrols
+            focus = SEATO_Peacekeeping_Missions
+        }
+        x = -5
+        y = 1
+        relative_position_id = begin
+    }
+    focus = {
+        id = SEATO_Peacekeeping_Missions
+        icon = GFX_goal_generic_navy_battleship
+        cost = 10
+        mutually_exclusive = {
+            focus = SEATO_Enhanced_Naval_Patrols
+            focus = SEATO_Peacekeeping_Missions
+        }
+        x = -3
+        y = 1
+        relative_position_id = begin
+    }
+    focus = {
+        id = P
+        icon = gfx
+        cost = 10
+        y = 1
+        relative_position_id = begin
+    }
+    focus = {
+        id = 1
+        icon = gfx
+        cost = 10
+        y = 2
+        relative_position_id = begin
+    }
+    focus = {
+        id = 2
+        icon = gfx
+        cost = 10
+        y = 3
+        relative_position_id = begin
+    }
+    focus = {
+        id = 3
+        icon = gfx
+        cost = 10
+        y = 4
+        relative_position_id = begin
+    }
+    focus = {
+        id = 4
+        icon = gfx
+        cost = 10
+        y = 5
+        relative_position_id = begin
+    }
+}
