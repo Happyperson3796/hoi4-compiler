@@ -22,14 +22,24 @@ class Focus(fileType):
         if not os.path.exists(strip(self.path)):
             shutil.copyfile(vanilla_path+strip(tail), strip(self.path))
 
+        extras = Collection()
+
         file_from = self.path
         file_to = strip(self.path)
 
         focus = open(file_to, "r", encoding="utf-8-sig")
-        focus_data = get(focus.read()).get().val()
+        focus_data = get(focus.read())
+        for x in focus_data:
+            if x[0] != "focus_tree":
+                extras.append(x)
+        focus_data = focus_data.retrieve("focus_tree").val()
         
         with open(file_from, "r", encoding="utf-8-sig") as file:
-            data = get(file.read()).get().val()
+            data = get(file.read())
+            for x in data:
+                if x[0] != "focus_tree":
+                    extras.append(x)
+            data = data.retrieve("focus_tree").val()
 
             remove = []
             inline_ideas = ""
@@ -75,7 +85,7 @@ class Focus(fileType):
                         lines = ideas.readlines()
                         inline_ideas = "".join(lines[2:-2]) + inline_ideas
 
-                with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "w") as ideas:
+                with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "w", encoding="utf-8-sig") as ideas:
                     ideas.write("ideas = {\n    country = {\n" + inline_ideas.removeprefix("\n") + "\n    }\n}")
 
             if inline_loc != "":
@@ -139,10 +149,10 @@ class Focus(fileType):
 
                 except: pass
 
-            collected = Collection()
+            collected = extras
             collected.append(Pair("focus_tree", "=", focus_data))
             
-            with open(strip(file_from), "w") as file:
+            with open(strip(file_from), "w", encoding="utf-8-sig") as file:
                 file.write(format(collected))
 
         focus.close()
