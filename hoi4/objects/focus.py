@@ -103,6 +103,25 @@ class Focus(fileType):
             for x in data:
                 try:
                     id = x.get().get("id").val()
+                    try:
+                        name = " "+id+": "+x.get().val().retrieve("name").val()
+                        x.get().val().remove(x.get().val().select("name"))
+                    except: name = ""
+                    try:
+                        desc = " "+id+"_desc: "+x.get().val().retrieve("desc").val()
+                        x.get().val().remove(x.get().val().select("desc"))
+                    except: desc = ""
+
+                    if name != "" or desc != "":
+                        focus_loc = name+"\n"+desc+"\n"
+                        os.makedirs(base_dir+"/localisation/", exist_ok=True)            
+                        if os.path.exists(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml"):
+                            with open(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml", "r", encoding="utf-8-sig") as loc:
+                                focus_loc = loc.read() + "\n" + focus_loc
+                        else: focus_loc = "l_english:\n" + focus_loc
+
+                        with open(base_dir+"/localisation/"+tail+"_inline_localisation_l_english.yml", "w", encoding="utf-8-sig") as loc:
+                            loc.write(focus_loc)
 
                     override = False
                     try:
