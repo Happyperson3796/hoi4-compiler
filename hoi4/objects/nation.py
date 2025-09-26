@@ -1,5 +1,5 @@
 from .filetype import fileType
-from ..pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection, Value
 import os
 from PIL import Image
 
@@ -27,6 +27,9 @@ class Nation(fileType):
             history_data = data.get("history").val()
             cores = data.get("cores").val()
 
+            generate_colors = data.retrieve("generate_colors", Value("yes")).val() == "yes"
+            use_cosmetics = data.retrieve("use_cosmetics", Value("no")).val() == "yes"
+
         if not build_cached_state_mappings:
             build_cached_state_mappings = True
             if os.path.exists(parent_dir+"/states/"):
@@ -46,6 +49,7 @@ class Nation(fileType):
 
 
         history = Collection()
+        if use_cosmetics: history = get("set_cosmetic_tag="+tag)
         for s in cores:
             history.append(get("add_state_core="+str(s))[0])
         for x in history_data:
@@ -64,6 +68,7 @@ class Nation(fileType):
         file_countries = base+"/common/countries/"+name+".txt"
         file_tags = base+"/common/country_tags/"+filename+"_tags.txt"
         file_colors = base+"/common/countries/"+namespace+"_dynamic_nation_colors.merge_temp"
+        file_cosmetics = base+"/common/countries/"+namespace+"_dynamic_nation_cosmetic.merge_temp"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
         file_flag = base+"/gfx/flags/"+tag+".tga"
         #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
@@ -97,18 +102,33 @@ class Nation(fileType):
             file.write("graphical_culture = western_european_gfx\ngraphical_culture_2d = western_european_2d")
             file.write("\ncolor = "+str(color).replace("\n"," "))
 
-        try:
-            with open(file_colors, "r") as file:
-                lines = file.readlines()
-                if lines[0].strip() == "#colors.txt":
-                    lines.pop(0)
-        except:
-            lines = []
+        if generate_colors:
+            try:
+                with open(file_colors, "r") as file:
+                    lines = file.readlines()
+                    if lines[0].strip() == "#colors.txt":
+                        lines.pop(0)
+            except:
+                lines = []
 
-        with open(file_colors, "w") as file:
-            file.write("#colors.txt\n")
-            file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
-            file.writelines(lines)
+            with open(file_colors, "w") as file:
+                file.write("#colors.txt\n")
+                file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
+                file.writelines(lines)
+
+        if use_cosmetics:
+            try:
+                with open(file_cosmetics, "r") as file:
+                    lines = file.readlines()
+                    if lines[0].strip() == "#cosmetic.txt":
+                        lines.pop(0)
+            except:
+                lines = []
+
+            with open(file_cosmetics, "w") as file:
+                file.write("#cosmetic.txt\n")
+                file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
+                file.writelines(lines)
 
         #try:
         #    with open(file_cores, "r") as file:
@@ -161,6 +181,9 @@ class Nation(fileType):
             name = data.get("loc").val().get("$", False, True).val().replace("\"","")
             #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
             #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
+
+            generate_colors = data.retrieve("generate_colors", Value("yes")).val() == "yes"
+            use_cosmetics = data.retrieve("use_cosmetics", Value("no")).val() == "yes"
         
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
@@ -170,6 +193,7 @@ class Nation(fileType):
         file_countries = base+"/common/countries/"+name+".txt"
         file_tags = base+"/common/country_tags/"+filename+"_tags.txt"
         file_colors = base+"/common/countries/"+namespace+"_dynamic_nation_colors.merge_temp"
+        file_cosmetics = base+"/common/countries/"+namespace+"_dynamic_nation_cosmetic.merge_temp"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
         file_flag = base+"/gfx/flags/"+tag+".tga"
         #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
@@ -184,7 +208,10 @@ class Nation(fileType):
             os.remove(file_tags)
         except: pass
         try:
-            os.remove(file_colors)
+            if generate_colors: os.remove(file_colors)
+        except: pass
+        try:
+            if use_cosmetics: os.remove(file_cosmetics)
         except: pass
         try:
             os.remove(file_loc)
