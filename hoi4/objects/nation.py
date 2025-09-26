@@ -29,13 +29,14 @@ class Nation(fileType):
 
         if not build_cached_state_mappings:
             build_cached_state_mappings = True
-            for path in os.scandir(parent_dir+"/states/"):
-                if path.name.endswith(".state"):
-                    with open(path.path, "r") as file:
-                        tdata = get(file.read())
-                        parent = str(tdata.retrieve("parent").val()[0])
-                        id = "$"+str(tdata.retrieve("id").val())
-                        cached_state_mappings[id] = parent
+            if os.path.exists(parent_dir+"/states/"):
+                for path in os.scandir(parent_dir+"/states/"):
+                    if path.name.endswith(".state"):
+                        with open(path.path, "r") as file:
+                            tdata = get(file.read())
+                            parent = str(tdata.retrieve("parent").val()[0])
+                            id = "$"+str(tdata.retrieve("id").val())
+                            cached_state_mappings[id] = parent
 
         for s in cores: #Integration for .state files, add cores
             for id in cached_state_mappings:
@@ -53,6 +54,11 @@ class Nation(fileType):
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
         filename = "dynamic_nations_"+namespace
+
+        os.makedirs(base+"/history/countries/", exist_ok=True)
+        os.makedirs(base+"/common/countries/", exist_ok=True)
+        os.makedirs(base+"/common/country_tags/", exist_ok=True)
+        os.makedirs(base+"/localisation/", exist_ok=True)
 
         file_history = base+"/history/countries/"+tag+" - "+name+".txt"
         file_countries = base+"/common/countries/"+name+".txt"
