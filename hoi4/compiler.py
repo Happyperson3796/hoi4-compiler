@@ -99,7 +99,7 @@ class Build():
             }
 
         if os.path.exists(self.mod+"/.build"):
-            self.deposit_compiler_files(self.mod+"/.build")
+            self.deposit_compiler_files(self.mod, self.mod+"/.build")
             shutil.rmtree(self.mod+"/.build")
         self.clean()
 
@@ -119,14 +119,14 @@ class Build():
                     
                     os.remove(path.path)
 
-    def deposit_compiler_files(self, dir=""): #Deposit from /.build/
+    def deposit_compiler_files(self, dest, dir=""): #Deposit from /.build/
         if dir == "": dir = self.mod
 
         for path in scandir(dir):
             if path.is_dir():
-                self.deposit_compiler_files(path.path)
+                self.deposit_compiler_files(dest, path.path)
             else:
-                orig_path = self.mod+"/"+path.path.removeprefix(self.mod+"/.build")
+                orig_path = dest+"/"+path.path.split("/.build")[-1]
                 os.makedirs(os.path.split(orig_path)[0], exist_ok=True)
                 shutil.copyfile(path.path, orig_path)
                 os.remove(path.path)
@@ -186,8 +186,46 @@ class Build():
                         shutil.copyfile(file.path, self.mod+"/"+file.name)
                     else:
                         distutils.dir_util.copy_tree(file.path, self.mod+"/"+file.name)
-                    
+
             #scan(self.mod, self.parsed_files)
+
+
+    def build_dependencies(self):
+        head, tail = os.path.split(self.mod)
+
+        if "depends" not in self.data.keys(): return
+
+        for depend in self.data["depends"]:
+            depend = depend.replace("/", "\\")
+            name = depend.split("\\")[-1]
+            print("Building depencency \""+name+"\"...")
+            depend = depend.replace("$USER", os.path.expanduser("~"))+"\\"
+            d = ".dependency_"+name
+
+            if os.path.exists(self.mod+"/"+d+"/"): shutil.rmtree(self.mod+"/"+d+"/")
+
+            for file in scandir(depend):
+                if not self.exclude(file.name):
+                    if file.is_file():
+                        shutil.copyfile(file.path, self.mod+"/"+d+"/"+file.name)
+                    else:
+                        distutils.dir_util.copy_tree(file.path, self.mod+"/"+d+"/"+file.name)
+
+            if os.path.exists(self.mod+"/"+d+"/.build"):
+                print("Unpacking depencency \""+name+"\"...")
+                self.deposit_compiler_files(self.mod+"/"+d, self.mod+"/"+d+"/.build")
+                shutil.rmtree(self.mod+"/"+d+"/.build")
+
+            print("Cleaning depencency \""+name+"\"...")
+            self.clean(self.mod+"/"+d)
+
+            print("Applying depencency \""+name+"\"...")
+            for file in scandir(self.mod+"/"+d):
+                if not file.is_file():
+                    distutils.dir_util.copy_tree(file.path, self.mod+"/"+file.name)
+
+            shutil.rmtree(self.mod+"/"+d+"/")
+
 
     def fire_build_scripts(self, dir="", mode=0):
         scripts = []
@@ -208,6 +246,9 @@ class Build():
             [file.postbuild() for file in scripts]
 
     def build(self):
+        self.build_dependencies()
+        print()
+        
         self.apply_overrides()
 
         start = time.time()
