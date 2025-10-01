@@ -19,6 +19,10 @@ class Focus(fileType):
 
         vanilla_path = globals.vanilla_path+"/common/national_focus/"
 
+        if tail.endswith(".core.focus") or tail.endswith(".0.focus"):
+            with open(strip(self.path), "w", encoding="utf-8-sig") as file:
+                shutil.copyfile(self.path, strip(self.path))
+
         if not os.path.exists(strip(self.path)):
             shutil.copyfile(vanilla_path+strip(tail), strip(self.path))
 
@@ -85,7 +89,7 @@ class Focus(fileType):
                         lines = ideas.readlines()
                         inline_ideas = "".join(lines[2:-2]) + inline_ideas
 
-                with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "w", encoding="utf-8-sig") as ideas:
+                with open(base_dir+"/common/ideas/"+tail+"_inline_ideas.txt", "w", encoding="utf-8") as ideas:
                     ideas.write("ideas = {\n    country = {\n" + inline_ideas.removeprefix("\n") + "\n    }\n}")
 
             if inline_loc != "":
