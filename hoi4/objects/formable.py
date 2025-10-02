@@ -43,6 +43,8 @@ class Formable(fileType):
         ai = data.extract("ai", "yes")
         hist_ai = data.extract("hist_ai", "no")
 
+        cosmetic_tag =  data.extract("cosmetic_tag", "").replace("\"", "")
+
         if tier == "0":
             tier_color = "§g"
         elif tier == "1":
@@ -391,6 +393,7 @@ formable_$ID_category = {{
 
 """
 
+            if cosmetic_tag != "": text = text.replace("$ID_formable_cosmetic", cosmetic_tag)
             text = text.replace("$ID", id)
             text = text.replace("$GFX", gfx)
 
