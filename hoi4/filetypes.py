@@ -1,4 +1,4 @@
-from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology
+from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology, hoipy
 from .objects.filetype import fileType
 import os
 
@@ -39,6 +39,8 @@ def get(path: str):
         return flag.Flag(path)
     elif endswith(path, ".focus.dds"):
         return focus_icon.FocusIcon(path)
+    elif endswith(path, ".hoipy"):
+        return hoipy.HoiPy(path)
     else:
         return fileType(path)
     
@@ -59,6 +61,7 @@ def order():
         append_file.Appended,
         flag.Flag,
         focus_icon.FocusIcon,
+        hoipy.HoiPy,
         fileType
     ]
 

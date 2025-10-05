@@ -9,6 +9,8 @@ import time
 from tqdm import tqdm
 import builtins
 
+from .objects import hoipy
+
 oprint = builtins.print
 def nprint(*args, **kwargs):
     def sanitize(arg):
@@ -97,6 +99,10 @@ class Build():
                 "excludes": [],
                 "overrides": ""
             }
+
+        if "run_unsafe" in self.data.keys() and self.data["run_unsafe"]:
+            hoipy.hoipy_allowed = True
+            print("Warning! Unsafe mode is enabled. Do not copy/paste hoipy files you don't understand.")
 
         if os.path.exists(self.mod+"/.build"):
             self.deposit_compiler_files(self.mod, self.mod+"/.build")
