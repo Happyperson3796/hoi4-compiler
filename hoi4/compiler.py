@@ -102,7 +102,7 @@ class Build():
 
         if "run_unsafe" in self.data.keys() and self.data["run_unsafe"]:
             hoipy.hoipy_allowed = True
-            print("Warning! Unsafe mode is enabled. Do not copy/paste hoipy files you don't understand.")
+            print("\033[38;5;208mWarning! Unsafe mode is enabled. Do not copy/paste hoipy files you don't understand.\033[0m")
 
         if os.path.exists(self.mod+"/.build"):
             self.deposit_compiler_files(self.mod, self.mod+"/.build")
