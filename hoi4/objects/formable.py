@@ -354,6 +354,7 @@ formable_$ID_category = {{
         target_trigger = {{
             FROM = {{
                 has_state_flag = $ID_core_state
+                impassable = no
                 NOT = {{
                     is_core_of = ROOT
                 }}
