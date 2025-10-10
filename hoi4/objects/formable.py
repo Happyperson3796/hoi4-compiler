@@ -354,7 +354,6 @@ formable_$ID_category = {{
         target_trigger = {{
             FROM = {{
                 has_state_flag = $ID_core_state
-                impassable = no
                 is_controlled_by = ROOT
                 NOT = {{
                     is_core_of = ROOT
@@ -371,7 +370,7 @@ formable_$ID_category = {{
         remove_effect = {{
             FROM = {{
                 if = {{
-                    limit = {{ compliance > 50 }}
+                    limit = {{ OR = {{ compliance > 50    impassable = yes }} }}
                     add_core_of = ROOT
                 }}
                 else = {{
