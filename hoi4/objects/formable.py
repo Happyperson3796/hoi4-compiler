@@ -355,6 +355,7 @@ formable_$ID_category = {{
             FROM = {{
                 has_state_flag = $ID_core_state
                 impassable = no
+                is_controlled_by = ROOT
                 NOT = {{
                     is_core_of = ROOT
                 }}
