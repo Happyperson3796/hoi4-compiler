@@ -1,5 +1,8 @@
 build/
 hoi4.egg-info/
 dist
+hoic.dist
 __pycache__
 ~nochecks
+.vscode
+.env

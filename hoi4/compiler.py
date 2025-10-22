@@ -8,6 +8,7 @@ import re
 import time
 from tqdm import tqdm
 import builtins
+import sys
 
 from .objects import hoipy
 
@@ -18,7 +19,6 @@ def nprint(*args, **kwargs):
     args = [sanitize(arg) for arg in args]
     oprint(*args, **kwargs)
 builtins.print = nprint
-
 
 def scandir(dir): #Sorted scandir: 1b, 2z, 3a, ab, bz, ca
     if (not dir.strip().endswith("states")):
@@ -88,9 +88,12 @@ class Build():
         self.mod = mod_path.removesuffix("/").removesuffix("\\")
 
         #print("Created a new Build for "+str(self.mod))
-
+        if os.path.exists("build.hoi4"):
+            build_config = "build.hoi4"
+        else:
+            build_config = "build.hoic"
         try:
-            with open("build.hoi4", "r") as file:
+            with open(build_config, "r") as file:
                 self.data = json.load(file)
         except Exception as e:
             print("No build file found")
@@ -278,6 +281,3 @@ class Build():
 
         #print("Cleaning empty dirs...")
         self.clean_empty_dirs()
-
-
-
