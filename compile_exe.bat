@@ -1,8 +1,10 @@
 @echo off
 
-#call full_install.bat
+call full_install.bat
 
-#python -m nuitka --standalone --windows-console-mode=force --windows-icon-from-ico=icon.png hoic.py
+python -m nuitka --standalone --windows-console-mode=force --windows-icon-from-ico=icon.png hoic.py
+
+copy "LICENSE" "hoic.dist\LICENSE" /Y
 
 echo Press enter to create the installer . . .
 pause
