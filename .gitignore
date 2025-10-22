@@ -6,3 +6,4 @@ __pycache__/
 ~nochecks
 .vscode
 .env
+hoic.build
