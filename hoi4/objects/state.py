@@ -18,7 +18,6 @@ def get_top_state_id(parent_dir):
             num = int(path.name.split("-",1)[0].strip())
             if num > top_num: top_num = num
         except: pass
-
     return top_num
 
 
