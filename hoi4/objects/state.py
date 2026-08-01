@@ -67,7 +67,7 @@ class State(fileType):
         if vanilla_file == "":
             for path in os.scandir(vanilla_path+"/history/states/"): #Else get from vanilla files
                 if path.name.split("-",1)[0].strip() == parent:
-                    with open(path.path, "r") as file:
+                    with open(path.path, "r", encoding="utf-8-sig") as file:
                         tdata = get(file.read())
 
                     vanilla_file = parent_dir+"/history/states/"+path.name
@@ -228,6 +228,11 @@ class State(fileType):
         new_data.retrieve("manpower").set(max(math.ceil(int(manpower.val())*(state_manpower_ratio*manpower_ratio_muliplier)),0))
         manpower.set(max(math.ceil(int(manpower.val())*(1-(state_manpower_ratio*manpower_ratio_muliplier))),0))
 
+        transfer_all_dockyards = False
+        try:
+            transfer_all_dockyards = data.retrieve("transfer_all_dockyards").val() == "yes"
+        except: pass
+
         for b in ["industrial_complex", "arms_factory"]: #Split up factories to new states
             try:
                 building = vanilla_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
@@ -242,8 +247,32 @@ class State(fileType):
                         new_data.retrieve("history").val().retrieve("buildings").val().append(get(b+"="+str(amt))[0])
 
                     building.set(int(str(building.val()))-amt)
+                    if int(str(building.val()))-amt <= 0:
+                        buildings.remove(buildings.select(b))
 
             except: pass
+
+        if transfer_all_dockyards:
+            for b in ["dockyard"]:
+                try:
+                    buildings = vanilla_data.retrieve("history").val().retrieve("buildings").val()
+                    building = buildings.retrieve(b)
+                    r = max(min(state_resource_ratio, 1), 0)
+                    r = 1
+                    amt = round(int(str(building.val()).strip()) * r)
+
+                    if amt > 0:
+                        try:
+                            nb = new_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
+                            nb.set(int(str(nb.val()))+amt)
+                        except:
+                            new_data.retrieve("history").val().retrieve("buildings").val().append(get(b+"="+str(amt))[0])
+
+                        building.set(int(str(building.val()))-amt)
+                        if int(str(building.val()))-amt <= 0:
+                            buildings.remove(buildings.select(b))
+
+                except: pass
 
         for pair in data.retrieve("history").val(): #Append custom history={} block contents
             if pair[0] != "owner":
@@ -393,7 +422,7 @@ on_actions = {
             every_country_template = f"""<every>
             if = {{
                 limit = {{
-                    NOT = {{ has_state_flag = bdt }}
+                    {parent} = {{ NOT = {{ has_state_flag = bdt }} }}
                     {num_id} = {{ NOT = {{ has_state_flag = bdt }} }}
                 }}
                 if = {{

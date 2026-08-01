@@ -281,3 +281,25 @@ class Build():
 
         #print("Cleaning empty dirs...")
         self.clean_empty_dirs()
+
+        print("Build Hash: "+compute_directory_hash(self.mod)[:5])
+
+
+def compute_directory_hash(dir_path):
+    sha256 = hashlib.sha256()
+    all_files = []
+    for root, _, files in os.walk(dir_path):
+        for names in files:
+            all_files.append(os.path.join(root, names))
+    
+    all_files.sort()
+
+    for file_path in all_files:
+        if file_path.endswith("build.eu5") or file_path.endswith("build.euc"): continue
+        relative_path = os.path.relpath(file_path, dir_path)
+        sha256.update(relative_path.encode('utf-8'))
+        
+        with open(file_path, 'rb') as f:
+            while chunk := f.read(4096):
+                sha256.update(chunk)
+    return sha256.hexdigest()
