@@ -1,3 +1,5 @@
+from collections import deque
+
 def is_spacing(char):
     return char == " " or char == "\n" or char == "\t" or char == ""
 
@@ -268,77 +270,72 @@ def parse(text):
 
     for char in text:
         if char == "\"":
-            if is_quoted:
-                is_quoted = False
-            else:
-                is_quoted = True
+            is_quoted = not is_quoted
 
         if char == "#":
             commented = True
         elif char == "\n":
             commented = False
+            
         if not commented:
-            if is_spacing(char) and not is_quoted:
-                if buffer != "":
+            if (char == " " or char == "\n" or char == "\t") and not is_quoted:
+                if buffer:
                     parsed.append(buffer)
                 buffer = ""
-
-            elif (buffer.endswith("?") and char == "=") and not is_quoted:  # ?= connector handling
-                if buffer.removesuffix("?") != "":
-                    parsed.append(buffer.removesuffix("?"))
-                parsed.append("?" + char)
-                buffer = ""
-            elif (buffer.endswith("!") and char == "=") and not is_quoted:  # != connector handling
-                if buffer.removesuffix("!") != "":
-                    parsed.append(buffer.removesuffix("!"))
-                parsed.append("!" + char)
-                buffer = ""
-            elif (buffer.endswith("<") and char == "=") and not is_quoted:  # <= connector handling
-                if buffer.removesuffix("<") != "":
-                    parsed.append(buffer.removesuffix("<"))
-                parsed.append("<" + char)
-                buffer = ""
-            elif (buffer.endswith(">") and char == "=") and not is_quoted:  # >= connector handling
-                if buffer.removesuffix(">") != "":
-                    parsed.append(buffer.removesuffix(">"))
-                parsed.append(">" + char)
-                buffer = ""
-
-            elif (buffer.endswith(">")) and not is_quoted:  # > connector handling
-                if buffer.removesuffix(">") != "":
-                    parsed.append(buffer.removesuffix(">"))
-                parsed.append(">")
-                buffer = ""
-            elif (buffer.endswith("<")) and not is_quoted:  # < connector handling
-                if buffer.removesuffix("<") != "":
-                    parsed.append(buffer.removesuffix("<"))
-                parsed.append("<")
-                buffer = ""
-
-            elif ((is_connector(char) and char != ">" and char != "<") or char == "{" or char == "}") and not is_quoted:
-                if buffer != "":
-                    parsed.append(buffer)
-                parsed.append(char)
-                buffer = ""
+                
+            elif not is_quoted:
+                if char == "=":
+                    # Fast index check for complex operators (?=, !=, <=, >=)
+                    if buffer and buffer[-1] in "?!<>":
+                        prefix = buffer[:-1]
+                        if prefix:
+                            parsed.append(prefix)
+                        parsed.append(buffer[-1] + "=")
+                        buffer = ""
+                    else:
+                        if buffer:
+                            parsed.append(buffer)
+                        parsed.append("=")
+                        buffer = ""
+                        
+                elif char == "{" or char == "}":
+                    if buffer:
+                        # Flush any lingering standalone < or > connectors before appending brackets
+                        parsed.append(buffer)
+                    parsed.append(char)
+                    buffer = ""
+                    
+                elif char == "<" or char == ">":
+                    # Isolate < and > in the buffer so they are ready to combine with a potential '='
+                    if buffer:
+                        parsed.append(buffer)
+                    buffer = char
+                    
+                else:
+                    # If buffer is exactly < or > and the current char is NOT =, flush the connector
+                    if buffer == "<" or buffer == ">":
+                        parsed.append(buffer)
+                        buffer = char
+                    else:
+                        buffer += char
             else:
                 buffer += char
 
     return parsed
 
-
 def collect(parsed):
+    # Convert to deque for O(1) popleft operations
+    q = deque(parsed)
+    
     def collect_value():
         collection = Collection()
-
-        while len(parsed) > 0:
-            obj = parsed.pop(0)
+        while len(q) > 0:
+            obj = q.popleft()
 
             if obj == "}":
                 return collection
-
             elif obj == "{":
                 collection.append(collect_value())
-
             else:
                 collection.append(obj)
 
@@ -349,73 +346,80 @@ def collect(parsed):
 
 def merge_pairs(collection):
     merged = Collection()
-    while len(collection) > 0:
-        x = collection.pop(0)
+    q = deque(collection)
+    
+    while len(q) > 0:
+        x = q.popleft()
 
-        if len(collection) > 1 and is_connector(collection[0]):
-            if isinstance(collection[1], list):
-                collection[1] = merge_pairs(collection[1])
-            merged.append(Pair(x, collection.pop(0), Value(collection.pop(0))))
+        if len(q) > 1 and is_connector(q[0]):
+            c = q.popleft()
+            v = q.popleft()
+            
+            if isinstance(v, list):
+                v = merge_pairs(v)
+                
+            merged.append(Pair(x, c, Value(v)))
         else:
             merged.append(Value(x))
 
     return merged
 
 
-def format(data):  # And back to text
-    text = ""
-    for x in data:
-        text += str(x) + "\n"
+def format(data):
+    raw_lines = [(str(x) + "\n") for x in data]
+    text = "".join(raw_lines)
 
-    text = text.split("\n")
-
+    lines = text.split("\n")
+    indented = []
     indent = 0
-    for line in range(len(text)):
-        if "}" in text[line] and "{" not in text[line]:
+    
+    for line in lines:
+        if "}" in line and "{" not in line:
             indent -= 1
 
-        text[line] = indent * "    " + text[line]
+        indented.append((indent * "    ") + line)
 
-        if "{" in text[line] and "}" not in text[line]:
+        if "{" in line and "}" not in line:
             indent += 1
 
-    text = "\n".join(text)
+    text = "\n".join(indented)
 
     return format_compress(text)
 
 
-def format_compress(text):  # Break down odd brackets
-    r = ""
-
+def format_compress(text): 
+    r = []  # Use a list to prevent O(N²) string reallocation
     no_newlines = False
-
     buffer = ""
+
     for x in text:
         if x != " " and x != "\n":
             buffer += x.strip()
 
         if buffer.endswith("}"):
             no_newlines = False
-
+        
         elif buffer.endswith("={"):
             buffer = ""
 
         elif buffer.endswith("{"):
             no_newlines = True
 
-            while r.endswith(" ") or r.endswith("\n"):
-                r = r.removesuffix(" ").removesuffix("\n")
-            r += " "
+            # Replaces while r.endswith(...) string methods
+            while r and (r[-1] == " " or r[-1] == "\n"):
+                r.pop()
+            r.append(" ")
 
         if not no_newlines or x != "\n":
-            r += x
+            r.append(x)
 
             if no_newlines:
-                if r.endswith("  "):
-                    r = r.removesuffix("  ")
-                    r += " "
+                # Replaces if r.endswith("  ") string deduplication
+                if len(r) >= 2 and r[-1] == " " and r[-2] == " ":
+                    r.pop()
 
-    return r
+    return "".join(r)
+
 
 # def reformat(d):
 #    """Convert dict/list/json to pdxscript"""
