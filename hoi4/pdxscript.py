@@ -420,34 +420,31 @@ def format_compress(text):
 
     return "".join(r)
 
+def reformat(d):
+    """Convert dict/list/json to pdxscript"""
+    if isinstance(d, dict):
+        r = Collection()
+        for k, v in d.items():
+            r.append(Pair(str(k), "=", reformat(v)))
 
-# def reformat(d):
-#    """Convert dict/list/json to pdxscript"""
-#    if isinstance(d, dict):
-#        r = Collection()
-#        for k in d.keys():
-#            r.append(Pair(str(k), "=", Value(reformat(d[k]))))
-#
-#    elif isinstance(d, list):
-#        r = Collection()
-#        for x in d:
-#            r.append(Value(reformat(x)))
-#
-#    elif isinstance(d, bool):
-#        if d == True:
-#            r = "yes"
-#        else:
-#            r = "no"
-#
-#    elif isinstance(d, int) or isinstance(d, float):
-#        r = str(d)
-#
-#    else:
-#        d = str(d)
-#
-#        if " " in d.strip() or d.strip() == "":
-#            d = "\""+d+"\""
-#
-#        r = d
-#
-#    return r
+    elif isinstance(d, list):
+        r = Collection()
+        for x in d:
+            r.append(Value(reformat(x)))
+
+    elif isinstance(d, bool):
+        if d:
+            r = "yes"
+        else:
+            r = "no"
+
+    elif isinstance(d, (int, float)):
+        r = str(d)
+
+    else:
+        d = str(d)
+        if " " in d.strip() or d.strip() == "":
+            d = f'"{d}"'
+        r = d
+
+    return r

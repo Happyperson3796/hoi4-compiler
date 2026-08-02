@@ -1,5 +1,5 @@
 from .filetype import fileType
-from ..pdxscript import get, format, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection, reformat
 import os
 from .. import globals
 import shutil
@@ -149,7 +149,7 @@ class Formable(fileType):
 
         rgb = color
         for x in range(len(rgb)):
-            rgb[x] = int(str(rgb[x]))
+            rgb.value[x] = int(str(rgb[x]))
 
         color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
         color = colorsys.hsv_to_rgb(color[0], color[1]/0.6, color[2]/0.8)
@@ -482,28 +482,28 @@ news_event = {
 
 
 
-#class JsonFormable(Formable):
-#    def define(self):
-#        file = open(self.path, "r")
-#        data = json.loads(file.read())
-#        file.close()
-#
-#        temp = {}
-#        for k in data.keys(): #Not case sensitive
-#            temp[k.lower()] = data[k]
-#        data = temp
-#
-#        data["color"] = data["color"].removeprefix("rgb(").removesuffix(")").strip().replace(",", " ").replace("  ", " ").split(" ")
-#
-#        data = reformat(data)
-#
-#        for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
-#            try:
-#                var = data.get(x)
-#                var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1])
-#            except: pass
-#
-#        id = str(data.get("id"))
-#        data.remove(data.get_pair("id"))
-#
-#        return id, data
+class JsonFormable(Formable):
+    def define(self):
+        file = open(self.path, "r")
+        data = json.loads(file.read())
+        file.close()
+
+        temp = {}
+        for k in data.keys(): #Not case sensitive
+            temp[k.lower()] = data[k]
+        data = temp
+
+        data["color"] = data["color"].removeprefix("rgb(").removesuffix(")").strip().replace(",", " ").replace("  ", " ").split(" ")
+
+        data = reformat(data)
+
+        for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
+            try:
+                var = data.get(x)
+                var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1])
+            except: pass
+
+        id = str(data.get("id"))
+        data.remove(data.get_pair("id"))
+
+        return id, data
