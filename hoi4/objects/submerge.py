@@ -25,15 +25,15 @@ class SubMerged(fileType):
 
         with open(head+"/"+base_file, "r") as file:
             base = get(file.read())
-            subbase = base.retrieve(subpath[0])
+            subbase = base.get(subpath[0])
             for p in subpath[1:]:
-                subbase = subbase.val().retrieve(p)
+                subbase = subbase.get(p)
 
-        suboverride = override.retrieve(subpath[0])
+        suboverride = override.get(subpath[0])
         for p in subpath[1:]:
-            suboverride = suboverride.val().retrieve(p)
+            suboverride = suboverride.get(p)
 
-        subbase.val().merge(suboverride.val(), reverse)
+        subbase.merge(suboverride, reverse)
 
         with open(head+"/"+base_file, "w") as file:
             file.write(format(base))

@@ -12,8 +12,8 @@ class Character(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())
 
-        namespace = data.extract("namespace")
-        id = data.extract("id")
+        namespace = str(data.get("namespace"))
+        id = str(data.get("id"))
 
         os.makedirs(parent_dir+"/common/characters/", exist_ok=True)
         os.makedirs(parent_dir+"/interface/", exist_ok=True)
@@ -33,7 +33,7 @@ class Character(fileType):
             with open(gfx_path, "r", encoding="utf-8") as file:
                 gfx = get(file.read())
 
-            gfx[0][-1].val().append(get(f"SpriteType = {{ name = \"GFX_idea_{namespace}_{id}\" texturefile = \"gfx/interface/ideas/{namespace}/{id}_small.dds\" }}")[0])
+            gfx[0].value().append(get(f"SpriteType = {{ name = \"GFX_idea_{namespace}_{id}\" texturefile = \"gfx/interface/ideas/{namespace}/{id}_small.dds\" }}")[0])
 
             with open(gfx_path, "w", encoding="utf-8") as file:
                 file.write(format(gfx))
@@ -50,7 +50,7 @@ class Character(fileType):
             with open(gfx_path, "r", encoding="utf-8") as file:
                 gfx = get(file.read())
 
-            gfx[0][-1].val().append(get(f"SpriteType = {{ name = \"GFX_portrait_{namespace}_{id}\" texturefile = \"gfx/leaders/{namespace}/{id}.dds\" }}")[0])
+            gfx[0].value().append(get(f"SpriteType = {{ name = \"GFX_portrait_{namespace}_{id}\" texturefile = \"gfx/leaders/{namespace}/{id}.dds\" }}")[0])
 
             with open(gfx_path, "w", encoding="utf-8") as file:
                 file.write(format(gfx))
@@ -65,9 +65,9 @@ class Character(fileType):
 
         with open(characters_path, "r", encoding="utf-8-sig") as file:
             characters_full = get(file.read())
-            characters = characters_full[0][-1].val()
+            characters = characters_full[0].value()
             characters.append(Pair(id, "=", Value(Collection())))
-            characters = characters[-1][-1].val()
+            characters = characters[-1].value()
 
         portraits_included = False
 
@@ -109,8 +109,8 @@ class Character(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())
 
-        namespace = data.extract("namespace")
-        id = data.extract("id")
+        namespace = str(data.get("namespace"))
+        id = str(data.get("id"))
 
         try:
             os.remove(parent_dir+"/common/characters/"+namespace+"_generated.txt")

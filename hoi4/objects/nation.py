@@ -17,18 +17,18 @@ class Nation(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-            namespace = data.get("namespace").val()
+            namespace = data.get("namespace")
 
-            tag = data.get("tag").val()
-            name = data.get("loc").val().get("$", False, True).val().replace("\"","")
-            #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
-            #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
-            color = data.get("color").val()
-            history_data = data.get("history").val()
-            cores = data.get("cores").val()
+            tag = data.get("tag")
+            name = str(data.get("loc").get("$")).replace("\"","")
+            #name_def = str(data.get("loc").get("$_DEF")).replace("\"","")
+            #name_adj = str(data.get("loc").get("$_ADJ")).replace("\"","")
+            color = data.get("color")
+            history_data = data.get("history")
+            cores = data.get("cores")
 
-            generate_colors = data.retrieve("generate_colors", Value("yes")).val() == "yes"
-            use_cosmetics = data.retrieve("use_cosmetics", Value("no")).val() == "yes"
+            generate_colors = str(data.get("generate_colors", Value("yes"))) == "yes"
+            use_cosmetics = str(data.get("use_cosmetics", Value("no"))) == "yes"
 
         if not build_cached_state_mappings:
             build_cached_state_mappings = True
@@ -37,8 +37,8 @@ class Nation(fileType):
                     if path.name.endswith(".state"):
                         with open(path.path, "r") as file:
                             tdata = get(file.read())
-                            parent = str(tdata.retrieve("parent").val()[0])
-                            id = "$"+str(tdata.retrieve("id").val())
+                            parent = str(tdata.get("parent")[0])
+                            id = "$"+str(tdata.get("id"))
                             cached_state_mappings[id] = parent
 
         for s in cores: #Integration for .state files, add cores
@@ -49,7 +49,7 @@ class Nation(fileType):
 
 
         history = Collection()
-        if use_cosmetics: history = get("set_cosmetic_tag="+tag)
+        if use_cosmetics: history = get("set_cosmetic_tag="+str(tag))
         for s in cores:
             history.append(get("add_state_core="+str(s))[0])
         for x in history_data:
@@ -57,20 +57,20 @@ class Nation(fileType):
         
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
-        filename = "dynamic_nations_"+namespace
+        filename = "dynamic_nations_"+str(namespace)
 
         os.makedirs(base+"/history/countries/", exist_ok=True)
         os.makedirs(base+"/common/countries/", exist_ok=True)
         os.makedirs(base+"/common/country_tags/", exist_ok=True)
         os.makedirs(base+"/localisation/", exist_ok=True)
 
-        file_history = base+"/history/countries/"+tag+" - "+name+".txt"
-        file_countries = base+"/common/countries/"+name+".txt"
+        file_history = base+"/history/countries/"+str(tag)+" - "+str(name)+".txt"
+        file_countries = base+"/common/countries/"+str(name)+".txt"
         file_tags = base+"/common/country_tags/"+filename+"_tags.txt"
-        file_colors = base+"/common/countries/"+namespace+"_dynamic_nation_colors.merge_temp"
-        file_cosmetics = base+"/common/countries/"+namespace+"_dynamic_nation_cosmetic.merge_temp"
+        file_colors = base+"/common/countries/"+str(namespace)+"_dynamic_nation_colors.merge_temp"
+        file_cosmetics = base+"/common/countries/"+str(namespace)+"_dynamic_nation_cosmetic.merge_temp"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
-        file_flag = base+"/gfx/flags/"+tag+".tga"
+        file_flag = base+"/gfx/flags/"+str(tag)+".tga"
         #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
 
         try:
@@ -82,12 +82,12 @@ class Nation(fileType):
                 file.write("l_english: ")
 
         with open(file_loc, "a+", encoding="utf-8-sig") as file:
-            loc = data.get("loc").val()
+            loc = data.get("loc")
             file.write("\n")
             for key in loc:
                 key = str(key)
                 if key.startswith("$"):
-                    key = key.replace("$", tag, 1)
+                    key = key.replace("$", str(tag), 1)
 
                 key = key.replace(" = ", ":0 ", 1)
                 file.write("\n  "+key)
@@ -96,7 +96,7 @@ class Nation(fileType):
             file.write(format(history))
 
         with open(file_tags, "a") as file:
-            file.write("\n"+tag+" = \"countries/"+name+".txt\"")
+            file.write("\n"+str(tag)+" = \"countries/"+str(name)+".txt\"")
 
         with open(file_countries, "w") as file:
             file.write("graphical_culture = western_european_gfx\ngraphical_culture_2d = western_european_2d")
@@ -113,7 +113,7 @@ class Nation(fileType):
 
             with open(file_colors, "w") as file:
                 file.write("#colors.txt\n")
-                file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
+                file.write(str(tag)+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
                 file.writelines(lines)
 
         if use_cosmetics:
@@ -127,7 +127,7 @@ class Nation(fileType):
 
             with open(file_cosmetics, "w") as file:
                 file.write("#cosmetic.txt\n")
-                file.write(tag+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
+                file.write(str(tag)+" = {\n    color = rgb "+str(color).replace("\n"," ")+"\n    color_ui = rgb "+str(color).replace("\n"," ")+"\n}\n")
                 file.writelines(lines)
 
         #try:
@@ -138,9 +138,9 @@ class Nation(fileType):
         #    
         #with open(file_cores, "w") as file:
         #    file.write("on_actions = {\n    on_startup = {\n        effect = {\n")
-        #    #file.write("            every_state = {\n                limit = { is_core_of = "+tag+" }\n                remove_core_of = "+tag+"\n            }\n")
+        #    #file.write("            every_state = {\n                limit = { is_core_of = "+str(tag)+" }\n                remove_core_of = "+str(tag)+"\n            }\n")
         #    for s in cores:
-        #        file.write("            "+s.val()+" = { add_core_of = "+tag+" }\n")
+        #        file.write("            "+str(s)+" = { add_core_of = "+str(tag)+" }\n")
         #    if len(lines) > 0: file.writelines(lines)
         #    file.write("        }\n    }\n}")
 
@@ -175,27 +175,27 @@ class Nation(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-            namespace = data.get("namespace").val()
+            namespace = data.get("namespace")
 
-            tag = data.get("tag").val()
-            name = data.get("loc").val().get("$", False, True).val().replace("\"","")
-            #name_def = data.get("loc").val().get("$_DEF", False, True).val().replace("\"","")
-            #name_adj = data.get("loc").val().get("$_ADJ", False, True).val().replace("\"","")
+            tag = data.get("tag")
+            name = str(data.get("loc").get("$")).replace("\"","")
+            #name_def = str(data.get("loc").get("$_DEF")).replace("\"","")
+            #name_adj = str(data.get("loc").get("$_ADJ")).replace("\"","")
 
-            generate_colors = data.retrieve("generate_colors", Value("yes")).val() == "yes"
-            use_cosmetics = data.retrieve("use_cosmetics", Value("no")).val() == "yes"
+            generate_colors = str(data.get("generate_colors", Value("yes"))) == "yes"
+            use_cosmetics = str(data.get("use_cosmetics", Value("no"))) == "yes"
         
         base = os.path.dirname(head).removesuffix("\\").removesuffix("/")
 
-        filename = "dynamic_nations_"+namespace
+        filename = "dynamic_nations_"+str(namespace)
 
-        file_history = base+"/history/countries/"+tag+" - "+name+".txt"
-        file_countries = base+"/common/countries/"+name+".txt"
+        file_history = base+"/history/countries/"+str(tag)+" - "+str(name)+".txt"
+        file_countries = base+"/common/countries/"+str(name)+".txt"
         file_tags = base+"/common/country_tags/"+filename+"_tags.txt"
-        file_colors = base+"/common/countries/"+namespace+"_dynamic_nation_colors.merge_temp"
-        file_cosmetics = base+"/common/countries/"+namespace+"_dynamic_nation_cosmetic.merge_temp"
+        file_colors = base+"/common/countries/"+str(namespace)+"_dynamic_nation_colors.merge_temp"
+        file_cosmetics = base+"/common/countries/"+str(namespace)+"_dynamic_nation_cosmetic.merge_temp"
         file_loc = base+"/localisation/"+filename+"_loc_l_english.yml"
-        file_flag = base+"/gfx/flags/"+tag+".tga"
+        file_flag = base+"/gfx/flags/"+str(tag)+".tga"
         #file_cores = base+"/common/on_actions/"+filename+"_cores_on_actions.txt"
 
         try:

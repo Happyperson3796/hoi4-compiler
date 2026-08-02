@@ -21,8 +21,6 @@ def get(path: str):
         return state_patch.StatePatch(path)
     elif endswith(path, ".state"):
         return state.State(path)
-    elif endswith(path, ".formable.json"):
-        return formable.JsonFormable(path)
     elif endswith(path, ".formable"):
         return formable.Formable(path)
     elif endswith(path, ".character"):
@@ -54,7 +52,6 @@ def order():
         nation.Nation,
         state_patch.StatePatch,
         state.State,
-        formable.JsonFormable,
         formable.Formable,
         character.Character,
         subideology.Subideology,

@@ -29,54 +29,54 @@ class StatePatch(fileType):
             with open(parent+"/history/states/"+vanilla_state, "r") as file:
                 state_data = get(file.read())
 
-            provinces = state[-1].val().extract("provinces")
+            provinces = state.value().get("provinces")
             for prov in provinces:
                 if str(prov).startswith("-"):
-                    prov.set(prov.val().removeprefix("-"))
-                    state_provs = state_data[0][-1].val().extract("provinces")
+                    prov.set(str(prov).removeprefix("-"))
+                    state_provs = state_data[0].value().get("provinces")
                     for x in [y for y in state_provs]:
                         if str(x) == str(prov):
                             state_provs.remove(x)
 
                 else:
-                    state_provs = state_data[0][-1].val().extract("provinces")
+                    state_provs = state_data[0].value().get("provinces")
                     state_provs.append(prov)
 
-            state[-1].val().remove(state[-1].val().select("provinces")) #Remove provinces block to avoid merge conflicts if I include that
+            state.value().remove(state.value().get_pair("provinces")) #Remove provinces block to avoid merge conflicts if I include that
 
-            history = state_data[0][-1].val().extract("history")
+            history = state_data[0].value().get("history")
 
             try: #Add or remove buildings
-                for x in state[-1].val().extract("history").extract("buildings"):
-                    if x[0].startswith("-"):
-                        for y in history.extract("buildings"):
-                            if y[0] == x[0].removeprefix("-"):
-                                history.extract("buildings").remove(y)
+                for x in state.value().get("history").get("buildings"):
+                    if str(x[0]).startswith("-"):
+                        for y in history.get("buildings"):
+                            if y[0] == str(x[0]).removeprefix("-"):
+                                history.get("buildings").remove(y)
 
-                state[-1].val().extract("history").remove(state[-1].val().extract("history").select("buildings"))
+                state.value().get("history").remove(state.value().get("history").get_pair("buildings"))
             except: pass
 
             try: #Victory point addition or removal
                 pairs = {}
-                for potential_vps in [x for x in state[-1].val().extract("history")]:
+                for potential_vps in [x for x in state.value().get("history")]:
                     if isinstance(potential_vps, Pair) and potential_vps[0] == "victory_points":
-                        vps = potential_vps[-1].val()
+                        vps = potential_vps.value()
                         for x in range(len(vps)):
                             if x % 2 == 0:
-                                pairs[vps[x].val()] = vps[x+1].val()
+                                pairs[str(vps[x])] = str(vps[x+1])
 
-                        state[-1].val().extract("history").remove(potential_vps)
+                        state.value().get("history").remove(potential_vps)
                             
                 
                 for potential_vps in history:
                     if isinstance(potential_vps, Pair) and potential_vps[0] == "victory_points":
-                        vps = potential_vps[-1].val()
+                        vps = potential_vps.value()
                         for x in range(len(vps)):
                             if x % 2 == 0:
-                                vp = vps[x].val()
+                                vp = str(vps[x])
                                 
                                 for k in [x for x in pairs.keys()]:
-                                    if k.startswith("-") and k.removeprefix("-") == vp:
+                                    if str(k).startswith("-") and str(k).removeprefix("-") == vp:
                                         history.remove(potential_vps)
                                         pairs.pop(k)
 
@@ -88,7 +88,7 @@ class StatePatch(fileType):
 
             except: pass
             
-            #state_data[0][-1].val().merge(state[-1].val()) #Merge remaining values? need .integrate method for recursive merging of Collections
+            #state_data[0].value().merge(state.value()) #Merge remaining values? need .integrate method for recursive merging of Collections
 
             with open(parent+"/history/states/"+vanilla_state, "w") as file:
                 file.write(format(state_data))

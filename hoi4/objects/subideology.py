@@ -31,11 +31,11 @@ class Subideology(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())
 
-        namespace = data.retrieve("namespace").val()
-        base = data.retrieve("base").val()
-        id = data.retrieve("id").val()
-        loc = data.retrieve("loc").val()
-        defines = data.retrieve("def", Value(Collection())).val()
+        namespace = str(data.get("namespace"))
+        base = str(data.get("base"))
+        id = str(data.get("id"))
+        loc = data.get("loc")
+        defines = data.get("def", Collection())
 
 
         os.makedirs(parent_dir+"/interface/", exist_ok=True)
@@ -49,7 +49,7 @@ class Subideology(fileType):
             else:
                 gfx = get("spriteTypes = {}")
 
-            gfx[0][-1].val().append(Pair("spriteType","=",Value(Collection([Pair("name","=",Value("GFX_ideology_"+id)),Pair("texturefile","=",Value("gfx/interface/ideologies/"+id+".dds"))]))))
+            gfx[0].value().append(Pair("spriteType","=",Collection([Pair("name","=","GFX_ideology_"+id),Pair("texturefile","=","gfx/interface/ideologies/"+id+".dds")])))
 
             with open(gfx_file, "w", encoding="utf-8-sig") as file:
                 file.write(format(gfx))
@@ -65,7 +65,7 @@ class Subideology(fileType):
                 file.write("l_english:")
 
         for l in loc:
-            l[0] = l[0].replace("$",id,1)
+            l[0] = str(l[0]).replace("$",id,1)
             l[1] = ":"
 
             with open(loc_file, "a", encoding="utf-8-sig") as file:
@@ -78,7 +78,7 @@ class Subideology(fileType):
                     if path.path.endswith(".txt"):
                         try:
                             with open(path.path, "r") as file:
-                                get(file.read()).retrieve("ideologies").val().retrieve(base).val()
+                                get(file.read()).get("ideologies").get(base)
                                 ideologies = path.path
                                 break
                         except: pass
@@ -87,14 +87,14 @@ class Subideology(fileType):
         with open(ideologies, "r") as file:
             ideologies_data = get(file.read())
             try:
-                ideologies_data.retrieve("ideologies").val().retrieve(base).val().retrieve("types").val().retrieve(id).set(defines)
+                ideologies_data.get("ideologies").get(base).get("types").get(id).set(defines)
             except:
                 try:
-                    x = ideologies_data.retrieve("ideologies").val().retrieve(base).val().retrieve("types").val()
+                    x = ideologies_data.get("ideologies").get(base).get("types")
                 except:
-                    x = ideologies_data.retrieve("ideologies").val().retrieve(base).val()
+                    x = ideologies_data.get("ideologies").get(base)
                     x.append(Pair("types","=",Collection()))
-                    x = ideologies_data.retrieve("ideologies").val().retrieve(base).val().retrieve("types").val()
+                    x = ideologies_data.get("ideologies").get(base).get("types")
                 
                 x.append(Pair(id,"=",defines))
 
@@ -115,11 +115,11 @@ class Subideology(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())
 
-        namespace = data.retrieve("namespace").val()
-        base = data.retrieve("base").val()
-        id = data.retrieve("id").val()
-        loc = data.retrieve("loc").val()
-        defines = data.retrieve("def").val()
+        namespace = str(data.get("namespace"))
+        base = str(data.get("base"))
+        id = str(data.get("id"))
+        loc = data.get("loc")
+        defines = data.get("def", Collection())
 
         gfx_file = parent_dir+"/interface/"+namespace+"_dynamic_subideologies.gfx"
 
@@ -138,7 +138,7 @@ class Subideology(fileType):
                 if path.path.endswith(".txt"):
                     try:
                         with open(path.path, "r") as file:
-                            get(file.read()).retrieve("ideologies").val().retrieve(base).val()
+                            get(file.read()).get("ideologies").get(base)
                             ideologies = path.path
                             break
                     except: pass
@@ -148,10 +148,10 @@ class Subideology(fileType):
             with open(ideologies, "r") as file:
                 ideologies_data = get(file.read())
             i = -1
-            for x in ideologies_data.retrieve("ideologies").val().retrieve(base).val().retrieve("types").val().copy():
+            for x in ideologies_data.get("ideologies").get(base).get("types").copy():
                 i += 1
                 if x[0] == id:
-                    ideologies_data.retrieve("ideologies").val().retrieve(base).val().retrieve("types").val().pop(i)
+                    ideologies_data.get("ideologies").get(base).get("types").pop(i)
                     i -= 1
 
             with open(ideologies, "w") as file:

@@ -9,13 +9,13 @@ class Achievement(fileType):
         with open(self.path, "r") as file:
             collection = get(file.read())
 
-        filename = collection[0][-1].val()
+        filename = str(collection[0].value())
         unique_id = collection[1]
 
         name = collection[2]
         desc = collection[3]
 
-        locfile = collection[4][-1].val()
+        locfile = str(collection[4].value())
 
         achievement = collection[-1]
 
@@ -48,10 +48,10 @@ class Achievement(fileType):
                 index.append("l_english:\n")
             append = True
             for x in index:
-                if name[0] in x:
+                if str(name[0]) in x:
                     append = False
             if append:
-                index.append("\n  "+name[0]+" "+name[-1].val()+"\n  "+desc[0]+" "+desc[-1].val()+"\n")
+                index.append("\n  "+str(name[0])+" "+str(name.value())+"\n  "+str(desc[0])+" "+str(desc.value())+"\n")
             with open(localisation_dir+locfile+".yml", "w", encoding="utf-8-sig") as file:
                 file.writelines(index)
 
@@ -63,13 +63,13 @@ class Achievement(fileType):
         with open(self.path, "r") as file:
             collection = get(file.read())
         
-        file = collection[0][-1].val()
+        file = str(collection[0].value())
         filepath = head+"/"+file+".txt"
 
         if os.path.exists(filepath):
             os.remove(filepath)
 
-        locfile = collection[4][-1].val()
+        locfile = str(collection[4].value())
         localisation_dir = "/".join(head.replace("\\","/").split("/")[:-2])+"/localisation/"
         if os.path.exists(localisation_dir+locfile+".yml"):
             os.remove(localisation_dir+locfile+".yml")

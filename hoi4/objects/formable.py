@@ -1,5 +1,5 @@
 from .filetype import fileType
-from ..pdxscript import get, format, reformat, Pair, Collection
+from ..pdxscript import get, format, Pair, Collection
 import os
 from .. import globals
 import shutil
@@ -12,7 +12,7 @@ class Formable(fileType):
             data = get(file.read())[0]
 
         id = data[0]
-        data = data[-1].val()
+        data = data[-1]
 
         return id, data
 
@@ -21,29 +21,28 @@ class Formable(fileType):
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
 
         id, data = self.define()
-        data = data.unwrap()
 
-        namespace = data.extract("namespace")
+        namespace = str(data.get("namespace"))
 
-        name = data.extract("name").replace("\"", "")
-        name_adj = data.extract("name_adj").replace("\"", "")
-        name_def = data.extract("name_def").replace("\"", "")
-        extra_loc = data.extract("extra_loc", Collection())
-        color = data.extract("color")
-        allowed = data.extract("allowed")
-        states = data.extract("states")
-        extras = data.extract("extras", Collection())
-        claims = data.extract("claims", Collection())
-        gfx = data.extract("gfx", "GFX_decision_cat_generic_hre")
-        tier = str(data.extract("tier", "1"))
-        exclusive = data.extract("exclusive", "yes")
-        on_formed = data.extract("on_formed", Collection())
-        extra_reqs = data.extract("extra_reqs", Collection())
-        hist_player = data.extract("hist_player", "yes")
-        ai = data.extract("ai", "yes")
-        hist_ai = data.extract("hist_ai", "no")
+        name = str(data.get("name")).replace("\"", "")
+        name_adj = str(data.get("name_adj")).replace("\"", "")
+        name_def = str(data.get("name_def")).replace("\"", "")
+        extra_loc = data.get("extra_loc", Collection())
+        color = data.get("color")
+        allowed = data.get("allowed")
+        states = data.get("states")
+        extras = data.get("extras", Collection())
+        claims = data.get("claims", Collection())
+        gfx = str(data.get("gfx", "GFX_decision_cat_generic_hre"))
+        tier = str(data.get("tier", "1"))
+        exclusive = str(data.get("exclusive", "yes"))
+        on_formed = data.get("on_formed", Collection())
+        extra_reqs = data.get("extra_reqs", Collection())
+        hist_player = str(data.get("hist_player", "yes"))
+        ai = str(data.get("ai", "yes"))
+        hist_ai = str(data.get("hist_ai", "no"))
 
-        cosmetic_tag =  data.extract("cosmetic_tag", "").replace("\"", "")
+        cosmetic_tag =  str(data.get("cosmetic_tag", "")).replace("\"", "")
 
         if tier == "0":
             tier_color = "§g"
@@ -76,9 +75,9 @@ class Formable(fileType):
 
         def convert_states(c):
             for state in [x for x in c]:
-                if not state.startswith("-"):
+                if not str(state).startswith("-"):
                     for x, y, z in conversion_list:
-                        if x == state:
+                        if x == str(state):
                             c.append(z)
 
         convert_states(states)
@@ -87,11 +86,11 @@ class Formable(fileType):
 
         def clean_states(c): #Remove any states marked with -
             for state in [x for x in c]:
-                if state.startswith("-"):
+                if str(state).startswith("-"):
                     c.remove(state)
-                    state = state.removeprefix("-")
+                    state = str(state).removeprefix("-")
                     for y in [x for x in c]:
-                        if y == state:
+                        if str(y) == state:
                             c.remove(y)
 
         clean_states(states)
@@ -131,8 +130,8 @@ class Formable(fileType):
 """
             
             for x in extra_loc:
-                k = x[0].replace("$", id+"_formable_cosmetic")
-                v = "\""+x[-1].removeprefix("\"").removesuffix("\"")+"\""
+                k = str(x[0]).replace("$", id+"_formable_cosmetic")
+                v = "\""+str(x[-1]).removeprefix("\"").removesuffix("\"")+"\""
                 template += "  "+k+":0 "+v+"\n"
 
             if exclusive == "yes":
@@ -150,7 +149,7 @@ class Formable(fileType):
 
         rgb = color
         for x in range(len(rgb)):
-            rgb[x] = int(rgb[x])
+            rgb[x] = int(str(rgb[x]))
 
         color = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
         color = colorsys.hsv_to_rgb(color[0], color[1]/0.6, color[2]/0.8)
@@ -453,7 +452,7 @@ news_event = {
 
         id, data = self.define()
 
-        namespace = data.extract("namespace")
+        namespace = str(data.get("namespace"))
 
         try:
             os.remove(parent_dir+"/localisation/"+namespace+"_dynamic_formable_loc_l_english.yml")
@@ -483,28 +482,28 @@ news_event = {
 
 
 
-class JsonFormable(Formable):
-    def define(self):
-        file = open(self.path, "r")
-        data = json.loads(file.read())
-        file.close()
-
-        temp = {}
-        for k in data.keys(): #Not case sensitive
-            temp[k.lower()] = data[k]
-        data = temp
-
-        data["color"] = data["color"].removeprefix("rgb(").removesuffix(")").strip().replace(",", " ").replace("  ", " ").split(" ")
-
-        data = reformat(data)
-
-        for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
-            try:
-                var = data.retrieve(x)
-                var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1].val())
-            except: pass
-
-        id = data.extract("id")
-        data.remove(data.select("id"))
-
-        return id, data
+#class JsonFormable(Formable):
+#    def define(self):
+#        file = open(self.path, "r")
+#        data = json.loads(file.read())
+#        file.close()
+#
+#        temp = {}
+#        for k in data.keys(): #Not case sensitive
+#            temp[k.lower()] = data[k]
+#        data = temp
+#
+#        data["color"] = data["color"].removeprefix("rgb(").removesuffix(")").strip().replace(",", " ").replace("  ", " ").split(" ")
+#
+#        data = reformat(data)
+#
+#        for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
+#            try:
+#                var = data.get(x)
+#                var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1])
+#            except: pass
+#
+#        id = str(data.get("id"))
+#        data.remove(data.get_pair("id"))
+#
+#        return id, data

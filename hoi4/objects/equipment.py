@@ -12,10 +12,10 @@ class Equipment(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())[0]
         
-            id = data[0]
-            data: Collection = data[-1].val()
+            id = str(data.key())
+            data: Collection = data.value()
 
-        namespace = data.extract("namespace")
+        namespace = str(data.get("namespace"))
 
         equipment_file = "common/units/equipment/"+namespace+"_generated_equipment.txt"
         if os.path.exists(equipment_file):
@@ -29,10 +29,10 @@ class Equipment(fileType):
         with open(self.path, "r") as file:
             data = get(file.read())[0]
         
-            id = data[0]
-            data: Collection = data[-1].val()
+            id = str(data.key())
+            data: Collection = data.value()
 
-        namespace = data.extract("namespace")
+        namespace = str(data.get("namespace"))
 
         try:
             os.remove("common/units/equipment/"+namespace+"_generated_equipment.txt")

@@ -36,14 +36,14 @@ class Focus(fileType):
         for x in focus_data:
             if x[0] != "focus_tree":
                 extras.append(x)
-        focus_data = focus_data.retrieve("focus_tree").val()
+        focus_data = focus_data.get("focus_tree")
         
         with open(file_from, "r", encoding="utf-8-sig") as file:
             data = get(file.read())
             for x in data:
                 if x[0] != "focus_tree":
                     extras.append(x)
-            data = data.retrieve("focus_tree").val()
+            data = data.get("focus_tree")
 
             remove = []
             inline_ideas = ""
@@ -55,23 +55,23 @@ class Focus(fileType):
                     for y in x:
                         traverse(y, x)
                 elif isinstance(x, Value):
-                    traverse(x.val(), x)
+                    traverse(x._value(), x)
                 elif isinstance(x, Pair):
                     traverse(x[-1], x)
 
 
                     if x[0] == "define_idea":
-                        idea: Collection = get(str(x))[0][-1].val()
+                        idea: Collection = get(str(x))[0][-1]
                         remove.append([parent, x])
 
-                        name = idea.extract("name")
-                        idea.remove(idea.select("name"))
+                        name = str(idea.get("name"))
+                        idea.remove(idea.get_pair("name"))
 
-                        desc = idea.extract("desc", "")
-                        if desc != "": idea.remove(idea.select("desc"))
+                        desc = str(idea.get("desc", ""))
+                        if desc != "": idea.remove(idea.get_pair("desc"))
 
-                        id = idea.extract("id")
-                        idea.remove(idea.select("id"))
+                        id = str(idea.get("id"))
+                        idea.remove(idea.get_pair("id"))
                         
                         inline_loc += " "+id+": "+name+"\n"
                         if desc != "": inline_loc += " "+id+"_desc: "+desc+"\n"
@@ -106,14 +106,14 @@ class Focus(fileType):
 
             for x in data:
                 try:
-                    id = x.get().get("id").val()
+                    id = str(x.value().get("id"))
                     try:
-                        name = " "+id+": "+x.get().val().retrieve("name").val()
-                        x.get().val().remove(x.get().val().select("name"))
+                        name = " "+id+": "+str(x.value().get("name"))
+                        x.value().remove(x.value().get_pair("name"))
                     except: name = ""
                     try:
-                        desc = " "+id+"_desc: "+x.get().val().retrieve("desc").val()
-                        x.get().val().remove(x.get().val().select("desc"))
+                        desc = " "+id+"_desc: "+str(x.value().get("desc"))
+                        x.value().remove(x.value().get_pair("desc"))
                     except: desc = ""
 
                     if name != "" or desc != "":
@@ -129,38 +129,38 @@ class Focus(fileType):
 
                     override = False
                     try:
-                        if (x.get().get("override").val() == "yes"):
+                        if (str(x.value().get("override")) == "yes"):
                             override = True
                             index = -1
-                            for obj in x.get().val():
+                            for obj in x.value():
                                 index += 1
                                 if obj[0] == "override":
-                                    x.get().val().pop(index)
+                                    x.value().pop(index)
                     except: pass
 
                     replaced = False
                     for y in focus_data:
                         try:
-                            if id == y.get().get("id").val():
+                            if id == str(y.value().get("id")):
 
                                 if not override:
 
-                                    for objx in x.get().val():
+                                    for objx in x.value():
                                         replaced_2 = False
-                                        for objy in y.get().val():
+                                        for objy in y.value():
                                             if (objx[0] == objy[0]):
                                                 if objx[0] != "prerequisite":
-                                                    objy.get().set(objx.get())
+                                                    objy.value().set(objx.value())
                                                     replaced_2 = True
                                                 else:
-                                                    if (str(objx[-1].val()) == str(objy[-1].val())):
+                                                    if (str(objx[-1]) == str(objy[-1])):
                                                         replaced_2 = True
 
                                         if not replaced_2:
-                                            y.get().val().append(objx)
+                                            y.value().append(objx)
                                 
                                 else:
-                                    y.set(x.get())
+                                    y[-1] = x.value()
 
                                 replaced = True
                                 break

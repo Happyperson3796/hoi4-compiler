@@ -50,11 +50,11 @@ class State(fileType):
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = str(data.retrieve("namespace").val())
-        full_id = data.retrieve("id").val()
-        name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
-        parent = data.retrieve("parent").val()[0].val()
-        provinces = data.retrieve("provinces").val()
+        namespace = str(data.get("namespace"))
+        full_id = str(data.get("id"))
+        name = str(data.get("name")).removeprefix("\"").removesuffix("\"")
+        parent = str(data.get("parent")[0])
+        provinces = data.get("provinces")
 
         #print(self.path)
 
@@ -80,104 +80,104 @@ class State(fileType):
             exit
 
         with open(vanilla_file, "r", encoding="utf-8") as file:
-            vanilla_data = get(file.read()).get("state").val()
+            vanilla_data = get(file.read()).get("state")
 
         infrastructure = 0
         try:
-            infrastructure = vanilla_data.retrieve("history").val().retrieve("buildings").val().retrieve("infrastructure").val()
+            infrastructure = vanilla_data.get("history").get("buildings").get("infrastructure")
         except: pass
         try:
-            infrastructure = data.retrieve("history").val().retrieve("buildings").val().retrieve("infrastructure").val()
+            infrastructure = data.get("history").get("buildings").get("infrastructure")
         except: pass
 
         owner = "LIB"
         try:
-            owner = vanilla_data.retrieve("history").val().retrieve("owner").val()
+            owner = vanilla_data.get("history").get("owner")
         except: pass
         try:
-            owner = data.retrieve("history").val().retrieve("owner").val()
+            owner = data.get("history").get("owner")
         except: pass
 
         local_supplies = "0.0"
         try:
-            local_supplies = vanilla_data.retrieve("local_supplies").val()
+            local_supplies = vanilla_data.get("local_supplies")
         except: pass
 
         state_category = "rural"
         try:
-            state_category = vanilla_data.retrieve("state_category").val()
+            state_category = vanilla_data.get("state_category")
         except: pass
         try:
-            state_category = data.retrieve("state_category").val()
+            state_category = data.get("state_category")
         except: pass
 
         num_id = get_top_state_id(parent_dir) + 1
 
         new_data_collection = get("state={}")
-        new_data = new_data_collection[0][-1].val()
+        new_data = new_data_collection[0][-1]
 
         new_data.append(get("id="+str(num_id))[0])
         new_data.append(get("name=\"STATE_"+str(num_id)+"\"")[0])
         new_data.append(get("manpower=0")[0])
-        new_data.append(get("state_category="+state_category)[0])
-        new_data.append(get("resources={"+format(data.retrieve("resources").val())+"}")[0])
-        new_data.append(get("history={owner="+owner+"}")[0])
+        new_data.append(get("state_category="+str(state_category))[0])
+        new_data.append(get("resources={"+format(data.get("resources"))+"}")[0])
+        new_data.append(get("history={owner="+str(owner)+"}")[0])
         new_data.append(get("provinces={}")[0])
-        new_data.append(get("local_supplies="+local_supplies)[0])
+        new_data.append(get("local_supplies="+str(local_supplies))[0])
         
         try:
-            impassable = data.retrieve("impassable").val()
-            new_data.append(get("impassable="+impassable)[0])
+            impassable = data.get("impassable")
+            new_data.append(get("impassable="+str(impassable))[0])
         except:
             try:
-                impassable = vanilla_data.retrieve("impassable").val()
-                new_data.append(get("impassable="+impassable)[0])
+                impassable = vanilla_data.get("impassable")
+                new_data.append(get("impassable="+str(impassable))[0])
             except: pass
 
                 
                 
         try: #Set buildings & infrastructure... this is useless, cut out and replace with text parsing later
-            new_data.retrieve("history").val().retrieve("buildings").val().retrieve("infrastructure").set(str(infrastructure))
+            new_data.get("history").get("buildings").get("infrastructure").set(str(infrastructure))
         except:
             try:
-                new_data.retrieve("history").val().retrieve("buildings").val().append(get("infrastructure="+str(infrastructure))[0])
+                new_data.get("history").get("buildings").append(get("infrastructure="+str(infrastructure))[0])
             except:
-                new_data.retrieve("history").val().append(get("buildings={infrastructure="+str(infrastructure)+"}")[0])
+                new_data.get("history").append(get("buildings={infrastructure="+str(infrastructure)+"}")[0])
 
 
-        old_province_total = len(vanilla_data.retrieve("provinces").val())
+        old_province_total = len(vanilla_data.get("provinces"))
         shared_provinces = []
 
         for prov in [c for c in provinces]: #Check for provinces shared by old and new states
-            for baseprov in vanilla_data.retrieve("provinces").val():
+            for baseprov in vanilla_data.get("provinces"):
                 if str(prov).strip() == str(baseprov).strip():
                     shared_provinces.append(int(str(prov).strip()))
-                    new_data.retrieve("provinces").val().append(baseprov)
-                    vanilla_data.retrieve("provinces").val().remove(baseprov)
+                    new_data.get("provinces").append(baseprov)
+                    vanilla_data.get("provinces").remove(baseprov)
 
         for prov in [c for c in provinces]:
             if int(str(prov).strip()) not in shared_provinces:
-                new_data.retrieve("provinces").val().append(prov)
+                new_data.get("provinces").append(prov)
 
         old_vps = 0
         new_vps = 0
 
-        for pair in [c for c in vanilla_data.retrieve("history").val()]: #Move VP mappings over
+        for pair in [c for c in vanilla_data.get("history")]: #Move VP mappings over
             if str(pair[0]).strip() == "victory_points":
-                vp, pts = pair[-1].val()
+                vp, pts = pair[-1]
                 if int(str(vp).strip()) in shared_provinces:
-                    new_data.retrieve("history").val().append(pair)
-                    vanilla_data.retrieve("history").val().remove(pair)
+                    new_data.get("history").append(pair)
+                    vanilla_data.get("history").remove(pair)
                     new_vps += int(str(pts).removesuffix(".0"))
                 else:
                     old_vps += int(str(pts).removesuffix(".0"))
 
         try:
-            for pair in [c for c in vanilla_data.retrieve("history").val().retrieve("buildings").val()]: #Move Province Buildings Over
+            for pair in [c for c in vanilla_data.get("history").get("buildings")]: #Move Province Buildings Over
                 try:
                     if int(str(pair[0]).strip()) in shared_provinces:
-                        new_data.retrieve("history").val().retrieve("buildings").val().append(pair)
-                        vanilla_data.retrieve("history").val().retrieve("buildings").val().remove(pair)
+                        new_data.get("history").get("buildings").append(pair)
+                        vanilla_data.get("history").get("buildings").remove(pair)
                 except: pass
         except: pass
                 
@@ -193,96 +193,96 @@ class State(fileType):
         #    print(str(round(state_manpower_ratio*100,2))+"%")
 
         try:
-            for r in vanilla_data.retrieve("resources").val(): #Merge up the resources
+            for r in vanilla_data.get("resources"): #Merge up the resources
                 res, s, amt = r
 
-                new_amt = str(math.ceil(int(amt.val())*state_resource_ratio))
+                new_amt = str(math.ceil(int(str(amt))*state_resource_ratio))
 
                 try:
-                    val = new_data.retrieve("resources").val().retrieve(res)
-                    val.set(int(val.val())+int(new_amt))
+                    val = new_data.get("resources").get(res)
+                    val.set(int(str(val))+int(new_amt))
                 except:
-                    new_data.retrieve("resources").val().append(get(res+s+new_amt)[0])
+                    new_data.get("resources").append(get(str(res)+str(s)+new_amt)[0])
 
-                amt.set(max(math.ceil(int(amt.val())*(1-state_resource_ratio)),0))
+                amt.set(max(math.ceil(int(str(amt))*(1-state_resource_ratio)),0))
         except: pass
 
 
-        for pair in vanilla_data.retrieve("history").val(): #Copy over extra history={} content like cores, demilitarized zones
+        for pair in vanilla_data.get("history"): #Copy over extra history={} content like cores, demilitarized zones
             if pair[0] != "victory_points" and pair[0] != "owner" and pair[0] != "buildings":
-                new_data.retrieve("history").val().append(get(format(pair))[0])
+                new_data.get("history").append(get(format(pair))[0])
 
         n = -1 #Move dynamic modifiers to top so forts etc. don't bug out
-        for x in new_data.retrieve("history").val():
+        for x in new_data.get("history"):
             n += 1
             if x[0] == "add_dynamic_modifier":
-                new_data.retrieve("history").val().insert(1, new_data.retrieve("history").val().pop(n))
+                new_data.get("history").insert(1, new_data.get("history").pop(n))
                 n -= 1
 
         manpower_ratio_muliplier = 1
         try:
-            manpower_ratio_muliplier = float(data.retrieve("manpower_ratio_mult").val())
+            manpower_ratio_muliplier = float(str(data.get("manpower_ratio_mult")))
         except: pass
 
-        manpower = vanilla_data.retrieve("manpower") #Distribute manpower
-        new_data.retrieve("manpower").set(max(math.ceil(int(manpower.val())*(state_manpower_ratio*manpower_ratio_muliplier)),0))
-        manpower.set(max(math.ceil(int(manpower.val())*(1-(state_manpower_ratio*manpower_ratio_muliplier))),0))
+        manpower = vanilla_data.get("manpower") #Distribute manpower
+        new_data.get("manpower").set(max(math.ceil(int(str(manpower))*(state_manpower_ratio*manpower_ratio_muliplier)),0))
+        manpower.set(max(math.ceil(int(str(manpower))*(1-(state_manpower_ratio*manpower_ratio_muliplier))),0))
 
         transfer_all_dockyards = False
         try:
-            transfer_all_dockyards = data.retrieve("transfer_all_dockyards").val() == "yes"
+            transfer_all_dockyards = str(data.get("transfer_all_dockyards")) == "yes"
         except: pass
 
         for b in ["industrial_complex", "arms_factory"]: #Split up factories to new states
             try:
-                building = vanilla_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
+                building = vanilla_data.get("history").get("buildings").get(b)
                 r = max(min(state_resource_ratio, 1), 0)
-                amt = round(int(str(building.val()).strip()) * r)
+                amt = round(int(str(building).strip()) * r)
 
                 if amt > 0:
                     try:
-                        nb = new_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
-                        nb.set(int(str(nb.val()))+amt)
+                        nb = new_data.get("history").get("buildings").get(b)
+                        nb.set(int(str(nb))+amt)
                     except:
-                        new_data.retrieve("history").val().retrieve("buildings").val().append(get(b+"="+str(amt))[0])
+                        new_data.get("history").get("buildings").append(get(b+"="+str(amt))[0])
 
-                    building.set(int(str(building.val()))-amt)
-                    if int(str(building.val()))-amt <= 0:
-                        buildings.remove(buildings.select(b))
+                    building.set(int(str(building))-amt)
+                    if int(str(building))-amt <= 0:
+                        buildings.remove(buildings.get_pair(b))
 
             except: pass
 
         if transfer_all_dockyards:
             for b in ["dockyard"]:
                 try:
-                    buildings = vanilla_data.retrieve("history").val().retrieve("buildings").val()
-                    building = buildings.retrieve(b)
+                    buildings = vanilla_data.get("history").get("buildings")
+                    building = buildings.get(b)
                     r = max(min(state_resource_ratio, 1), 0)
                     r = 1
-                    amt = round(int(str(building.val()).strip()) * r)
+                    amt = round(int(str(building).strip()) * r)
 
                     if amt > 0:
                         try:
-                            nb = new_data.retrieve("history").val().retrieve("buildings").val().retrieve(b)
-                            nb.set(int(str(nb.val()))+amt)
+                            nb = new_data.get("history").get("buildings").get(b)
+                            nb.set(int(str(nb))+amt)
                         except:
-                            new_data.retrieve("history").val().retrieve("buildings").val().append(get(b+"="+str(amt))[0])
+                            new_data.get("history").get("buildings").append(get(b+"="+str(amt))[0])
 
-                        building.set(int(str(building.val()))-amt)
-                        if int(str(building.val()))-amt <= 0:
-                            buildings.remove(buildings.select(b))
+                        building.set(int(str(building))-amt)
+                        if int(str(building))-amt <= 0:
+                            buildings.remove(buildings.get_pair(b))
 
                 except: pass
 
-        for pair in data.retrieve("history").val(): #Append custom history={} block contents
+        for pair in data.get("history"): #Append custom history={} block contents
             if pair[0] != "owner":
                 try:
                     if pair[0] == "add_core_of": raise
-                    new_data.retrieve("history").val().retrieve(pair[0]).set(pair[-1].val())
+                    new_data.get("history").get(pair[0]).set(pair[-1])
                 except: 
-                    new_data.retrieve("history").val().append(pair)
+                    new_data.get("history").append(pair)
 
-        new_data.retrieve("history").val().append("set_variable = { var = state_event_parent value = "+str(parent)+" }")
+        new_data.get("history").append("set_variable = { var = state_event_parent value = "+str(parent)+" }")
 
         #Write to file
         with open(parent_dir+"/history/states/"+str(num_id)+"-"+full_id.capitalize()+".txt", "w") as file:
@@ -459,10 +459,10 @@ on_actions = {
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = str(data.retrieve("namespace").val())
-        full_id = data.retrieve("id").val()
-        name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
-        parent = data.retrieve("parent").val()[0].val()
+        namespace = str(data.get("namespace"))
+        full_id = str(data.get("id"))
+        name = str(data.get("name")).removeprefix("\"").removesuffix("\"")
+        parent = str(data.get("parent")[0])
 
         for path in os.scandir(parent_dir+"/history/states/"):
             try:
@@ -515,10 +515,10 @@ on_actions = {
         with open(self.path, "r", encoding="utf-8") as file:
             data = get(file.read())
 
-        namespace = str(data.retrieve("namespace").val())
-        full_id = data.retrieve("id").val()
-        name = data.retrieve("name").val().removeprefix("\"").removesuffix("\"")
-        parent = data.retrieve("parent").val()[0].val()
+        namespace = str(data.get("namespace"))
+        full_id = str(data.get("id"))
+        name = str(data.get("name")).removeprefix("\"").removesuffix("\"")
+        parent = str(data.get("parent")[0])
 
         try:
             for path in os.scandir(parent_dir+"/history/states/"):
