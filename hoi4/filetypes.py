@@ -1,4 +1,4 @@
-from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology, hoipy, submerge
+from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology, hoipy, submerge, event
 from .objects.filetype import fileType
 import os
 
@@ -13,6 +13,8 @@ def get(path: str):
         return pull_file.Pulled(path)
     elif endswith(path, ".focus"):
         return focus.Focus(path)
+    elif endswith(path, ".event"):
+        return event.Event(path)
     elif endswith(path, ".achievement"):
         return achievements.Achievement(path)
     elif endswith(path, ".nation"):
@@ -50,6 +52,7 @@ def order():
     return [
         pull_file.Pulled,
         focus.Focus,
+        event.Event,
         achievements.Achievement,
         nation.Nation,
         state_patch.StatePatch,

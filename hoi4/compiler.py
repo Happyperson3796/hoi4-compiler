@@ -275,7 +275,7 @@ class Build:
                     else:
                         print(f"Dependency {name} is up to date.")
 
-            print("Building dependency \"" + name + "\"...")
+            #print("Building dependency \"" + name + "\"...")
             depend = depend.replace("$USER", os.path.expanduser("~")) + "\\"
             d = ".dependency_" + name
 
@@ -295,7 +295,7 @@ class Build:
                 self.deposit_compiler_files(self.mod + "/" + d, self.mod + "/" + d + "/.build")
                 shutil.rmtree(self.mod + "/" + d + "/.build")
 
-            print("Cleaning dependency \"" + name + "\"...")
+            #print("Cleaning dependency \"" + name + "\"...")
             self.clean(self.mod + "/" + d)
 
             print("Applying dependency \"" + name + "\"...")
