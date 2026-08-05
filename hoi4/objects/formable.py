@@ -222,6 +222,7 @@ formable_$ID_category = {{
         allowed = {{
             OR = {{
                 original_tag = $TAGS
+                $ALT_REQ
             }}
         }}
 
@@ -232,6 +233,7 @@ formable_$ID_category = {{
         visible = {{
             OR = {{
                 original_tag = $TAGS
+                $ALT_REQ
             }}
             {exclusive_no_tier_flag}
             NOT = {{ has_global_flag = form_$ID_flag }}
@@ -278,6 +280,7 @@ formable_$ID_category = {{
         visible = {{
             OR = {{
                 original_tag = $TAGS
+                $ALT_REQ
             }}
             {exclusive_no_tier_flag}
             NOT = {{ has_global_flag = form_$ID_flag }}
@@ -326,6 +329,7 @@ formable_$ID_category = {{
         allowed = {{
             OR = {{
                 original_tag = $TAGS
+                $ALT_REQ
             }}
         }}
 
