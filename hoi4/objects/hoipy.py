@@ -13,10 +13,16 @@ def run_function(filepath, func_name, *args):
     args_json = json.dumps(args)
 
     code = f"""
-import json
+import json, sys
 ns = {{}}
-exec(open(r'{filepath}').read(), ns)
-result = ns['{func_name}'](*json.loads(r'''{args_json}'''))
+_orig_stdout = sys.stdout
+sys.stdout = sys.stderr
+try:
+    exec(open(r'{filepath}').read(), ns)
+    result = ns['{func_name}'](*json.loads(r'''{args_json}'''))
+finally:
+    sys.stdout = _orig_stdout
+
 print(json.dumps(result))
 """
 
@@ -26,6 +32,9 @@ print(json.dumps(result))
         capture_output=True,
         text=True
     )
+
+    if result.stderr:
+        print(result.stderr, file=sys.stderr, end="")
 
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip())
