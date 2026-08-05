@@ -38,6 +38,7 @@ class Formable(fileType):
         exclusive = str(data.get("exclusive", "yes"))
         on_formed = data.get("on_formed", Collection())
         extra_reqs = data.get("extra_reqs", Collection())
+        alt_req = data.get("alt_req", Collection())
         hist_player = str(data.get("hist_player", "yes"))
         ai = str(data.get("ai", "yes"))
         hist_ai = str(data.get("hist_ai", "no"))
@@ -262,6 +263,7 @@ formable_$ID_category = {{
         allowed = {{
             OR = {{
                 original_tag = $TAGS
+                $ALT_REQ
             }}
         }}
 
@@ -405,7 +407,7 @@ formable_$ID_category = {{
             text = text.splitlines()
 
             extras.extend(states)
-            loop = {"TAGS": allowed, "CONTROLS_STATES": states, "ADD_CORES": extras, "ADD_CLAIMS": claims, "ON_FORMED": format(on_formed).split("\n"), "REQS": format(extra_reqs).split("\n")}
+            loop = {"TAGS": allowed, "CONTROLS_STATES": states, "ADD_CORES": extras, "ADD_CLAIMS": claims, "ON_FORMED": format(on_formed).split("\n"), "REQS": format(extra_reqs).split("\n"), "ALT_REQ": format(alt_req).split("\n")}
             for ln in range(len(text)):
                 for x in loop:
                     temp_list = []
@@ -497,7 +499,7 @@ class JsonFormable(Formable):
 
         data = reformat(data)
 
-        for x in ["on_formed", "extra_reqs"]: #Unrwap json strings into pdxscript
+        for x in ["on_formed", "extra_reqs", "alt_req"]: #Unrwap json strings into pdxscript
             try:
                 var = data.get(x)
                 var.set(get("0 = {"+str(var).removeprefix("\"").removesuffix("\"")+"}")[0][-1])
