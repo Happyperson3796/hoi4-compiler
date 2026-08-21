@@ -15,6 +15,8 @@ class fileType():
         pass
     def postbuild(self): #After scanning & collecting
         pass
+    def finalbuild(self): #After the After
+        pass
 
     def required_dir(self):
         return []

@@ -1,4 +1,4 @@
-from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology, hoipy, submerge, event
+from .objects import achievements, append_file, character, equipment, flag, focus, focus_icon, formable, merge_file, nation, pull_file, state, state_patch, subideology, hoipy, submerge, event, province
 from .objects.filetype import fileType
 import os
 
@@ -23,6 +23,8 @@ def get(path: str):
         return state_patch.StatePatch(path)
     elif endswith(path, ".state"):
         return state.State(path)
+    elif endswith(path, ".province"):
+        return province.Province(path)
     elif endswith(path, ".formable"):
         return formable.Formable(path)
     elif endswith(path, ".formable.json"):
@@ -57,6 +59,7 @@ def order():
         nation.Nation,
         state_patch.StatePatch,
         state.State,
+        province.Province,
         formable.Formable,
         formable.JsonFormable,
         character.Character,

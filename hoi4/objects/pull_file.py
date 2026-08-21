@@ -5,6 +5,21 @@ from .. import globals
 import shutil
 
 class Pulled(fileType):
+    def execute(head: str, base_file: str, dest_file: str, lines=[]):
+        dest_file = head+"/"+dest_file
+        if not os.path.exists(dest_file):
+            try:
+                shutil.copyfile(globals.vanilla_path+base_file, dest_file)
+                if len(lines) > 0:
+                    with open(dest_file, "r") as file:
+                        content = file.readlines()
+                    with open(dest_file, "w") as file:
+                        file.writelines(lines)
+                        file.writelines(content)
+            except:
+                open(head+"/"+base_file, "w").close() #Create if not found
+                print("\n\x1b[33;20mUnable to pull "+base_file+"\x1b[0m")
+
     def run(self):
         head, tail = os.path.split(self.path)
         
@@ -15,21 +30,13 @@ class Pulled(fileType):
             lines.pop(1)
             lines.pop(0)
 
-        if not os.path.exists(head+"/"+dest_file):
-            try:
-                shutil.copyfile(globals.vanilla_path+"/"+base_file, head+"/"+dest_file)
-                if len(lines) > 0:
-                    with open(head+"/"+dest_file, "r") as file:
-                        content = file.readlines()
-                    with open(head+"/"+dest_file, "w") as file:
-                        file.writelines(lines)
-                        file.writelines(content)
-            except:
-                open(head+"/"+base_file, "w").close() #Create if not found
-                print("Unable to pull "+base_file)
+        Pulled.execute(head, base_file, dest_file, lines)
+
+
 
     def clean(self):
-        head, tail = os.path.split(self.path)
+        pass
+        #head, tail = os.path.split(self.path)
 
         #with open(self.path, "r") as file:
         #    lines = file.readlines()
@@ -38,8 +45,4 @@ class Pulled(fileType):
 
         #try:
         #    os.remove(head+"/"+dest_file)
-        #except: pass
-
-        #try:
-        #    os.remove(self.path) #removed for now, potentially unstable
         #except: pass

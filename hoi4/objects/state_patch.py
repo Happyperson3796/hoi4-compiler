@@ -4,9 +4,16 @@ import os
 from .. import globals
 import shutil
 from pathlib import Path
+from ..utils import utils
+
+shifted_provinces = False
+potential_province_shifts = {}
+complete_province_shifts = []
 
 class StatePatch(fileType):
     def run(self):
+        global complete_province_shifts
+        global potential_province_shifts
         head, tail = os.path.split(self.path)
 
         parent = str(Path(head).parent)
@@ -36,10 +43,13 @@ class StatePatch(fileType):
                     state_provs = state_data[0].value().get("provinces")
                     for x in [y for y in state_provs]:
                         if str(x) == str(prov):
+                            potential_province_shifts[prov] = utils.find_strat_region(state_provs[0])
                             state_provs.remove(x)
 
                 else:
                     state_provs = state_data[0].value().get("provinces")
+                    complete_province_shifts.append(str(prov))
+                    utils.add_to_strat_region(utils.find_strat_region(state_provs[0]), prov)
                     state_provs.append(prov)
 
             state.value().remove(state.value().get_pair("provinces")) #Remove provinces block to avoid merge conflicts if I include that
@@ -93,8 +103,13 @@ class StatePatch(fileType):
             with open(parent+"/history/states/"+vanilla_state, "w") as file:
                 file.write(format(state_data))
 
-
-
+    def postbuild(self):
+        global shifted_provinces
+        if not shifted_provinces:
+            shifted_provinces = True
+            for prov, region in potential_province_shifts.items():
+                if str(prov) in complete_province_shifts:
+                    utils.remove_from_strat_region(region, prov)
 
     def clean(self):
         head, tail = os.path.split(self.path)

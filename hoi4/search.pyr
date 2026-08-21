@@ -1,0 +1,38 @@
+import os
+import concurrent.futures
+
+cols = 225
+lines = 35
+buffer_height = 999
+
+os.system(f"mode con: cols={cols} lines={lines}")
+os.system(f"powershell -Command \"[Console]::BufferHeight={buffer_height}\"")
+
+search = input("Search for: ")
+file_queue = []
+
+def collect_files(directory):
+    for path in os.scandir(directory):
+        if path.is_dir():
+            collect_files(path.path)
+        elif path.is_file():
+            if ("localization" in path.path or "localisation" in path.path) and not path.name.split("_")[-1].endswith("english.yml"): continue
+            file_queue.append(path.path)
+
+def scan_file(path):
+    try:
+        with open(path, "r", encoding="utf-8-sig") as file:
+            for i, raw_line in enumerate(file):
+                if search in raw_line:
+                    print(f"{raw_line.strip()} | Hit on line {i} in {path}")
+    except Exception:
+        pass
+
+collect_files(os.getcwd())
+
+print()
+
+with concurrent.futures.ThreadPoolExecutor() as executor:
+    executor.map(scan_file, file_queue)
+
+print()

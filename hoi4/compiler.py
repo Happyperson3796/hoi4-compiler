@@ -322,6 +322,8 @@ class Build:
             [file.build() for file in scripts]
         elif mode == 1:
             [file.postbuild() for file in scripts]
+        elif mode == 2:
+            [file.finalbuild() for file in scripts]
 
     def build(self):
         self.build_dependencies()
@@ -349,6 +351,8 @@ class Build:
 
         print("Postbuild scripts...")
         self.fire_build_scripts("", 1)
+
+        self.fire_build_scripts("", 2)
 
         print("Finished build in " + str(round(time.time() - start, 1)) + " Seconds")
 

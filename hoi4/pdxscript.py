@@ -71,6 +71,12 @@ class StoredData(Jom):
             return False
         raise Exception("Not a boolean!")
 
+    def int(self) -> int:
+        try:
+            return int(str(self.value).strip())
+        except:
+            raise Exception("Not an int!")
+
 
 class Value(StoredData):
     def set(self, value):
@@ -253,6 +259,12 @@ class Collection(Jom, list):
             if type(x) == Pair and "inline" in x[0]: continue
             l.append(x)
         return l
+
+    def remove_value(self, x):
+        for y in self:
+            if str(x) == str(y):
+                self.remove(y)
+                return
 
 
 def get(text):  # All combined

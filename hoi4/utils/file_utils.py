@@ -1,13 +1,29 @@
 from ..pdxscript import get, format, Pair, Collection, Jom
 import os
 from .. import globals
+from charset_normalizer import from_path
+
+def get_encoding(path):
+    # Fast initial detection
+    encoding = from_path(path).best().encoding
+    normalized = encoding.lower().replace('-', '_')
+
+    # Most files will hit this and skip the BOM check
+    if normalized != 'utf_8':
+        return encoding
+
+    # Only check BOM if it's detected as plain utf_8
+    with open(path, 'rb') as f:
+        if f.read(3).startswith(b'\xef\xbb\xbf'):
+            return 'utf_8_sig'
+
+    return encoding
 
 def write_file(raw_path: str, name: str, data: Collection):
     path = globals.mod+"/"+raw_path+"/"
     os.makedirs(path, exist_ok=True)
     with open(path+name, "w", encoding="utf-8-sig") as file:
         file.write(format(data))
-
 
 localization_dir_path = "localisation/"
 

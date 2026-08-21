@@ -3,7 +3,7 @@ from ..pdxscript import get, format, Pair, Collection
 import os
 from ..globals import vanilla_path
 import math
-from charset_normalizer import from_path
+from ..utils import file_utils
 
 def get_top_state_id(parent_dir):
     top_num = 0
@@ -23,23 +23,6 @@ def get_top_state_id(parent_dir):
 
 postbuild_tree_cache_run = False
 postbuild_ids_cache = {}
-
-
-def get_encoding(path):
-    # Fast initial detection
-    encoding = from_path(path).best().encoding
-    normalized = encoding.lower().replace('-', '_')
-
-    # Most files will hit this and skip the BOM check
-    if normalized != 'utf_8':
-        return encoding
-
-    # Only check BOM if it's detected as plain utf_8
-    with open(path, 'rb') as f:
-        if f.read(3).startswith(b'\xef\xbb\xbf'):
-            return 'utf_8_sig'
-
-    return encoding
 
 
 class State(fileType):
@@ -156,7 +139,7 @@ class State(fileType):
                     vanilla_data.get("provinces").remove(baseprov)
 
         for prov in [c for c in provinces]:
-            if int(str(prov).strip()) not in shared_provinces:
+            if (str(prov).strip().startswith("$")) or (int(str(prov).strip()) not in shared_provinces):
                 new_data.get("provinces").append(prov)
 
         old_vps = 0
@@ -496,7 +479,7 @@ on_actions = {
                                     write = True
 
                             if write:
-                                encoding = get_encoding(filepath.path)
+                                encoding = file_utils.get_encoding(filepath.path)
 
                                 for full, num in postbuild_ids_cache.items():
                                     text = text.replace("$"+full, num)
