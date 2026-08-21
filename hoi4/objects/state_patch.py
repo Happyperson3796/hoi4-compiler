@@ -49,7 +49,8 @@ class StatePatch(fileType):
                 else:
                     state_provs = state_data[0].value().get("provinces")
                     complete_province_shifts.append(str(prov))
-                    utils.add_to_strat_region(utils.find_strat_region(state_provs[0]), prov)
+                    if not str(prov).startswith("$"):
+                        utils.add_to_strat_region(utils.find_strat_region(state_provs[0]), prov)
                     state_provs.append(prov)
 
             state.value().remove(state.value().get_pair("provinces")) #Remove provinces block to avoid merge conflicts if I include that

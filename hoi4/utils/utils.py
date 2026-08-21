@@ -37,6 +37,7 @@ def find_strat_region(province: int) -> int:
 
 def pull_strat_region(region: int) -> str:
     if region < 0: return
+    os.makedirs(globals.mod+"map/strategicregions", exist_ok=True)
 
     if region in region_cache.keys():
         return region_cache[region]
