@@ -23,6 +23,8 @@ def get(path: str):
         return state_patch.StatePatch(path)
     elif endswith(path, ".state"):
         return state.State(path)
+    elif endswith(path, ".provinces"):
+        return province.Provinces(path)
     elif endswith(path, ".province"):
         return province.Province(path)
     elif endswith(path, ".formable"):
@@ -59,6 +61,7 @@ def order():
         nation.Nation,
         state_patch.StatePatch,
         state.State,
+        province.Provinces,
         province.Province,
         formable.Formable,
         formable.JsonFormable,

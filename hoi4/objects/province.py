@@ -11,6 +11,30 @@ postbuild_ids_cache = {}
 highest = 0
 added = 0
 
+class Provinces(fileType):
+    def run(self):
+        with open(self.path, "r") as file:
+            data = get(file.read())
+
+        head, tail = os.path.split(self.path)
+
+        id = str(data.get("id")).strip()
+
+        provinces = data.get_pop("provinces")
+
+        for province in provinces:
+            prefix = province[0]
+            province = province[-1]
+            province.merge(data)
+            new_id = id+"_"+prefix
+            province.get("id").set(new_id)
+
+            with open(head+"/generated_"+new_id+".province", "w") as file:
+                file.write(format(province))
+
+    def clean(self):
+        pass
+
 class Province(fileType):
     def run(self):
         global postbuild_ids_cache
