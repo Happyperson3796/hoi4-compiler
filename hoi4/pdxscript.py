@@ -189,6 +189,8 @@ class Collection(Jom, list):
     def get_pop(self, retrieve: str, default=None, debug=False):
         obj = self.get_pop_pair(retrieve, default, debug)
         try:
+            if not isinstance(obj[-1], Jom):
+                return StoredData(default)
             return obj[-1]
         except Exception as e:
             if default is not None:

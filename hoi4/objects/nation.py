@@ -86,7 +86,7 @@ class Nation(fileType):
             file.write("\n")
             for key in loc:
                 key = str(key)
-                if key.startswith("$"):
+                if "$" in key:
                     key = key.replace("$", str(tag), 1)
 
                 key = key.replace(" = ", ":0 ", 1)
