@@ -45,6 +45,8 @@ class Focus(fileType):
                     extras.append(x)
             data = data.get("focus_tree")
 
+            localize_empty = data.get_pop("localize_empty", "no").bool()
+
             remove = []
             inline_ideas = ""
             inline_loc = ""
@@ -107,6 +109,15 @@ class Focus(fileType):
             for x in data:
                 try:
                     id = str(x.value().get("id"))
+
+                    if localize_empty:
+                        if str(x[-1].get("name", "")).strip() == "":
+                            id_name = id
+                            if len(id_name.split("_")[0]) == 3 and id_name.split("_")[0].isupper():
+                                id_name = "_".join(id_name.split("_")[1:])
+                            id_name = id_name.replace("_", " ").strip().title()
+                            x[-1].append(Pair("name","=","\""+id_name+"\""))
+
                     try:
                         name = " "+id+": "+str(x.value().get("name"))
                         x.value().remove(x.value().get_pair("name"))
