@@ -287,7 +287,7 @@ class State(fileType):
         num_of_states += 1
         
         try:
-            with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "r") as file:
+            with open(parent_dir+"/common/on_actions/"+("zz_" if x == 0 else "")+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "r") as file:
                 template = file.read()
                 if template == "":
                     raise Exception
@@ -369,8 +369,10 @@ on_actions = {
         }
     }
 """, "")
+            template = template.replace("""                    # Update the stored owner
+                    set_variable = { prev_owner = OWNER }""", "")
 
-        with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "w") as file:
+        with open(parent_dir+"/common/on_actions/"+("zz_" if x == 0 else "")+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "w") as file:
             state_template = f"""<states>
 
                     if = {{
@@ -533,7 +535,7 @@ on_actions = {
 
         for x in range(10):
             try:
-                os.remove(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt")
+                os.remove(parent_dir+"/common/on_actions/"+("zz_" if x == 0 else "")+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt")
             except: pass
 
         try:
