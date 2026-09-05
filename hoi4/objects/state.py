@@ -23,10 +23,12 @@ def get_top_state_id(parent_dir):
 
 postbuild_tree_cache_run = False
 postbuild_ids_cache = {}
+num_of_states = 0
 
 
 class State(fileType):
     def run(self):
+        global num_of_states
         head, tail = os.path.split(self.path)
         parent_dir = os.path.abspath(os.path.join(head, os.pardir))
         
@@ -281,9 +283,11 @@ class State(fileType):
         with open(locfile, "a", encoding="utf-8-sig") as file:
             file.write("\n STATE_"+str(num_id)+": \""+name+"\"")
             
-
+        x = math.floor(num_of_states / 100)
+        num_of_states += 1
+        
         try:
-            with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt", "r") as file:
+            with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "r") as file:
                 template = file.read()
                 if template == "":
                     raise Exception
@@ -354,7 +358,19 @@ on_actions = {
 }
 """
 
-        with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt", "w") as file:
+        if x != 0 and "compiler_per_states_fired_monthly_tick\n" in template:
+            template = template.replace("compiler_per_states_fired_monthly_tick", "compiler_per_states_fired_monthly_tick_"+str(x))
+            template = template.replace("""
+    on_startup = {
+        effect = {
+            every_state = {
+                set_variable = { prev_owner = OWNER }
+            }
+        }
+    }
+""", "")
+
+        with open(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt", "w") as file:
             state_template = f"""<states>
 
                     if = {{
@@ -515,9 +531,10 @@ on_actions = {
                     os.remove(path.path)
         except: pass
 
-        try:
-            os.remove(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions.txt")
-        except: pass
+        for x in range(10):
+            try:
+                os.remove(parent_dir+"/common/on_actions/"+namespace+"_dynamic_state_on_actions"+(("_"+str(x)) if x != 0 else "")+".txt")
+            except: pass
 
         try:
             os.remove(parent_dir+"/localisation/"+namespace+"_generated_state_names_loc_l_english.yml")
