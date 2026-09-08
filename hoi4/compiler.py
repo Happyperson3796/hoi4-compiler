@@ -239,71 +239,96 @@ class Build:
     def build_dependencies(self):
         if "depends" not in self.data.keys(): return
 
-        depends = self.data["depends"]
-        for depend in [*depends]:
-            if not "\\" in depend and depend.endswith(".json"):
-                depends.remove(depend)
-                with open(globals.mod+"/"+depend, "r") as file:
-                    mods = json.load(file)["mods"]
-                for mod in mods:
-                    text = globals.vanilla_workshop+mod["steamId"]
-                    if mod["enabled"]:
-                        depends.append(text)
+        cache_built_dependencies = self.data.get("cache_built_dependencies", "").replace("$USER", os.path.expanduser("~")).replace("/", "\\")
 
-        for depend in [*depends]:
-            if " : " in depend:
-                depends.remove(depend)
-                id, replacement = depend.split(":", 1)
-                for x in range(len(depends)):
-                    if depends[x].replace("/", "\\").split("\\")[-1].strip() == id.strip():
-                        depends[x] = replacement.strip()
+        if cache_built_dependencies == "" or not os.path.exists(cache_built_dependencies) or len(os.listdir(cache_built_dependencies)) == 0:
+            depends = self.data["depends"]
+            for depend in [*depends]:
+                if not "\\" in depend and depend.endswith(".json"):
+                    depends.remove(depend)
+                    with open(globals.mod+"/"+depend, "r") as file:
+                        mods = json.load(file)["mods"]
+                    for mod in mods:
+                        text = globals.vanilla_workshop+mod["steamId"]
+                        if mod["enabled"]:
+                            depends.append(text)
 
-        for depend in depends:
-            depend = depend.replace("/", "\\")
-            name = depend.split("\\")[-1]
+            for depend in [*depends]:
+                if " : " in depend:
+                    depends.remove(depend)
+                    id, replacement = depend.split(":", 1)
+                    for x in range(len(depends)):
+                        if depends[x].replace("/", "\\").split("\\")[-1].strip() == id.strip():
+                            depends[x] = replacement.strip()
 
-            if "check_outdated" not in self.data.keys() or self.data["check_outdated"]:
-                workshop_id = depend.replace("\\", "/").removesuffix("/").split("/")[-1].strip()
-                if workshop_id and workshop_id.isdigit():
-                    steam_time = get_steam_mod_time(workshop_id)
-                    local_time = os.path.getmtime(depend) if os.path.exists(depend) else 0
+            for depend in depends:
+                depend = depend.replace("/", "\\")
+                name = depend.split("\\")[-1]
 
-                    if steam_time > local_time:
-                        print(f"\033[91mDependency {name} is OUTDATED\033[0m\033[38;5;208m")
-                        steam_url = f"steam://openurl/https://steamcommunity.com/sharedfiles/filedetails/?id={workshop_id}"
-                        webbrowser.open(steam_url)
-                    else:
-                        print(f"Dependency {name} is up to date.")
+                if "check_outdated" not in self.data.keys() or self.data["check_outdated"]:
+                    workshop_id = depend.replace("\\", "/").removesuffix("/").split("/")[-1].strip()
+                    if workshop_id and workshop_id.isdigit():
+                        steam_time = get_steam_mod_time(workshop_id)
+                        local_time = os.path.getmtime(depend) if os.path.exists(depend) else 0
 
-            #print("Building dependency \"" + name + "\"...")
-            depend = depend.replace("$USER", os.path.expanduser("~")) + "\\"
-            d = ".dependency_" + name
+                        if steam_time > local_time:
+                            print(f"\033[91mDependency {name} is OUTDATED\033[0m\033[38;5;208m")
+                            steam_url = f"steam://openurl/https://steamcommunity.com/sharedfiles/filedetails/?id={workshop_id}"
+                            webbrowser.open(steam_url)
+                        else:
+                            print(f"Dependency {name} is up to date.")
 
-            if os.path.exists(self.mod + "/" + d + "/"): shutil.rmtree(self.mod + "/" + d + "/")
+                #print("Building dependency \"" + name + "\"...")
+                depend = depend.replace("$USER", os.path.expanduser("~")) + "\\"
+                d = ".dependency_" + name
 
-            for file in scandir(depend):
+                if os.path.exists(self.mod + "/" + d + "/"): shutil.rmtree(self.mod + "/" + d + "/")
+
+                for file in scandir(depend):
+                    if not self.exclude(file.name):
+                        if file.is_file():
+                            target_dir = self.mod + "/" + d
+                            os.makedirs(target_dir, exist_ok=True)
+                            shutil.copyfile(file.path, target_dir + "/" + file.name)
+                        elif file.is_dir():
+                            distutils.dir_util.copy_tree(file.path, self.mod + "/" + d + "/" + file.name)
+
+                if os.path.exists(self.mod + "/" + d + "/.build"):
+                    print("Unpacking dependency \"" + name + "\"...")
+                    self.deposit_compiler_files(self.mod + "/" + d, self.mod + "/" + d + "/.build")
+                    shutil.rmtree(self.mod + "/" + d + "/.build")
+
+                #print("Cleaning dependency \"" + name + "\"...")
+                self.clean(self.mod + "/" + d)
+
+                print("Applying dependency \"" + name + "\"...")
+                for file in scandir(self.mod + "/" + d):
+                    if not file.is_file():
+                        distutils.dir_util.copy_tree(file.path, self.mod + "/" + file.name)
+
+                shutil.rmtree(self.mod + "/" + d + "/")
+
+
+            if cache_built_dependencies != "":
+                print("Caching dependencies in "+cache_built_dependencies+"...")
+                if os.path.exists(cache_built_dependencies): shutil.rmtree(cache_built_dependencies)
+                os.makedirs(cache_built_dependencies, exist_ok=True)
+                for file in scandir(self.mod):
+                    if not self.exclude(file.name):
+                        if file.is_file():
+                            shutil.copyfile(file.path, cache_built_dependencies + "/" + file.name)
+                        else:
+                            distutils.dir_util.copy_tree(file.path, cache_built_dependencies + "/" + file.name)
+
+        else:
+            print("Loading cached dependencies...")
+            for file in scandir(cache_built_dependencies):
                 if not self.exclude(file.name):
                     if file.is_file():
-                        target_dir = self.mod + "/" + d
-                        os.makedirs(target_dir, exist_ok=True)
-                        shutil.copyfile(file.path, target_dir + "/" + file.name)
-                    elif file.is_dir():
-                        distutils.dir_util.copy_tree(file.path, self.mod + "/" + d + "/" + file.name)
+                        shutil.copyfile(file.path, self.mod + "/" + file.name)
+                    else:
+                        distutils.dir_util.copy_tree(file.path, self.mod + "/" + file.name)
 
-            if os.path.exists(self.mod + "/" + d + "/.build"):
-                print("Unpacking dependency \"" + name + "\"...")
-                self.deposit_compiler_files(self.mod + "/" + d, self.mod + "/" + d + "/.build")
-                shutil.rmtree(self.mod + "/" + d + "/.build")
-
-            #print("Cleaning dependency \"" + name + "\"...")
-            self.clean(self.mod + "/" + d)
-
-            print("Applying dependency \"" + name + "\"...")
-            for file in scandir(self.mod + "/" + d):
-                if not file.is_file():
-                    distutils.dir_util.copy_tree(file.path, self.mod + "/" + file.name)
-
-            shutil.rmtree(self.mod + "/" + d + "/")
 
     def fire_build_scripts(self, dir="", mode=0):
         scripts = []
