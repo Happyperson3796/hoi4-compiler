@@ -21,6 +21,13 @@ class Provinces(fileType):
         id = str(data.get("id")).strip()
 
         provinces = data.get_pop("provinces")
+        unsorted = len(provinces) > 0 and provinces[0][0] == "rgb"
+
+        if unsorted:
+            provinces_data = provinces
+            provinces = Collection()
+            for x in range(len(provinces_data)):
+                provinces.append(Pair(str(x+1),"=",Collection(provinces_data[x])))
 
         for province in provinces:
             prefix = province[0]
