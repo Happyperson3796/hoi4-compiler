@@ -3,6 +3,9 @@ class fileType():
     def __init__(self, path: str):
         self.path = path
         self.tmp = path.endswith("_temp")
+        self.setup()
+    def setup(self):
+        pass
     def run(self): #Fires on Scan
         pass
     def clean(self):
