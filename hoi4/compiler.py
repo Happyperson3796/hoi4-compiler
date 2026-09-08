@@ -241,7 +241,16 @@ class Build:
 
         cache_built_dependencies = self.data.get("cache_built_dependencies", "").replace("$USER", os.path.expanduser("~")).replace("/", "\\")
 
-        if cache_built_dependencies == "" or not os.path.exists(cache_built_dependencies) or len(os.listdir(cache_built_dependencies)) == 0:
+        stale = False
+        if cache_built_dependencies != "" and os.path.exists(cache_built_dependencies):
+            for one in os.listdir(cache_built_dependencies):
+                if (time.time() - os.path.getmtime(one)) > 60*60*24:
+                    stale = True
+                break
+            
+
+        if stale or cache_built_dependencies == "" or not os.path.exists(cache_built_dependencies) or len(os.listdir(cache_built_dependencies)) == 0:
+            if stale: print("\033[38;5;208mCache is stale, rebuilding...\033[0m")
             depends = self.data["depends"]
             for depend in [*depends]:
                 if not "\\" in depend and depend.endswith(".json"):
@@ -321,7 +330,7 @@ class Build:
                             distutils.dir_util.copy_tree(file.path, cache_built_dependencies + "/" + file.name)
 
         else:
-            print("Loading cached dependencies...")
+            print("\033[0;36mLoading cached dependencies...\033[0m")
             for file in scandir(cache_built_dependencies):
                 if not self.exclude(file.name):
                     if file.is_file():
