@@ -8,6 +8,7 @@ from ..utils import utils
 
 postbuild_tree_cache_run = False
 postbuild_ids_cache = {}
+victory_point_gen = {}
 highest = 0
 added = 0
 
@@ -32,7 +33,14 @@ class Provinces(fileType):
         for province in provinces:
             prefix = province[0]
             province = province[-1]
-            province.merge(data)
+            for pair in data:
+                has = False
+                for x in province:
+                    if x[0] == pair[0]:
+                        has = True
+                        break
+                if not has:
+                    province.append(pair)
             new_id = id+"_"+prefix
             province.get("id").set(new_id)
 
@@ -42,11 +50,14 @@ class Provinces(fileType):
     def clean(self):
         pass
 
+generated_vp_file = False
+
 class Province(fileType):
     def run(self):
         global postbuild_ids_cache
         global highest
         global added
+        global victory_point_gen
         head, tail = os.path.split(self.path)
         head = "/".join(head.split("\\")[:-1])
 
@@ -85,6 +96,9 @@ class Province(fileType):
 
         postbuild_ids_cache[str(data.get("id")).strip()] = new_id
 
+        vp = data.get("vp", 0).int()
+        if vp != 0: victory_point_gen[new_id] = vp
+
         if this not in text:
             with open(head+"/"+dest_file, "a") as file:
                 file.write("\n"+str(new_id)+";"+this)
@@ -101,6 +115,19 @@ class Province(fileType):
         region = data.get("region").int()
         if region >= 0:
             utils.add_to_strat_region(region, new_id)
+
+    def build(self):
+        global generated_vp_file
+        if not generated_vp_file:
+            generated_vp_file = True
+
+            text = ""
+            for id, vp in victory_point_gen.items():
+                text += f"\n    set_victory_points = {{ province = {id}    value = {vp} }}"
+
+            if text != "":
+                with open(globals.mod+"common/on_actions/generated_province_victory_points_"+globals.mod_namespace+".txt", "w") as file:
+                    file.write("on_actions = { on_startup = { effect = { "+text+"\n} } }")
 
     def finalbuild(self): #Replace all $ID with province ids
         global postbuild_tree_cache_run
