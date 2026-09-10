@@ -1,5 +1,5 @@
 from ..pdxscript import get, format, Pair, Collection, Jom
-import os
+import os, shutil
 from .. import globals
 from charset_normalizer import from_path
 
@@ -70,3 +70,31 @@ class Locfile():
                         text.append(x)
                 file.write("\n".join(text))
 
+class Gfx():
+    def __init__(self, cwd, name: str, texture: str, group: str = ""):
+        texture = "gfx/interface/"+texture.replace("\\", "/")
+        if group == "": group = name.removeprefix("GFX_")
+        cwd = cwd.replace("\\", "/")
+        if not cwd.endswith("/"): cwd = "/".join(cwd.split("/")[:-1])
+
+        os.makedirs(globals.mod+"/".join(texture.split("/")[:-1]), exist_ok=True)
+        shutil.copy(cwd+"/"+texture.split("/")[-1], globals.mod+texture)
+
+        os.makedirs(globals.mod+"interface", exist_ok=True)
+
+        gfx = globals.mod+"interface/generated_gfx_"+group+".gfx"
+        if not os.path.exists(gfx):
+            with open(gfx, "w") as file:
+                data = Collection(Pair("spriteTypes","=",Collection()))
+        else:
+            with open(gfx, "r") as file:
+                data = get(file.read())
+
+        sprites = data[0][-1]
+        sprites.append(Pair("spriteType","=",Collection(
+            Pair("name","=","\""+name+"\""),
+            Pair("texturefile","=","\""+texture+"\"")
+        )))
+
+        with open(gfx, "w") as file:
+            file.write(format(data))

@@ -1,0 +1,33 @@
+
+sp_land_long_range_artillery = {
+    name = "Sp test"
+    desc = "test2"
+    type = land
+
+	project_tags = sp_tag_artillery
+	
+	special_project_parent = {
+		sp_land_super_heavy_howitzer
+	}
+	
+	prototype_time = sp_time.prototype.short
+
+	complexity = sp_complexity.medium
+
+	breakthrough_cost = {
+		specialization_land = 1
+	}
+
+	resource_cost = {
+		resources = {
+			steel = 4
+			tungsten = 2
+		}
+	}
+	
+	project_output = {
+		enable_subunits = {
+			long_range_artillery
+		}
+	}
+}
