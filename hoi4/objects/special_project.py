@@ -11,8 +11,11 @@ class Project(Embeddable):
 
     def run_sp(self, group, id, data):
         type = str(data.get_pop("type"))
+        cost = str(data.get_pop("cost"))
 
         data.append(Pair("specialization","=","specialization_"+type))
+
+        data.append(Pair("breakthrough_cost","=",Collection(Pair("specialization_land","=",cost))))
 
         text = """
         allowed = { has_dlc = "Gotterdammerung" }

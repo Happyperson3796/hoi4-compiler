@@ -14,9 +14,7 @@ sp_land_long_range_artillery = {
 
 	complexity = sp_complexity.medium
 
-	breakthrough_cost = {
-		specialization_land = 1
-	}
+	cost = 1
 
 	resource_cost = {
 		resources = {
