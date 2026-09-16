@@ -120,10 +120,10 @@ class Build:
         globals.mod_namespace = self.mod.split("\\")[-1]
 
         # print("Created a new Build for "+str(self.mod))
-        if os.path.exists("build.hoi4"):
-            build_config = "build.hoi4"
-        else:
+        if os.path.exists("build.hoi"):
             build_config = "build.hoi"
+        else:
+            build_config = "build.hoi4"
         try:
             with open(build_config, "r") as file:
                 self.data = json.load(file)
@@ -134,6 +134,11 @@ class Build:
                 "excludes": [],
                 "overrides": ""
             }
+            while True: pass
+
+        if not os.path.exists(self.mod+"_overrides"):
+            print(self.mod+"_overrides Not Found, is this a mod?")
+            while True: pass
 
         if "run_unsafe" in self.data.keys() and self.data["run_unsafe"]:
             hoipy.hoipy_allowed = True
