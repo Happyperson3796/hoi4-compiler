@@ -10,6 +10,7 @@ from tqdm import tqdm
 import builtins
 import requests
 import webbrowser
+import subprocess
 
 from . import globals
 from .objects import hoipy
@@ -279,6 +280,9 @@ class Build:
                 depend = depend.replace("/", "\\")
                 name = depend.split("\\")[-1]
 
+                depend = depend.replace("$USER", os.path.expanduser("~")) + "\\"
+                d = ".dependency_" + name
+
                 if "check_outdated" not in self.data.keys() or self.data["check_outdated"]:
                     workshop_id = depend.replace("\\", "/").removesuffix("/").split("/")[-1].strip()
                     if workshop_id and workshop_id.isdigit():
@@ -292,9 +296,12 @@ class Build:
                         else:
                             print(f"Dependency {name} is up to date.")
 
+                    else:
+                        if os.path.exists(os.path.join(depend, ".git")):
+                            print(f"Pulling Git Repository for \"{name}\"...")
+                            subprocess.run(["git", "pull"], cwd=depend, check=True)
+
                 #print("Building dependency \"" + name + "\"...")
-                depend = depend.replace("$USER", os.path.expanduser("~")) + "\\"
-                d = ".dependency_" + name
 
                 if os.path.exists(self.mod + "/" + d + "/"): shutil.rmtree(self.mod + "/" + d + "/")
 
